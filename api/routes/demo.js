@@ -31,4 +31,23 @@ router.post("/attendance", async(req,res,next)=>{
 })
 
 
+router.post("/siteinfo", async(req,res,next)=>{
+
+    fetch ("https://api.monday.com/v2", {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : req.body.apiKey
+        },
+        body: JSON.stringify({
+            'query' : req.body.query
+        })
+        })
+        .then((res) => res.json())
+        .then((result) => res.status(200).send(result));
+        // .then(res => console.log(JSON.stringify(res, null, 2)));
+       
+})
+
+
 module.exports = router
