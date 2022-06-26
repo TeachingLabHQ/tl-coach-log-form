@@ -3,9 +3,13 @@ import {AccessTokenContext} from "../contexts/accessTokenContext"
 import axios from "axios"
 import ListGroup from 'react-bootstrap/ListGroup';
 import '../App.css';
+import Button from 'react-bootstrap/Button';
+import {  getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
+import app from "../firebase/firebase";
 
 
 function Home() {
+    const authentication = getAuth(app);
     const[info, setInfo] = useState([])
     const[lessons,setLessons] = useState([])
     const{accessToken, setAccessToken} = useContext(AccessTokenContext)
@@ -35,11 +39,24 @@ function Home() {
 
     }
 
+    const signInWithGoogle = () =>{
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(authentication, provider)
+        .then((res)=>{
+        
+          console.log(res);
+         
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+
     console.log(lessons)
 
     return (
         <div>
-            <span>Firebase Test:</span>
+           {/* <span>Firebase Test:</span>
            {info && info.map((item)=><p>{item.test}</p>)}
            <span>Monday API data:</span>
            <button onClick={getAttendance}>fetch</button>
@@ -49,7 +66,9 @@ function Home() {
                )}
            
             
-           </ListGroup>
+           </ListGroup> */}
+           <Button variant="outline-primary" onClick={signInWithGoogle}>Sign in as Teaching Lab Staff</Button>{' '}
+            <Button variant="outline-secondary">Sign in as participants</Button>{' '}
         </div>
     )
 }
