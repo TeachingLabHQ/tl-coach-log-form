@@ -37,14 +37,14 @@ router.post("/siteinfo", async(req,res,next)=>{
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization' : req.body.apiKey
+            'Authorization' : "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NTYwODI0MSwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMi0wNi0xNFQyMDoyMTo1Ny4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.BUyi3WsoBlpPvCBms9WUKfOufKFDNz6onxBm8h_jWGo"
         },
         body: JSON.stringify({
             'query' : req.body.query
         })
         })
         .then((res) => res.json())
-        .then((result) => res.status(200).send(result));
+        .then((result) => res.status(200).send(result))
         // .then(res => console.log(JSON.stringify(res, null, 2)));
        
 })

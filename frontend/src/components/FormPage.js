@@ -8,7 +8,7 @@ function FormPage() {
     const[site,setSite] = useState("");
     const[siteCourse,setSiteCourse] = useState([]);
     const{accessToken, setAccessToken} = useContext(AccessTokenContext)
-    let query = '{ boards (ids:1512429056) {name id  groups {title items {name} } } }';
+    let query = ' {boards (ids:1512429056) {name id  groups {title items {name} } } }';
 
     useEffect(()=>{
         setAccessToken("eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NTYwODI0MSwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMi0wNi0xNFQyMDoyMTo1Ny4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.BUyi3WsoBlpPvCBms9WUKfOufKFDNz6onxBm8h_jWGo");
