@@ -2,10 +2,10 @@
 ## Overview:
 Purpose: The purpose of the app is to test out Monday.com API to see if integrating Monday.com is better for the attendance system.
 ## Getting Started:
-To get started developing the application, there are a few commands the developer needs to run before he can run the app and edit the files.
+To get started developing the application, there are a few commands the developer needs to run before running the app and editing the files.
 
 `git clone <github repo URL link>`<br /> 
-In the terminal, when the developer is at the right directory that he wants to be in, he should use the command above to pull the code to the local environment. The github repo URL link in this case is [https://github.com/TeachingLabHQ/monday-api-app.git](https://github.com/TeachingLabHQ/monday-api-app.git) The developer should be able to see and access the link by clicking the green Code tab.
+In the terminal, when at the right directory that he wants to be in, the developer should use the command above to pull the code to the local environment. The github repo URL link in this case is [https://github.com/TeachingLabHQ/monday-api-app.git](https://github.com/TeachingLabHQ/monday-api-app.git) The developer should be able to see and access the link by clicking the green Code tab.
 
 
 
@@ -13,10 +13,10 @@ In the terminal, when the developer is at the right directory that he wants to b
 After cloning the project, the developer should see two files: api and frontend. He should use the above command to navigate himself to both files one at a time. <filename> can be substituted with api or frontend.
 
 `npm install`<br /> 
-After navigating to the correct file path, he should use npm install to install all the modules and their dependencies the application needs in order to start running. Remember that the command should be run for both files.
+After navigating to the correct file path, the developer should use npm install to install all the modules and their dependencies the application needs in order to start running. Remember that the command should be run for both files.
 
 vice should go. For security purposes, the key values are not displayed here. Please contact the owner and the developers for private keys.
 
 `npm start`<br /> 
-After going through the instructions above, the final step to run the app is to again navigate to both files at api and frontend to start the backend and frontend of the app. And then, the developer should be able to see the application running at his localhost website.
+After going through the instructions above, the final step to run the app is to again navigate to both files at api and frontend to start the backend and frontend of the app. And then, the developer should be able to see the application running at the localhost website.
 
