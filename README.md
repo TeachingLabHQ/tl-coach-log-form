@@ -1,6 +1,6 @@
-# Monday.com API App
+# TL-weekly-project-data-log-form
 ## Overview:
-Purpose: The purpose of the app is to test out Monday.com API to see if integrating Monday.com is better for the attendance system.
+Purpose: The app is a customized form that collects weekly project data from internal staff at Teaching Lab.
 ## Getting Started:
 To get started developing the application, there are a few commands the developer needs to run before running the app and editing the files.
 
@@ -20,4 +20,4 @@ vice should go. For security purposes, the key values are not displayed here. Pl
 `npm start`<br /> 
 After going through the instructions above, the final step to run the app is to again navigate to both files at api and frontend to start the backend and frontend of the app. And then, the developer should be able to see the application running at the localhost website.
 
-# TL-weekly-project-data-log-form
+
