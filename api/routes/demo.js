@@ -21,7 +21,8 @@ router.post("/attendance", async(req,res,next)=>{
             'Authorization' : req.body.apiKey
         },
         body: JSON.stringify({
-            'query' : req.body.query
+            'query' : req.body.query,
+            // 'variables' : JSON.stringify(req.body.vars)
         })
         })
         .then((res) => res.json())
@@ -37,10 +38,11 @@ router.post("/siteinfo", async(req,res,next)=>{
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization' : "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NTYwODI0MSwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMi0wNi0xNFQyMDoyMTo1Ny4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.BUyi3WsoBlpPvCBms9WUKfOufKFDNz6onxBm8h_jWGo"
+            'Authorization' : "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjIzNDI2ODE2OCwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMy0wMi0wM1QwMDozNjoyMC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.oM37gRdrLf8UnnmuZIM-QWDRoT_GtgFLLyHpvnxGUtQ"
         },
         body: JSON.stringify({
-            'query' : req.body.query
+            'query' : req.body.query,
+            'variables' : JSON.stringify(req.body.vars)
         })
         })
         .then((res) => res.json())

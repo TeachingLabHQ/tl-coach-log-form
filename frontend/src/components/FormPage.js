@@ -11,25 +11,33 @@ function FormPage() {
     const[team,setTeam] = useState([]);
     const[projects,setProjects] = useState([{projectName:"",projectRole:"",projectHours:""}]);
     const[options,setOptions] = useState(["Shared Ops", "Program"]);
+    const[pjOptions,setPjOptions] = useState([]);
+    const[internalPj,setInternalPj] = useState([
+        "TL_Internal Program Evaluation",
+        "TL_LMS Transition to Canvas",
+        "TL_Technology Operations and Support"
+    ]);
+    const[programPj,setProgramPj] = useState([
+        "CA_San Diego AMS Study", 
+        "CA_West Contra Costa_Michelle Obama",
+        "TL_Client Project Evaluation"
+    ]);
     const{accessToken, setAccessToken} = useContext(AccessTokenContext)
-    let query = ' {boards (ids:1512429056) {name id  groups {title items {name} } } }';
 
-    // useEffect(()=>{
-    //     setAccessToken("eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NTYwODI0MSwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMi0wNi0xNFQyMDoyMTo1Ny4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.BUyi3WsoBlpPvCBms9WUKfOufKFDNz6onxBm8h_jWGo");
-    //     getSite();
-    //     console.log(accessToken)
-    // },[])
     const handleTeamChange=(e)=>{
         console.log(e.target.value);
         console.log(e.target.name);
         const projectTypes = ["Internal Project","Program-related Project"];
         if(e.target.value == "Shared Ops"){
 
-            setTeam([projectTypes[0]])
+            setTeam([projectTypes[0]]);
         }
         else if(e.target.value == "Program"){
 
-            setTeam([...projectTypes])
+            setTeam([...projectTypes]);
+        }
+        else{
+            setTeam([]);
         }
     }
 
@@ -39,6 +47,17 @@ function FormPage() {
         setProjects(newProjectValues);
         console.log(projects);
     }
+
+    const handleTypeChange=(e)=>{
+        console.log(e.target.value);
+        if(e.target.value == "Internal Project"){
+            setPjOptions(internalPj);
+        }
+        else{
+            setPjOptions(programPj);
+        }
+    }
+
     const addProjectFields=()=>{
         setProjects([...projects,{projectName:"",projectRole:"",projectHours:""}])
     }
@@ -48,17 +67,57 @@ function FormPage() {
         setProjects([...currProjectValues]);
         console.log(projects);
     }
-    // const getSite = () =>{
-      
-    //     axios.post("http://localhost:9000/demo/siteinfo",{
-    //         apiKey: accessToken,
-    //         query: query
-    //     })
-    //     .then((res)=>res.data.data.boards[0])
-    //     .then((data)=>data.groups.map((val,index)=> setSiteCourse(siteCourse=>[...siteCourse,{siteTitle:val.title,siteClasses:[...val.items]}])))
-    //     .catch((err)=>console.log(err))
 
-    // }
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+        console.log(e.target.name.value);
+        const personName = e.target.name.value;
+        console.log(e.target.date.value);
+        const dateValue = e.target.date.value;
+        console.log(e.target.teamName.value);
+        const teamName = e.target.date.value;
+        console.log(e.target.projectType.value);
+        const projectGenre = e.target.projectType.value;
+        console.log(projects);
+
+        let query = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:3962685859, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
+        let vars = {
+        "groupName" : "new_group3217",
+        "myItemName" : e.target.name.value,
+        "columnVals" : JSON.stringify({
+            "date8" : {"date" : dateValue},
+            //program project 1 name
+            "updated_programs_options":{"labels":(projectGenre=="Program-related Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]},
+            //internal project 1 name
+            "dup__of_2__project_name9":{"labels": (projectGenre=="Internal Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]} , 
+            //project role 1
+            "dup__of_2__what_is_your_role_in_the_project_6" : {"label" : (0<projects.length) ? projects[0].projectRole:"n/a"}, 
+            //project hours 1
+            "dup__of_2__how_many_hours_did_you_spend_this_week_on_the_selected_project_0" : (0<projects.length) ? projects[0].projectHours:"n/a"
+
+        })
+        };
+        createItem(query,vars);
+    }
+
+   
+    // useEffect(()=>{
+    //     setAccessToken("eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NTYwODI0MSwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMi0wNi0xNFQyMDoyMTo1Ny4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.BUyi3WsoBlpPvCBms9WUKfOufKFDNz6onxBm8h_jWGo");
+    //     getSite();
+    //     console.log(accessToken)
+    // },[])
+
+    const createItem = (query,vars) =>{
+      
+        axios.post("http://localhost:9000/demo/siteinfo",{
+            apiKey: accessToken,
+            query: query,
+            vars:vars
+        })
+        .then((res)=>console.log(res))
+        .catch((err)=>console.log(err))
+
+    }
 
 
     console.log(options)
@@ -68,19 +127,19 @@ function FormPage() {
     return (
         <>
         <h1>Test Form</h1>
-        <Form>
+        <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicName">
                 <Form.Label>Name:</Form.Label>
-                <Form.Control type="email" placeholder="Enter your last name and first name" />
+                <Form.Control name="name" type="text" placeholder="Enter your last name and first name" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Enter the date:</Form.Label>
-                <Form.Control type="date" placeholder="Enter email" />
+                <Form.Control  name="date" type="date" placeholder="Enter email" />
             </Form.Group>
             
             <Form.Group className="mb-3" controlId="formBasicSite">
                 <Form.Label>Which team are you on?</Form.Label>
-                <Form.Select name="team-name" aria-label="Default select example" onChange={handleTeamChange}>
+                <Form.Select name="teamName" aria-label="Default select example" onChange={handleTeamChange}>
                      <option></option>
                     {options.map((val,idx)=>(
                         <option value={val}>{val}</option>
@@ -89,7 +148,7 @@ function FormPage() {
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicCourse">
                 <Form.Label>What type of projects do you want to log?</Form.Label>
-                <Form.Select aria-label="Default select example">
+                <Form.Select name="projectType" aria-label="Default select example" onChange={handleTypeChange}>
                     <option></option>
                     {team && team.map((val,index)=>(
                         <option value={val} >{val}</option>
@@ -107,10 +166,11 @@ function FormPage() {
                     <Row className="align-items-center" style={{display: "flex", justifyContent: "center",alignItems: "center"}}>
                         <Col sm={2} className="my-1">
                             <Form.Label visuallyHidden="true">name</Form.Label>
-                            <Form.Select aria-label="Default select example" name="projectName" onChange={e=>handleProjectChange(idx,e)} >
+                            <Form.Select  aria-label="Default select example" name="projectName" onChange={e=>handleProjectChange(idx,e)} >
                                 <option></option>
-                                <option>TL_Internal Program Evaluation</option>
-                                <option>TL_LMS Transition to Canvas</option>
+                                {pjOptions.map((val)=>(
+                                    <option value={val}>{val}</option>
+                                ))}
                             </Form.Select>
                         </Col>
                         <Col sm={2} className="my-1">
