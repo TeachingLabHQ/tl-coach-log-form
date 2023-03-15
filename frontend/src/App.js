@@ -9,6 +9,7 @@ import AccessTokenProvider from './contexts/accessTokenContext'
 import app from "./firebase/firebase"
 import {  getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 import React, {useState} from "react";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 function App() {

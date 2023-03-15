@@ -6,11 +6,13 @@ import axios from "axios";
 import Col from 'react-bootstrap/esm/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
+import '../App.css';
+import DatePicker from "react-datepicker";
 
 function FormPage() {
     const[team,setTeam] = useState([]);
     const[projects,setProjects] = useState([{projectName:"",projectRole:"",projectHours:""}]);
-    const[options,setOptions] = useState(["Shared Ops", "Program"]);
+    const[options,setOptions] = useState(["Shared Ops", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
     const[pjOptions,setPjOptions] = useState([]);
     const[internalPj,setInternalPj] = useState([
         "TL_Internal Program Evaluation",
@@ -22,22 +24,28 @@ function FormPage() {
         "CA_West Contra Costa_Michelle Obama",
         "TL_Client Project Evaluation"
     ]);
-    const{accessToken, setAccessToken} = useContext(AccessTokenContext)
+    const [pickedDate, setPickedDate] = useState(new Date().setDate(new Date().getDate() - new Date().getDay() + 1));
+    const{accessToken, setAccessToken} = useContext(AccessTokenContext);
+ 
 
     const handleTeamChange=(e)=>{
         console.log(e.target.value);
-        console.log(e.target.name);
+        console.log(3);
         const projectTypes = ["Internal Project","Program-related Project"];
-        if(e.target.value == "Shared Ops"){
+        switch(e.target.value){
+            case "Shared Ops": return setTeam([projectTypes[0]]);
+            case "Finance": return setTeam([projectTypes[0]]);
+            case "Marketing & Communications": return setTeam([projectTypes[0]]);
+            case "People & Culture": return setTeam([projectTypes[0]]);
+            case "Fundraising": return setTeam([projectTypes[0]]);
+            case "Business Development": return setTeam([projectTypes[1]]);
+            case "Program": return setTeam([projectTypes[1]]);
+            case "Innovation Studio": return setTeam([projectTypes[1]]);
+            case "Learning & Research": return setTeam([...projectTypes]);
+            case "Office of the CEO": return setTeam([...projectTypes]);
+            case "Technology": return setTeam([...projectTypes]);
+            case "": return setTeam([]);
 
-            setTeam([projectTypes[0]]);
-        }
-        else if(e.target.value == "Program"){
-
-            setTeam([...projectTypes]);
-        }
-        else{
-            setTeam([]);
         }
     }
 
@@ -70,8 +78,8 @@ function FormPage() {
 
     const handleSubmit=(e)=>{
         e.preventDefault();
-        console.log(e.target.name.value);
-        const personName = e.target.name.value;
+        const personName = e.target.firstName.value+" "+e.target.lastName.value;
+        console.log(personName);
         console.log(e.target.date.value);
         const dateValue = e.target.date.value;
         console.log(e.target.teamName.value);
@@ -125,85 +133,114 @@ function FormPage() {
 
 
     return (
-        <>
-        <h1>Test Form</h1>
-        <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formBasicName">
-                <Form.Label>Name:</Form.Label>
-                <Form.Control name="name" type="text" placeholder="Enter your last name and first name" />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Enter the date:</Form.Label>
-                <Form.Control  name="date" type="date" placeholder="Enter email" />
-            </Form.Group>
+        <div className='formAll'>
+        <div className='formSection'>
             
-            <Form.Group className="mb-3" controlId="formBasicSite">
-                <Form.Label>Which team are you on?</Form.Label>
-                <Form.Select name="teamName" aria-label="Default select example" onChange={handleTeamChange}>
-                     <option></option>
-                    {options.map((val,idx)=>(
-                        <option value={val}>{val}</option>
-                    ))}
-                </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicCourse">
-                <Form.Label>What type of projects do you want to log?</Form.Label>
-                <Form.Select name="projectType" aria-label="Default select example" onChange={handleTypeChange}>
-                    <option></option>
-                    {team && team.map((val,index)=>(
-                        <option value={val} >{val}</option>
-                    ))}
-                </Form.Select>
-            </Form.Group>
-
-            <Form.Group  controlId="formBasicCourse"  >
-                <Row className="align-items-center" style={{display: "flex", justifyContent: "center",alignItems: "center"}}>
-                    <Col sm={2} className="my-1"><Form.Label>Name of the Project</Form.Label></Col>
-                    <Col sm={2} className="my-1"><Form.Label>Role of the Project</Form.Label></Col>
-                    <Col sm={2} className="my-1"><Form.Label>Total Working Hours</Form.Label></Col>
-                </Row>
-                {projects.map((ele,idx)=>(
-                    <Row className="align-items-center" style={{display: "flex", justifyContent: "center",alignItems: "center"}}>
-                        <Col sm={2} className="my-1">
-                            <Form.Label visuallyHidden="true">name</Form.Label>
-                            <Form.Select  aria-label="Default select example" name="projectName" onChange={e=>handleProjectChange(idx,e)} >
-                                <option></option>
-                                {pjOptions.map((val)=>(
-                                    <option value={val}>{val}</option>
-                                ))}
-                            </Form.Select>
+            <Form className='formBlock' onSubmit={handleSubmit}>
+            <h1>Weekly Project Data Log Form</h1>
+                <Form.Group className="mb-3" as={Col} controlId="formBasicName">
+                    <Form.Label>Name:</Form.Label>
+                    <Row>
+                        <Col>
+                            <Form.Control name="firstName" type="text" placeholder="Enter your first name" />
+                        </Col> 
+                        <Col>
+                            <Form.Control name="lastName" type="text" placeholder="Enter your last name" />
                         </Col>
-                        <Col sm={2} className="my-1">
-                            <Form.Label visuallyHidden="true">role</Form.Label>
-                            <Form.Select aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)}>
-                                <option></option>
-                                <option>Project Lead</option>
-                                <option>Analyst</option>
-                            </Form.Select>
-                        </Col>    
-                        <Col sm={2} className="my-1">
-                            <Form.Label visuallyHidden="true" >hours</Form.Label>
-                            <Form.Control type="number" name="projectHours" onChange={e=>handleProjectChange(idx,e)} placeholder="Enter Time" />
-                        </Col>
-                        {projects.length>1 ? 
-                        <Col sm={1} className="my-1">
-                             <Button variant="danger" onClick={removeProjectFields}>X</Button>
-                        </Col>
-                        : null}
-                        
                     </Row>
-                ))}
-                
-            </Form.Group>
-            <Button variant="secondary" onClick={addProjectFields}>+ Add Row</Button>
+                </Form.Group>
 
-            
-            
-            <Button variant="primary" type="submit">
-                Submit
-            </Button>
-        </Form>
-        </>
+
+                <Form.Group className="mb-3" as={Col} controlId="formBasicEmail">
+                    <Form.Label>Enter the date:</Form.Label>
+                    {/* <Form.Control  name="date" type="date" placeholder="Enter email" as="input"  /> */}
+                    <div className='customDatePickerWidth'>
+                        <DatePicker 
+                        showIcon 
+                        selected={pickedDate}
+                        onChange={(date) => setPickedDate(date)}
+                        filterDate={(date) => date.getDay() === 1}
+                        name="date"
+                        style={{width: "100%"}} />
+                    </div>
+                    
+                </Form.Group>
+                
+                <Form.Group className="mb-3" controlId="formBasicSite">
+                    <Form.Label>Which team are you on?</Form.Label>
+                    <Form.Select name="teamName" aria-label="Default select example" onChange={handleTeamChange}>
+                        <option></option>
+                        {options.map((val,idx)=>(
+                            <option value={val}>{val}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicCourse">
+                    <Form.Label>What type of projects do you want to log?</Form.Label>
+                    <Form.Select name="projectType" aria-label="Default select example" onChange={handleTypeChange}>
+                        <option></option>
+                        {team && team.map((val,index)=>(
+                            <option value={val} >{val}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formBasicCourse"  >
+                    <Row  >
+                        <Col  className="my-1"><Form.Label>Project Name</Form.Label></Col>
+                        <Col className="my-1"><Form.Label>Project Role</Form.Label></Col>
+                        <Col className="my-1"><Form.Label>Working Hours</Form.Label></Col>
+                        {projects.length>1 ? 
+                            <Col sm={1} className="my-1">
+                            </Col>
+                            : null}
+                    </Row>
+                    {projects.map((ele,idx)=>(
+                        <Row  >
+                            <Col className="my-1">
+                                <Form.Label visuallyHidden="true">name</Form.Label>
+                                <Form.Select  aria-label="Default select example" name="projectName" onChange={e=>handleProjectChange(idx,e)} >
+                                    <option></option>
+                                    {pjOptions.map((val)=>(
+                                        <option value={val}>{val}</option>
+                                    ))}
+                                </Form.Select>
+                            </Col>
+                            <Col className="my-1">
+                                <Form.Label visuallyHidden="true">role</Form.Label>
+                                <Form.Select aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)}>
+                                    <option></option>
+                                    <option>Project Lead</option>
+                                    <option>Analyst</option>
+                                </Form.Select>
+                            </Col>    
+                            <Col className="my-1">
+                                <Form.Label visuallyHidden="true" >hours</Form.Label>
+                                <Form.Control type="number" name="projectHours" onChange={e=>handleProjectChange(idx,e)} placeholder="Enter Time" />
+                            </Col>
+                            {projects.length>1 ? 
+                            <Col sm={1} className="my-1">
+                                <Button variant="danger" onClick={removeProjectFields}>X</Button>
+                            </Col>
+                            : null}
+                            
+                        </Row>
+                    ))}
+                    
+                </Form.Group>
+                <Form.Group className="mb-3" id="formGridCheckbox">
+                            <Button variant="secondary" onClick={addProjectFields}>+ Add Row</Button> 
+                      
+                    </Form.Group>
+                <div className='submitButton'>
+                <Button className='submitButton' variant="primary" type="submit">
+                    Submit
+                </Button>
+                </div>         
+                
+            </Form>
+        </div>
+        </div>
     )
 }
 

@@ -67,8 +67,8 @@ function Home() {
            
             
            </ListGroup> */}
-           <Button variant="outline-primary" onClick={signInWithGoogle}>Sign in as Teaching Lab Staff</Button>{' '}
-            <Button variant="outline-secondary">Sign in as participants</Button>{' '}
+           <Button variant="outline-primary" onClick={signInWithGoogle}>Sign in as a TL employee</Button>{' '}
+            <Button variant="outline-secondary">Sign in as a PL participant</Button>{' '}
         </div>
     )
 }

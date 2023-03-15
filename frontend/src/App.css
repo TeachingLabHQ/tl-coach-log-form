@@ -1,4 +1,29 @@
 .App {
+
+}
+
+
+
+.formSection{
+  display: flex;
+  justify-content: center;
+
+}
+
+.formBlock{
+  width:50%;
+  padding: 3%;
+  border-radius: 3px;
+  box-shadow: rgba(87, 100, 126, 0.21) 0px 4px 4px;
+  background-color: rgb(255, 255, 255);
+}
+
+.customDatePickerWidth > div > div.react-datepicker__input-container input {
+   width: 100%;
+   border: 1px solid #ced4da;
+   border-radius: 0.25rem;
+}
+.submitButton{
   text-align: center;
 }
 
