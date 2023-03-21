@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 
 function FormPage() {
     const[team,setTeam] = useState([]);
-    const[projects,setProjects] = useState([{projectName:"",projectRole:"",projectHours:""}]);
+    const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectName:"",projectRole:"",projectHours:""}]);
     const[options,setOptions] = useState(["Shared Ops", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
     const[pjOptions,setPjOptions] = useState([]);
     const[internalPj,setInternalPj] = useState([
@@ -26,6 +26,7 @@ function FormPage() {
     ]);
     const [pickedDate, setPickedDate] = useState(new Date().setDate(new Date().getDate() - new Date().getDay() + 1));
     const{accessToken, setAccessToken} = useContext(AccessTokenContext);
+    const [count,setCount] = useState(0);
  
 
     const handleTeamChange=(e)=>{
@@ -54,6 +55,9 @@ function FormPage() {
         newProjectValues[i][e.target.name] = e.target.value;
         setProjects(newProjectValues);
         console.log(projects);
+        if(e.target.name == "projectHours"){
+            setCount(count+1);
+        }
     }
 
     const handleTypeChange=(e)=>{
@@ -67,13 +71,21 @@ function FormPage() {
     }
 
     const addProjectFields=()=>{
-        setProjects([...projects,{projectName:"",projectRole:"",projectHours:""}])
+        setProjects([...projects,{projectId:new Date().getTime(),projectName:"",projectRole:"",projectHours:""}])
     }
-    const removeProjectFields=(i)=>{
-        let currProjectValues = projects;
-        currProjectValues.splice(i,1);
-        setProjects([...currProjectValues]);
-        console.log(projects);
+    const removeProjectFields=(ele)=>{
+    //     console.log(i);
+    //     let currProjectValues = [...projects];
+    //     currProjectValues.splice(i,1);
+    //     console.log(currProjectValues);
+    //    setProjects(currProjectValues);
+    //     console.log(projects);
+
+        setCount(count-parseInt(ele.projectHours));
+
+        console.log(ele.projectId);
+        const updatedList = projects.filter((object, i) => object.projectId != ele.projectId);
+        setProjects(updatedList);
     }
 
     const handleSubmit=(e)=>{
@@ -135,7 +147,6 @@ function FormPage() {
     return (
         <div className='formAll'>
         <div className='formSection'>
-            
             <Form className='formBlock' onSubmit={handleSubmit}>
             <h1>Weekly Project Data Log Form</h1>
                 <Form.Group className="mb-3" as={Col} controlId="formBasicName">
@@ -185,6 +196,10 @@ function FormPage() {
                     </Form.Select>
                 </Form.Group>
 
+                <Form.Group className="mb-3" controlId="formCapacity">
+                    <Form.Label>Total Inputted Working Hours: <bold>{count}</bold></Form.Label>
+                </Form.Group>
+                
                 <Form.Group className="mb-3" controlId="formBasicCourse"  >
                     <Row  >
                         <Col  className="my-1"><Form.Label>Project Name</Form.Label></Col>
@@ -196,8 +211,8 @@ function FormPage() {
                             : null}
                     </Row>
                     {projects.map((ele,idx)=>(
-                        <Row  >
-                            <Col className="my-1">
+                        <Row key={ele.projectId}>
+                            <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
                                 <Form.Select  aria-label="Default select example" name="projectName" onChange={e=>handleProjectChange(idx,e)} >
                                     <option></option>
@@ -218,20 +233,31 @@ function FormPage() {
                                 <Form.Label visuallyHidden="true" >hours</Form.Label>
                                 <Form.Control type="number" name="projectHours" onChange={e=>handleProjectChange(idx,e)} placeholder="Enter Time" />
                             </Col>
+
                             {projects.length>1 ? 
-                            <Col sm={1} className="my-1">
-                                <Button variant="danger" onClick={removeProjectFields}>X</Button>
-                            </Col>
+                                <Col sm={1} className="my-1">
+                                    <Button variant="danger" onClick={()=>removeProjectFields(ele)}>X</Button>
+                                </Col>
                             : null}
                             
                         </Row>
                     ))}
-                    
                 </Form.Group>
+
                 <Form.Group className="mb-3" id="formGridCheckbox">
-                            <Button variant="secondary" onClick={addProjectFields}>+ Add Row</Button> 
-                      
-                    </Form.Group>
+                    <Button variant="secondary" onClick={()=>addProjectFields()}>+ Add Row</Button> 
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formCapacity">
+                    <Form.Label>Do you feel you have the capacity to take on a new project?</Form.Label>
+                    <Form.Select name="capacity" aria-label="Default select example" >
+                        <option></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </Form.Select>
+                </Form.Group>
+
+
                 <div className='submitButton'>
                 <Button className='submitButton' variant="primary" type="submit">
                     Submit
