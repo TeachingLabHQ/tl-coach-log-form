@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, createRef} from 'react';
 import {AccessTokenContext} from "../contexts/accessTokenContext";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -10,7 +10,7 @@ import '../App.css';
 import DatePicker from "react-datepicker";
 
 function FormPage() {
-    const[team,setTeam] = useState([]);
+    const[team,setTeam] = useState([""]);
     const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectName:"",projectRole:"",projectHours:0}]);
     const[options,setOptions] = useState(["Shared Ops", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
     const[pjOptions,setPjOptions] = useState([]);
@@ -27,27 +27,29 @@ function FormPage() {
     const [pickedDate, setPickedDate] = useState(new Date().setDate(new Date().getDate() - new Date().getDay() + 1));
     const{accessToken, setAccessToken} = useContext(AccessTokenContext);
     const [count,setCount] = useState(0);
+    const pjTypeRef = createRef("");
  
 
     const handleTeamChange=(e)=>{
-        console.log(e.target.value);
+        console.log(e);
         console.log(3);
         const projectTypes = ["Internal Project","Program-related Project"];
         switch(e.target.value){
-            case "Shared Ops": return setTeam([projectTypes[0]]);
-            case "Finance": return setTeam([projectTypes[0]]);
-            case "Marketing & Communications": return setTeam([projectTypes[0]]);
-            case "People & Culture": return setTeam([projectTypes[0]]);
-            case "Fundraising": return setTeam([projectTypes[0]]);
-            case "Business Development": return setTeam([projectTypes[1]]);
-            case "Program": return setTeam([projectTypes[1]]);
-            case "Innovation Studio": return setTeam([projectTypes[1]]);
-            case "Learning & Research": return setTeam([...projectTypes]);
-            case "Office of the CEO": return setTeam([...projectTypes]);
-            case "Technology": return setTeam([...projectTypes]);
-            case "": return setTeam([]);
+            case "Shared Ops": setTeam([projectTypes[0]]); handleTypeChange(projectTypes[0]); break;
+            case "Finance": setTeam([projectTypes[0]]); handleTypeChange(projectTypes[0]);break;
+            case "Marketing & Communications": setTeam([projectTypes[0]]); handleTypeChange(projectTypes[0]);break;
+            case "People & Culture": setTeam([projectTypes[0]]);handleTypeChange(projectTypes[0]); break;
+            case "Fundraising": setTeam([projectTypes[0]]); handleTypeChange(projectTypes[0]);break;
+            case "Business Development": setTeam([projectTypes[1]]); handleTypeChange(projectTypes[1]);break;
+            case "Program": setTeam([projectTypes[1]]); handleTypeChange(projectTypes[1]);break;
+            case "Innovation Studio": setTeam([projectTypes[1]]);handleTypeChange(projectTypes[1]); break;
+            case "Learning & Research": setTeam([...projectTypes]);handleTypeChange(); break;
+            case "Office of the CEO": setTeam([...projectTypes]); handleTypeChange();break;
+            case "Technology":setTeam([...projectTypes]);handleTypeChange(); break;
+            case "": setTeam([]); break;
 
         }
+        //call to change project name
     }
 
     const handleProjectChange=(i,e)=>{
@@ -70,13 +72,30 @@ function FormPage() {
     }
 
     const handleTypeChange=(e)=>{
-        console.log(e.target.value);
-        if(e.target.value == "Internal Project"){
-            setPjOptions(internalPj);
+
+        if(typeof e == "object"){
+            if(e.target.value == "Internal Project"){
+                setPjOptions(internalPj);
+            }
+            else{
+                setPjOptions(programPj);
+            }
         }
         else{
-            setPjOptions(programPj);
+            if(e == "Internal Project"){
+                setPjOptions(internalPj);
+
+            }
+            else if(e == "Program-related Project"){
+                setPjOptions(programPj);
+            }
+            else{
+                setPjOptions(internalPj);
+            }
+
+            setProjects([{projectId: new Date().getTime(), projectName:"",projectRole:"",projectHours:0}]);
         }
+        
     }
 
     const addProjectFields=()=>{
@@ -95,8 +114,13 @@ function FormPage() {
         e.preventDefault();
         const personName = e.target.firstName.value+" "+e.target.lastName.value;
         console.log(personName);
-        console.log(e.target.date.value);
-        const dateValue = e.target.date.value;
+        
+        const dateValue = new Date(e.target.date.value);
+        const month = ("0" + (dateValue.getMonth() + 1)).slice(-2)
+        const day = ("0" + dateValue.getDate()).slice(-2);
+        const year = dateValue.getFullYear();
+        const formattedDate = `${year}-${month}-${day}`;
+        console.log(formattedDate);
         console.log(e.target.teamName.value);
         const teamName = e.target.date.value;
         console.log(e.target.projectType.value);
@@ -106,9 +130,9 @@ function FormPage() {
         let query = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:3962685859, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
         let vars = {
         "groupName" : "new_group3217",
-        "myItemName" : e.target.name.value,
+        "myItemName" : personName,
         "columnVals" : JSON.stringify({
-            "date8" : {"date" : dateValue},
+            "date8" : {"date" : formattedDate},
             //program project 1 name
             "updated_programs_options":{"labels":(projectGenre=="Program-related Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]},
             //internal project 1 name
@@ -191,7 +215,7 @@ function FormPage() {
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicCourse">
                     <Form.Label>What type of projects do you want to log?</Form.Label>
-                    <Form.Select name="projectType" aria-label="Default select example" onChange={handleTypeChange}>
+                    <Form.Select name="projectType" aria-label="Default select example" ref={pjTypeRef} onChange={handleTypeChange}>
                         <option></option>
                         {team && team.map((val,index)=>(
                             <option value={val} >{val}</option>
@@ -217,7 +241,7 @@ function FormPage() {
                         <Row key={ele.projectId}>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
-                                <Form.Select  aria-label="Default select example" name="projectName" onChange={e=>handleProjectChange(idx,e)} >
+                                <Form.Select  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e)} >
                                     <option></option>
                                     {pjOptions.map((val)=>(
                                         <option value={val}>{val}</option>
