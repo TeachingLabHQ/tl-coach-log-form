@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 
 function FormPage() {
     const[team,setTeam] = useState([]);
-    const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectName:"",projectRole:"",projectHours:""}]);
+    const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectName:"",projectRole:"",projectHours:0}]);
     const[options,setOptions] = useState(["Shared Ops", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
     const[pjOptions,setPjOptions] = useState([]);
     const[internalPj,setInternalPj] = useState([
@@ -52,11 +52,20 @@ function FormPage() {
 
     const handleProjectChange=(i,e)=>{
         let newProjectValues = [...projects];
+        let sumHours = 0;
         newProjectValues[i][e.target.name] = e.target.value;
         setProjects(newProjectValues);
         console.log(projects);
         if(e.target.name == "projectHours"){
-            setCount(count+1);
+            projects.forEach(e=>{
+                if(e.projectHours==""){
+                    sumHours += parseInt(0);
+                }
+                else{
+                    sumHours += parseInt(e.projectHours);
+                }
+            })
+            setCount(sumHours);
         }
     }
 
@@ -74,15 +83,9 @@ function FormPage() {
         setProjects([...projects,{projectId:new Date().getTime(),projectName:"",projectRole:"",projectHours:""}])
     }
     const removeProjectFields=(ele)=>{
-    //     console.log(i);
-    //     let currProjectValues = [...projects];
-    //     currProjectValues.splice(i,1);
-    //     console.log(currProjectValues);
-    //    setProjects(currProjectValues);
-    //     console.log(projects);
-
-        setCount(count-parseInt(ele.projectHours));
-
+        if(ele.projectHours != ""){
+            setCount(count-parseInt(ele.projectHours));
+        }
         console.log(ele.projectId);
         const updatedList = projects.filter((object, i) => object.projectId != ele.projectId);
         setProjects(updatedList);
@@ -231,7 +234,7 @@ function FormPage() {
                             </Col>    
                             <Col className="my-1">
                                 <Form.Label visuallyHidden="true" >hours</Form.Label>
-                                <Form.Control type="number" name="projectHours" onChange={e=>handleProjectChange(idx,e)} placeholder="Enter Time" />
+                                <Form.Control type="number" name="projectHours" min="0" onChange={e=>handleProjectChange(idx,e)} placeholder="Enter Time" />
                             </Col>
 
                             {projects.length>1 ? 
