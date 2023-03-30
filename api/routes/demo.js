@@ -12,13 +12,13 @@ router.get("/info", async(req,res,next)=>{
     res.json({result:allDocData})
 })
 
-router.post("/attendance", async(req,res,next)=>{
+router.post("/getEmployment", async(req,res,next)=>{
 
     fetch ("https://api.monday.com/v2", {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization' : req.body.apiKey
+            'Authorization' : "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjIzNDI2ODE2OCwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMy0wMi0wM1QwMDozNjoyMC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.oM37gRdrLf8UnnmuZIM-QWDRoT_GtgFLLyHpvnxGUtQ"
         },
         body: JSON.stringify({
             'query' : req.body.query,
@@ -32,7 +32,7 @@ router.post("/attendance", async(req,res,next)=>{
 })
 
 
-router.post("/siteinfo", async(req,res,next)=>{
+router.post("/boardUpdate", async(req,res,next)=>{
 
     fetch ("https://api.monday.com/v2", {
         method: 'post',

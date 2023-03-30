@@ -11,9 +11,10 @@ import DatePicker from "react-datepicker";
 
 function FormPage() {
     const[team,setTeam] = useState([""]);
-    const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectName:"",projectRole:"",projectHours:0}]);
+    const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectType:"", projectName:"",projectRole:"",projectHours:0}]);
     const[options,setOptions] = useState(["Shared Ops", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
     const[pjOptions,setPjOptions] = useState([]);
+    const[employmentInfo,setEmploymentInfo] = useState([]);
     const[internalPj,setInternalPj] = useState([
         "TL_Internal Program Evaluation",
         "TL_LMS Transition to Canvas",
@@ -29,32 +30,45 @@ function FormPage() {
     const [count,setCount] = useState(0);
     const pjTypeRef = createRef("");
  
+    useEffect(()=>{
+        getEmployee();
+        console.log(employmentInfo)
+    },[])
+
+    const getEmployee=(e)=>{
+        let query = "{boards(ids: 4227743305) {items() {name}}}";
+        axios.post("http://localhost:9000/demo/getEmployment",{
+            query:query,
+        })
+        .then((res)=>res.data.data.boards[0])
+        .then((data)=>data.items.map((val,index)=>setEmploymentInfo(employmentInfo=>([...employmentInfo,val.name]))));
+    }
 
     const handleTeamChange=(e)=>{
         console.log(e);
         console.log(3);
         const projectTypes = ["Internal Project","Program-related Project"];
         switch(e.target.value){
-            case "Shared Ops": setTeam([projectTypes[0]]); handleTypeChange(projectTypes[0]); break;
-            case "Finance": setTeam([projectTypes[0]]); handleTypeChange(projectTypes[0]);break;
-            case "Marketing & Communications": setTeam([projectTypes[0]]); handleTypeChange(projectTypes[0]);break;
-            case "People & Culture": setTeam([projectTypes[0]]);handleTypeChange(projectTypes[0]); break;
-            case "Fundraising": setTeam([projectTypes[0]]); handleTypeChange(projectTypes[0]);break;
-            case "Business Development": setTeam([projectTypes[1]]); handleTypeChange(projectTypes[1]);break;
-            case "Program": setTeam([projectTypes[1]]); handleTypeChange(projectTypes[1]);break;
-            case "Innovation Studio": setTeam([projectTypes[1]]);handleTypeChange(projectTypes[1]); break;
+            case "Shared Ops": setTeam([projectTypes[0]]); handleTypeChange(); break;
+            case "Finance": setTeam([projectTypes[0]]); handleTypeChange();break;
+            case "Marketing & Communications": setTeam([projectTypes[0]]); handleTypeChange();break;
+            case "People & Culture": setTeam([projectTypes[0]]);handleTypeChange(); break;
+            case "Fundraising": setTeam([projectTypes[0]]); handleTypeChange();break;
+            case "Business Development": setTeam([projectTypes[1]]); handleTypeChange();break;
+            case "Program": setTeam([projectTypes[1]]); handleTypeChange();break;
+            case "Innovation Studio": setTeam([projectTypes[1]]);handleTypeChange(); break;
             case "Learning & Research": setTeam([...projectTypes]);handleTypeChange(); break;
             case "Office of the CEO": setTeam([...projectTypes]); handleTypeChange();break;
             case "Technology":setTeam([...projectTypes]);handleTypeChange(); break;
             case "": setTeam([]); break;
 
         }
-        //call to change project name
     }
 
     const handleProjectChange=(i,e)=>{
         let newProjectValues = [...projects];
         let sumHours = 0;
+        //update project list
         newProjectValues[i][e.target.name] = e.target.value;
         setProjects(newProjectValues);
         console.log(projects);
@@ -71,35 +85,45 @@ function FormPage() {
         }
     }
 
-    const handleTypeChange=(e)=>{
-
+    const handleTypeChange=(e,ele)=>{
+        //if it is either one
         if(typeof e == "object"){
-            if(e.target.value == "Internal Project"){
-                setPjOptions(internalPj);
+            console.log(111);
+            var exist = pjOptions.filter((e)=>{return e.hasOwnProperty(ele.projectId)});
+            console.log(exist);
+            if(e.target.value == "Internal Project" ){
+                console.log(222);
+                if(exist.length != 0){
+                    setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=internalPj}return e}));
+                }
+                else{
+                    setPjOptions([...pjOptions,{[ele.projectId]:internalPj}]);
+                }
+                
+            }
+            else if(e.target.value == "Program-related Project" ){
+                if(exist.length != 0){
+                    setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=programPj}return e}));
+                }
+                else{
+                    setPjOptions([...pjOptions,{[ele.projectId]:programPj}]);
+                }
             }
             else{
-                setPjOptions(programPj);
+                if(exist.length != 0){
+                    setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=[]}return e}));
+                }
             }
         }
+        //if the team is changed, all field cleared out
         else{
-            if(e == "Internal Project"){
-                setPjOptions(internalPj);
-
-            }
-            else if(e == "Program-related Project"){
-                setPjOptions(programPj);
-            }
-            else{
-                setPjOptions(internalPj);
-            }
-
-            setProjects([{projectId: new Date().getTime(), projectName:"",projectRole:"",projectHours:0}]);
+            setProjects([{projectId: new Date().getTime(), projectType:"",projectName:"",projectRole:"",projectHours:0}]);
+            setPjOptions([]);
         }
-        
     }
 
     const addProjectFields=()=>{
-        setProjects([...projects,{projectId:new Date().getTime(),projectName:"",projectRole:"",projectHours:""}])
+        setProjects([...projects,{projectId:new Date().getTime(),projectType:"",projectName:"",projectRole:"",projectHours:""}])
     }
     const removeProjectFields=(ele)=>{
         if(ele.projectHours != ""){
@@ -147,50 +171,33 @@ function FormPage() {
         createItem(query,vars);
     }
 
-   
-    // useEffect(()=>{
-    //     setAccessToken("eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NTYwODI0MSwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMi0wNi0xNFQyMDoyMTo1Ny4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.BUyi3WsoBlpPvCBms9WUKfOufKFDNz6onxBm8h_jWGo");
-    //     getSite();
-    //     console.log(accessToken)
-    // },[])
-
     const createItem = (query,vars) =>{
-      
-        axios.post("http://localhost:9000/demo/siteinfo",{
+        axios.post("http://localhost:9000/demo/boardUpdate",{
             apiKey: accessToken,
             query: query,
             vars:vars
         })
         .then((res)=>console.log(res))
         .catch((err)=>console.log(err))
-
     }
-
-
-    console.log(options)
- 
-
 
     return (
         <div className='formAll'>
         <div className='formSection'>
             <Form className='formBlock' onSubmit={handleSubmit}>
             <h1>Weekly Project Data Log Form</h1>
-                <Form.Group className="mb-3" as={Col} controlId="formBasicName">
-                    <Form.Label>Name:</Form.Label>
-                    <Row>
-                        <Col>
-                            <Form.Control name="firstName" type="text" placeholder="Enter your first name" />
-                        </Col> 
-                        <Col>
-                            <Form.Control name="lastName" type="text" placeholder="Enter your last name" />
-                        </Col>
-                    </Row>
+            <Form.Group className="mb-3" controlId="formBasicSite">
+                    <Form.Label>What's your name?</Form.Label>
+                    <Form.Select name="name" aria-label="Default select example">
+                        <option></option>
+                        {employmentInfo.map((val,idx)=>(
+                            <option value={val}>{val}</option>
+                        ))}
+                    </Form.Select>
                 </Form.Group>
 
-
                 <Form.Group className="mb-3" as={Col} controlId="formBasicEmail">
-                    <Form.Label>Enter the date:</Form.Label>
+                    <Form.Label>Enter the Monday of the week:</Form.Label>
                     {/* <Form.Control  name="date" type="date" placeholder="Enter email" as="input"  /> */}
                     <div className='customDatePickerWidth'>
                         <DatePicker 
@@ -201,7 +208,6 @@ function FormPage() {
                         name="date"
                         style={{width: "100%"}} />
                     </div>
-                    
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="formBasicSite">
@@ -213,22 +219,14 @@ function FormPage() {
                         ))}
                     </Form.Select>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCourse">
-                    <Form.Label>What type of projects do you want to log?</Form.Label>
-                    <Form.Select name="projectType" aria-label="Default select example" ref={pjTypeRef} onChange={handleTypeChange}>
-                        <option></option>
-                        {team && team.map((val,index)=>(
-                            <option value={val} >{val}</option>
-                        ))}
-                    </Form.Select>
-                </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formCapacity">
                     <Form.Label>Total Inputted Working Hours: <bold>{count}</bold></Form.Label>
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="formBasicCourse"  >
-                    <Row  >
+                    <Row >
+                        <Col  className="my-1"><Form.Label>Project Type</Form.Label></Col>
                         <Col  className="my-1"><Form.Label>Project Name</Form.Label></Col>
                         <Col className="my-1"><Form.Label>Project Role</Form.Label></Col>
                         <Col className="my-1"><Form.Label>Working Hours</Form.Label></Col>
@@ -240,12 +238,22 @@ function FormPage() {
                     {projects.map((ele,idx)=>(
                         <Row key={ele.projectId}>
                             <Col className="my-1" >
+                                <Form.Label visuallyHidden="true">type</Form.Label>
+                                <Form.Select name="projectType" aria-label="Default select example" ref={pjTypeRef} onChange={e=>handleTypeChange(e,ele)}>
+                                    <option></option>
+                                    {team && team.map((val,index)=>(
+                                        <option value={val} >{val}</option>
+                                    ))}
+                                </Form.Select>
+                            </Col>
+                            <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
                                 <Form.Select  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e)} >
                                     <option></option>
-                                    {pjOptions.map((val)=>(
-                                        <option value={val}>{val}</option>
-                                    ))}
+                                    {pjOptions && pjOptions.map((value)=>( value.hasOwnProperty(ele.projectId)? value[ele.projectId].map((v,idx)=>(<option value={v}>{v}</option>)) :null))
+
+                                    }
+                                    {/* {pjOptions.has(ele.projectId) ? pjOptions[ele.projectId].map((v)=>(<option value={v}>{v}</option>)) : (<option></option>)} */}
                                 </Form.Select>
                             </Col>
                             <Col className="my-1">
