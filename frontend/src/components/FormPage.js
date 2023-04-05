@@ -12,9 +12,10 @@ import DatePicker from "react-datepicker";
 function FormPage() {
     const[team,setTeam] = useState([""]);
     const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectType:"", projectName:"",projectRole:"",projectHours:0}]);
-    const[options,setOptions] = useState(["Shared Ops", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
+    const[options,setOptions] = useState(["Operations", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
     const[pjOptions,setPjOptions] = useState([]);
     const[employmentInfo,setEmploymentInfo] = useState([]);
+    const[selectedTeam,setSelectedTeam] = useState();
     const[internalPj,setInternalPj] = useState([
         "TL_Internal Program Evaluation",
         "TL_LMS Transition to Canvas",
@@ -36,20 +37,25 @@ function FormPage() {
     },[])
 
     const getEmployee=(e)=>{
-        let query = "{boards(ids: 4227743305) {items() {name}}}";
+        let query = "{boards(ids: 4266679896) {items() { name column_values{text} }}}";
         axios.post("http://localhost:9000/demo/getEmployment",{
             query:query,
         })
         .then((res)=>res.data.data.boards[0])
-        .then((data)=>data.items.map((val,index)=>setEmploymentInfo(employmentInfo=>([...employmentInfo,val.name]))));
+        // .then((data)=>console.log(data))
+        .then((data)=>data.items.map((val,index)=>setEmploymentInfo(employmentInfo=>([...employmentInfo,{name:val.name, department:val.column_values[2].text}]))));
     }
+    const handleNameTeamMatch=(e)=>{
+        console.log(e.target.value);
+        setSelectedTeam(e.target.value);
 
+    }
     const handleTeamChange=(e)=>{
         console.log(e);
         console.log(3);
         const projectTypes = ["Internal Project","Program-related Project"];
         switch(e.target.value){
-            case "Shared Ops": setTeam([projectTypes[0]]); handleTypeChange(); break;
+            case "Operations": setTeam([projectTypes[0]]); handleTypeChange(); break;
             case "Finance": setTeam([projectTypes[0]]); handleTypeChange();break;
             case "Marketing & Communications": setTeam([projectTypes[0]]); handleTypeChange();break;
             case "People & Culture": setTeam([projectTypes[0]]);handleTypeChange(); break;
@@ -58,7 +64,7 @@ function FormPage() {
             case "Program": setTeam([projectTypes[1]]); handleTypeChange();break;
             case "Innovation Studio": setTeam([projectTypes[1]]);handleTypeChange(); break;
             case "Learning & Research": setTeam([...projectTypes]);handleTypeChange(); break;
-            case "Office of the CEO": setTeam([...projectTypes]); handleTypeChange();break;
+            case "Office of CEO": setTeam([...projectTypes]); handleTypeChange();break;
             case "Technology":setTeam([...projectTypes]);handleTypeChange(); break;
             case "": setTeam([]); break;
 
@@ -136,7 +142,7 @@ function FormPage() {
 
     const handleSubmit=(e)=>{
         e.preventDefault();
-        const personName = e.target.firstName.value+" "+e.target.lastName.value;
+        const personName = e.target.name;
         console.log(personName);
         
         const dateValue = new Date(e.target.date.value);
@@ -188,10 +194,10 @@ function FormPage() {
             <h1>Weekly Project Data Log Form</h1>
             <Form.Group className="mb-3" controlId="formBasicSite">
                     <Form.Label>What's your name?</Form.Label>
-                    <Form.Select name="name" aria-label="Default select example">
+                    <Form.Select name="name" aria-label="Default select example" onChange={handleNameTeamMatch}>
                         <option></option>
                         {employmentInfo.map((val,idx)=>(
-                            <option value={val}>{val}</option>
+                            <option value={val.department}>{val.name}</option>
                         ))}
                     </Form.Select>
                 </Form.Group>
@@ -212,10 +218,11 @@ function FormPage() {
                 
                 <Form.Group className="mb-3" controlId="formBasicSite">
                     <Form.Label>Which team are you on?</Form.Label>
-                    <Form.Select name="teamName" aria-label="Default select example" onChange={handleTeamChange}>
+                    <Form.Select name="teamName" aria-label="Default select example"  onChange={handleTeamChange}>
                         <option></option>
                         {options.map((val,idx)=>(
-                            <option value={val}>{val}</option>
+                            (selectedTeam == val)?<option value={val} selected >{val}</option>:
+                            <option value={val} >{val}</option>
                         ))}
                     </Form.Select>
                 </Form.Group>
