@@ -31,28 +31,30 @@ function FormPage() {
     const [count,setCount] = useState(0);
     const pjTypeRef = createRef("");
  
+    // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
         getEmployee();
         console.log(employmentInfo)
     },[])
 
+    //employee information(name,deparment)
     const getEmployee=(e)=>{
         let query = "{boards(ids: 4266679896) {items() { name column_values{text} }}}";
         axios.post("http://localhost:9000/demo/getEmployment",{
             query:query,
         })
         .then((res)=>res.data.data.boards[0])
-        // .then((data)=>console.log(data))
         .then((data)=>data.items.map((val,index)=>setEmploymentInfo(employmentInfo=>([...employmentInfo,{name:val.name, department:val.column_values[2].text}]))));
     }
+
+    //auto select team when name is selected
     const handleNameTeamMatch=(e)=>{
         console.log(e.target.value);
         setSelectedTeam(e.target.value);
-
+        handleTeamChange(e);
     }
+    //only show certain project options when a team is selected
     const handleTeamChange=(e)=>{
-        console.log(e);
-        console.log(3);
         const projectTypes = ["Internal Project","Program-related Project"];
         switch(e.target.value){
             case "Operations": setTeam([projectTypes[0]]); handleTypeChange(); break;
@@ -67,17 +69,17 @@ function FormPage() {
             case "Office of CEO": setTeam([...projectTypes]); handleTypeChange();break;
             case "Technology":setTeam([...projectTypes]);handleTypeChange(); break;
             case "": setTeam([]); break;
-
         }
     }
 
+    //update project list
     const handleProjectChange=(i,e)=>{
         let newProjectValues = [...projects];
         let sumHours = 0;
-        //update project list
+        //update project information (project name/role/time)
         newProjectValues[i][e.target.name] = e.target.value;
         setProjects(newProjectValues);
-        console.log(projects);
+        //add hours to the total time counter
         if(e.target.name == "projectHours"){
             projects.forEach(e=>{
                 if(e.projectHours==""){
@@ -91,14 +93,12 @@ function FormPage() {
         }
     }
 
+    //only show certain project when a project type is selecte
     const handleTypeChange=(e,ele)=>{
         //if it is either one
         if(typeof e == "object"){
-            console.log(111);
             var exist = pjOptions.filter((e)=>{return e.hasOwnProperty(ele.projectId)});
-            console.log(exist);
             if(e.target.value == "Internal Project" ){
-                console.log(222);
                 if(exist.length != 0){
                     setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=internalPj}return e}));
                 }
@@ -121,30 +121,32 @@ function FormPage() {
                 }
             }
         }
-        //if the team is changed, all field cleared out
+        //if the team is changed, clear all project inputs
         else{
             setProjects([{projectId: new Date().getTime(), projectType:"",projectName:"",projectRole:"",projectHours:0}]);
             setPjOptions([]);
         }
     }
 
+    //add project rows into the widget
     const addProjectFields=()=>{
         setProjects([...projects,{projectId:new Date().getTime(),projectType:"",projectName:"",projectRole:"",projectHours:""}])
     }
+
+    //remove project row from the widget
     const removeProjectFields=(ele)=>{
         if(ele.projectHours != ""){
             setCount(count-parseInt(ele.projectHours));
         }
-        console.log(ele.projectId);
         const updatedList = projects.filter((object, i) => object.projectId != ele.projectId);
         setProjects(updatedList);
     }
 
+    //organize form data before submitting them to Monday
     const handleSubmit=(e)=>{
         e.preventDefault();
         const personName = e.target.name;
         console.log(personName);
-        
         const dateValue = new Date(e.target.date.value);
         const month = ("0" + (dateValue.getMonth() + 1)).slice(-2)
         const day = ("0" + dateValue.getDate()).slice(-2);
@@ -177,6 +179,7 @@ function FormPage() {
         createItem(query,vars);
     }
 
+    //push data to Monday
     const createItem = (query,vars) =>{
         axios.post("http://localhost:9000/demo/boardUpdate",{
             apiKey: accessToken,
@@ -204,7 +207,6 @@ function FormPage() {
 
                 <Form.Group className="mb-3" as={Col} controlId="formBasicEmail">
                     <Form.Label>Enter the Monday of the week:</Form.Label>
-                    {/* <Form.Control  name="date" type="date" placeholder="Enter email" as="input"  /> */}
                     <div className='customDatePickerWidth'>
                         <DatePicker 
                         showIcon 
