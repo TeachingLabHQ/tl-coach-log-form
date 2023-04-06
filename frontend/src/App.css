@@ -1,12 +1,44 @@
 .App {
 
 }
+body{
+  
+}
 
+Form.Group{
 
+}
+.formAll{
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 
+  background-image: url("../public/img/mountainBg.png");
+}
+h2{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.timeCounter{
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.1);
+    border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
+    box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
+    color: rgb(255, 255, 255);
+  margin-left: 10rem;
+  width: 10rem;
+  height: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .formSection{
   display: flex;
   justify-content: center;
+  padding-top: 3rem;
+ 
+
 
 }
 
@@ -14,8 +46,11 @@
   width:50%;
   padding: 3%;
   border-radius: 3px;
-  box-shadow: rgba(87, 100, 126, 0.21) 0px 4px 4px;
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.292);
+    border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
+    box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
+    color: rgb(255, 255, 255);
+  margin-bottom: 3rem;
 }
 
 .customDatePickerWidth > div > div.react-datepicker__input-container input {

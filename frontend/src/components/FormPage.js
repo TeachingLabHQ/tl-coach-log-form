@@ -9,6 +9,8 @@ import Row from 'react-bootstrap/Row';
 import '../App.css';
 import DatePicker from "react-datepicker";
 
+
+
 function FormPage() {
     const[team,setTeam] = useState([""]);
     const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectType:"", projectName:"",projectRole:"",projectHours:0}]);
@@ -193,20 +195,11 @@ function FormPage() {
     return (
         <div className='formAll'>
         <div className='formSection'>
+
             <Form className='formBlock' onSubmit={handleSubmit}>
             <h1>Weekly Project Data Log Form</h1>
-            <Form.Group className="mb-3" controlId="formBasicSite">
-                    <Form.Label>What's your name?</Form.Label>
-                    <Form.Select name="name" aria-label="Default select example" onChange={handleNameTeamMatch}>
-                        <option></option>
-                        {employmentInfo.map((val,idx)=>(
-                            <option value={val.department}>{val.name}</option>
-                        ))}
-                    </Form.Select>
-                </Form.Group>
-
-                <Form.Group className="mb-3" as={Col} controlId="formBasicEmail">
-                    <Form.Label>Enter the Monday of the week:</Form.Label>
+            <Form.Group className="mb-5" as={Col} controlId="formBasicEmail">
+                    <Form.Label><strong>Enter the Monday of the week:</strong></Form.Label>
                     <div className='customDatePickerWidth'>
                         <DatePicker 
                         showIcon 
@@ -218,8 +211,18 @@ function FormPage() {
                     </div>
                 </Form.Group>
                 
-                <Form.Group className="mb-3" controlId="formBasicSite">
-                    <Form.Label>Which team are you on?</Form.Label>
+            <Form.Group className="mb-5" controlId="formBasicSite">
+                    <Form.Label><strong>What's your name?</strong></Form.Label>
+                    <Form.Select name="name" aria-label="Default select example" onChange={handleNameTeamMatch}>
+                        <option></option>
+                        {employmentInfo.map((val,idx)=>(
+                            <option value={val.department}>{val.name}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+                
+                <Form.Group className="mb-5" controlId="formBasicSite">
+                    <Form.Label><strong>Which team are you on?</strong></Form.Label>
                     <Form.Select name="teamName" aria-label="Default select example"  onChange={handleTeamChange}>
                         <option></option>
                         {options.map((val,idx)=>(
@@ -229,16 +232,16 @@ function FormPage() {
                     </Form.Select>
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formCapacity">
-                    <Form.Label>Total Inputted Working Hours: <bold>{count}</bold></Form.Label>
-                </Form.Group>
+                {/* <Form.Group className="mb-1" controlId="formCapacity">
+                    <Form.Label>Total Hours: <bold>{count}</bold></Form.Label>
+                </Form.Group> */}
                 
                 <Form.Group className="mb-3" controlId="formBasicCourse"  >
                     <Row >
-                        <Col  className="my-1"><Form.Label>Project Type</Form.Label></Col>
-                        <Col  className="my-1"><Form.Label>Project Name</Form.Label></Col>
-                        <Col className="my-1"><Form.Label>Project Role</Form.Label></Col>
-                        <Col className="my-1"><Form.Label>Working Hours</Form.Label></Col>
+                        <Col  className="my-1"><Form.Label><strong>Project Type</strong></Form.Label></Col>
+                        <Col  className="my-1"><Form.Label><strong>Project Name</strong></Form.Label></Col>
+                        <Col className="my-1"><Form.Label><strong>Project Role</strong></Form.Label></Col>
+                        <Col className="my-1"><Form.Label><strong>Working Hours</strong></Form.Label></Col>
                         {projects.length>1 ? 
                             <Col sm={1} className="my-1">
                             </Col>
@@ -288,12 +291,12 @@ function FormPage() {
                     ))}
                 </Form.Group>
 
-                <Form.Group className="mb-3" id="formGridCheckbox">
+                <Form.Group className="mb-4" id="formGridCheckbox">
                     <Button variant="secondary" onClick={()=>addProjectFields()}>+ Add Row</Button> 
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formCapacity">
-                    <Form.Label>Do you feel you have the capacity to take on a new project?</Form.Label>
+                <Form.Group className="mb-5" controlId="formCapacity">
+                    <Form.Label><strong>Do you feel you have the capacity to take on a new project?</strong></Form.Label>
                     <Form.Select name="capacity" aria-label="Default select example" >
                         <option></option>
                         <option>Yes</option>
@@ -309,8 +312,14 @@ function FormPage() {
                 </div>         
                 
             </Form>
+            <div className='timeCounter'>
+             <h3>Total Time</h3>
+             <h1>{count}</h1>
+            </div>
+       
         </div>
         </div>
+        
     )
 }
 
