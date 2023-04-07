@@ -8,16 +8,25 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import '../App.css';
 import DatePicker from "react-datepicker";
+import Alert from 'react-bootstrap/Alert';
 
 
 
 function FormPage() {
+    const getQuote = 'quote';
+    const [quote,setQuote] = useState({sentence:"",author:""});
     const[team,setTeam] = useState([""]);
     const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectType:"", projectName:"",projectRole:"",projectHours:0}]);
     const[options,setOptions] = useState(["Operations", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
     const[pjOptions,setPjOptions] = useState([]);
     const[employmentInfo,setEmploymentInfo] = useState([]);
     const[selectedTeam,setSelectedTeam] = useState();
+    const [pickedDate, setPickedDate] = useState(new Date().setDate(new Date().getDate() - new Date().getDay() + 1));
+    const{accessToken, setAccessToken} = useContext(AccessTokenContext);
+    const [count,setCount] = useState(0);
+    const pjTypeRef = createRef("");
+    const [reminderInfo, setReminderInfo] = useState([]);
+    const [popup, setPopup] = useState([]);
     const[internalPj,setInternalPj] = useState([
         "TL_Internal Program Evaluation",
         "TL_LMS Transition to Canvas",
@@ -28,26 +37,54 @@ function FormPage() {
         "CA_West Contra Costa_Michelle Obama",
         "TL_Client Project Evaluation"
     ]);
-    const [pickedDate, setPickedDate] = useState(new Date().setDate(new Date().getDate() - new Date().getDay() + 1));
-    const{accessToken, setAccessToken} = useContext(AccessTokenContext);
-    const [count,setCount] = useState(0);
-    const pjTypeRef = createRef("");
+
+
+
+
+
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
         getEmployee();
-        console.log(employmentInfo)
+        // getProjectCategorizaton();
+        console.log(reminderInfo);
+        fetch(`http://localhost:9000/demo/info?myParam=${getQuote}`)
+        .then((res)=>res.json())
+        .then((text)=>{setQuote({sentence:text.result[0].quotes[0].quoteContent,author:text.result[0].quotes[0].quoteAuthor})})
+        .catch((err)=>console.log(err))
     },[])
 
     //employee information(name,deparment)
     const getEmployee=(e)=>{
-        let query = "{boards(ids: 4266679896) {items() { name column_values{text} }}}";
-        axios.post("http://localhost:9000/demo/getEmployment",{
+        setEmploymentInfo([]);
+        setReminderInfo([]);
+        let query = "{boards(ids: [4271509592, 4266679896]) {items() { name column_values{text} }}}";
+        return axios.post("http://localhost:9000/demo/getMonday",{
             query:query,
         })
-        .then((res)=>res.data.data.boards[0])
-        .then((data)=>data.items.map((val,index)=>setEmploymentInfo(employmentInfo=>([...employmentInfo,{name:val.name, department:val.column_values[2].text}]))));
-    }
+        .then((res)=>res.data.data.boards)
+        // .then((data)=>console.log(data[0]))
+        .then((data)=>{
+            data[0].items.map((v,index)=>
+            setReminderInfo(reminderInfo=>(
+                [...reminderInfo,{content:v.name, type:v.column_values[0].text}])
+                ));
+            data[1].items.map((val,index)=>
+            setEmploymentInfo(employmentInfo=>(
+                [...employmentInfo,{name:val.name, department:val.column_values[2].text}])
+                ));
+        })
+        }
+
+     //project Categorization
+    //  const getProjectCategorization=(e)=>{
+    //     let query = "{boards(ids: 4271509592) {items() { name column_values{text} }}}";
+    //     axios.post("http://localhost:9000/demo/getMonday",{
+    //         query:query,
+    //     })
+    //     .then((res)=>res.data.data.boards[0])
+    //     .then((data)=>data.items.map((val,index)=>setReminder(reminder=>([...reminder,{content:val.name, type:val.column_values[0].text}]))));
+    // }
 
     //auto select team when name is selected
     const handleNameTeamMatch=(e)=>{
@@ -75,12 +112,30 @@ function FormPage() {
     }
 
     //update project list
-    const handleProjectChange=(i,e)=>{
+    const handleProjectChange=(i,e,pjId)=>{
         let newProjectValues = [...projects];
         let sumHours = 0;
         //update project information (project name/role/time)
         newProjectValues[i][e.target.name] = e.target.value;
         setProjects(newProjectValues);
+        //add popup reminders
+        if(e.target.name == "projectName"){
+            console.log(e.target.value);
+            console.log(reminderInfo);
+            var reminderNeed = reminderInfo.filter((ele)=>{return ele.content == e.target.value })
+            var reminderExisted = popup.filter((ele)=>{return ele.reminderId == pjId })
+            if(reminderNeed && reminderExisted.length == 0){
+                console.log(1);
+                setPopup([...popup,{reminderId:pjId,reminderContent:reminderNeed[0].type}]);
+            }
+            else if(reminderNeed && reminderExisted.length != 0){
+
+                const updatedReminder = popup.map((object, i) => {if(object.reminderId == pjId){object.reminderContent=reminderNeed[0].type}return object});
+
+                setPopup(updatedReminder);
+            }
+ 
+        }
         //add hours to the total time counter
         if(e.target.name == "projectHours"){
             projects.forEach(e=>{
@@ -192,6 +247,14 @@ function FormPage() {
         .catch((err)=>console.log(err))
     }
 
+
+    const toggleShowA = (ele)=>{
+        console.log(111);
+        const updatedReminder = popup.filter((object, i) => {return object.reminderId != ele.projectId});
+        console.log(updatedReminder);
+        setPopup(updatedReminder);
+    }
+
     return (
         <div className='formAll'>
         <div className='formSection'>
@@ -241,7 +304,7 @@ function FormPage() {
                         <Col  className="my-1"><Form.Label><strong>Project Type</strong></Form.Label></Col>
                         <Col  className="my-1"><Form.Label><strong>Project Name</strong></Form.Label></Col>
                         <Col className="my-1"><Form.Label><strong>Project Role</strong></Form.Label></Col>
-                        <Col className="my-1"><Form.Label><strong>Working Hours</strong></Form.Label></Col>
+                        <Col className="my-1"><Form.Label><strong>Work Hours</strong></Form.Label></Col>
                         {projects.length>1 ? 
                             <Col sm={1} className="my-1">
                             </Col>
@@ -249,6 +312,7 @@ function FormPage() {
                     </Row>
                     {projects.map((ele,idx)=>(
                         <Row key={ele.projectId}>
+                            <Row>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">type</Form.Label>
                                 <Form.Select name="projectType" aria-label="Default select example" ref={pjTypeRef} onChange={e=>handleTypeChange(e,ele)}>
@@ -260,7 +324,7 @@ function FormPage() {
                             </Col>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
-                                <Form.Select  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e)} >
+                                <Form.Select  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e,ele.projectId)} >
                                     <option></option>
                                     {pjOptions && pjOptions.map((value)=>( value.hasOwnProperty(ele.projectId)? value[ele.projectId].map((v,idx)=>(<option value={v}>{v}</option>)) :null))
 
@@ -286,8 +350,16 @@ function FormPage() {
                                     <Button variant="danger" onClick={()=>removeProjectFields(ele)}>X</Button>
                                 </Col>
                             : null}
-                            
+                            </Row>
+                            {popup.map((el,idx)=>(
+                                (el.reminderId == ele.projectId) ?
+                            <Alert key='info' variant='info' onClose={() => toggleShowA(ele)} dismissible>
+                           Note:This will go to {el.reminderContent}
+                          </Alert> :null
+                                
+                           ))}
                         </Row>
+                        
                     ))}
                 </Form.Group>
 
@@ -312,9 +384,18 @@ function FormPage() {
                 </div>         
                 
             </Form>
-            <div className='timeCounter'>
-             <h3>Total Time</h3>
-             <h1>{count}</h1>
+            <div className='notificationAisle'>
+                <div className='quoteContainer'>
+                    <h4>Quote of the Week</h4>
+                    <h6>{quote.sentence}</h6>
+                    <h6>{quote.author}</h6>
+                </div>
+                <div className='timeCounter'>
+                    <h3>Total Time</h3>
+                    <h1>{count}</h1>
+                </div>
+                
+            
             </div>
        
         </div>

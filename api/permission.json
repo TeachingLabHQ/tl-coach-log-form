@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "projectId": "teaching-lab-form-system",
+  "private_key_id": "a31baa37490cd163fcbbb5eea8adbc4a759a2a65",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDHDPztGydWlymn\n8Ab2zPz7cZTly1NvhUXTqc6EdCOJ3Eng460kcSlhwfORudWEfatuL/S5bgkTfSIy\npdZEe+yziJl+Jwfi5YlrKufwGml8NsM5MSt+2IzGYhjqWy/6Px2u6X1KBtoXCif3\nUWM52iFPzu0pPVm6aMRj8ynjDuAQiduKJ3aWOQSs/5I/SanF9Ufs45AUeOAA1R25\nDKzfW6gLtaBjMI42Ir+9pVH3aSWVsGAJQtDuoiwVxus/UJ0F59FAfK1ALIxVb2+I\nj9nj34j691g/yNv4qHp/GTswdpoTqpuMEBUSTpayUwIvEtaY9VERhfX/yVpb/b0X\nfUqEb1htAgMBAAECggEABHVfiw2/VY/E6k3N5RODTutavtF1xXKZ+LEpsU5YcXA6\n8becBypbngm7HMdLTJPz0pW/PqYlhgCzzC7w9updy2SGDOSlIGslyMgMdZtVNnwN\nAdB33v6yAIgxPOM7XWfauO7v7zqZo9wNYJf+/cWjE2DSYicXe8sM2qorhM5rEeEy\n7Wn4w2zSHifdi0+Yc5MMqsLadfLtaOgAkvhmUcHx+9nf7R1vziq3dTheqXas7Vcl\nEnWwUozP++5R0jMwfTeXM9UVQlA8yf6imh5lfU6VJezimY/25SXMj33LrQDBDXoJ\nO1ok4jn8s1/S5aLvE84BT9xobuahCgstBvmSBbP43QKBgQDiov/OlDku1IYbaW1f\nEX6TOjTHxjzC9VtC+5PSuejcn+pmOsUqKhIp4drFxsT6T88AOjSb9f+znUwMXCpC\n/eUydWbtcKsBbCAVVGg8fE/BvUx4LCnWIBsKBl5mRdoEtytnhGPeQntmPjHZ4WSd\nHiBtkW3vkPhX9cmDO5pIN0fuMwKBgQDg1wcBMPJp0VYiEWMHbtbfqx7g6UH68qZE\nuuXAX3dM7gRNQEtAikC1vNWXdnyPPk3+wlbGK+tf72QDaPsg/SgKqOQMtDIckmEG\n+CU5K8cxUi9b9vDOj+SfYOw1/NRhKxdoU3yN8Zs4xUlzM/uDIz6Kmf+v8bqdaMOX\npaD85w++3wKBgQCP8uv7sBWp8v7DBnGbgqccqEnB4d3SDrlKkDRSEhcfmsrs58M3\nhsVGqNel6xxNyMc348BqlxM0aGJXL2sAZfdf10Xq5jcXji/KnHQghuy5p5ycb6Cb\nCoViFq161D8n45fEBkjQcPWj+Tj8pLadPPdn4IktMq0qYUj++6qA1+vuFQKBgQCe\nx/vQYYqwI/+Z64Ft3F6uciBKYTARUo8M9pgN9N1BXM146LC8EWaFcae9YRWx6yQV\nh5TUOmvswhh1OAwxTdabQI5cUl0ZRF51F4TiDQKM2CdN4ORKW9/ulfn6XmR1goLz\nUBIkA73Ep76pNsql35vpMbwZurI5O6T1USiRsXOzLQKBgQDa5qa0zkQy4DJBQ03B\ns3miwDC+QVzUePLTbKuw6WJMN0YjFooa9grvugXxxIkPeraDwTQMxyMEvHQR5vY3\nBRVsAO72ZWBwnP3LY/93dFCGrlwfemj+L/BRWhQN+JdDpeKntKtEIVw8OBz5r4SH\nJQ5MiljBMvJVrczfuWsSTJagLg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-66p2s@teaching-lab-form-system.iam.gserviceaccount.com",
+  "client_id": "114157705738939008591",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-66p2s%40teaching-lab-form-system.iam.gserviceaccount.com"
+}

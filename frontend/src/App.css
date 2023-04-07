@@ -20,19 +20,50 @@ h2{
   margin-bottom: 2rem;
 }
 
-.timeCounter{
-  border-radius: 3px;
+.notificationAisle{
+  /* border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.1);
-    border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
-    box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
-    color: rgb(255, 255, 255);
+  border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
+  box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
+  color: rgb(255, 255, 255); */
   margin-left: 10rem;
-  width: 10rem;
-  height: 6rem;
+  /* width: 15rem;
+  height: 8rem; */
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
+
+.timeCounter{
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
+  box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
+  color: rgb(255, 255, 255);
+  width: 15rem;
+  height: 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+.quoteContainer{
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
+  box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
+  color: rgb(255, 255, 255);
+  width: 25rem;
+  height: 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
 .formSection{
   display: flex;
   justify-content: center;
