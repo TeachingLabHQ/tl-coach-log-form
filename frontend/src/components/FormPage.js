@@ -245,7 +245,8 @@ function FormPage() {
             query: query,
             vars:vars
         })
-        .then((res)=>console.log(res))
+        //item id
+        .then((res)=>console.log(res.data.data.create_item.id))
         .catch((err)=>console.log(err))
     }
 
