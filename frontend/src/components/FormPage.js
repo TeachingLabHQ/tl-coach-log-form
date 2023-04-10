@@ -88,8 +88,8 @@ function FormPage() {
 
     //auto select team when name is selected
     const handleNameTeamMatch=(e)=>{
-        console.log(e.target.value);
-        setSelectedTeam(e.target.value);
+        console.log(e.target.value.split(",")[1]);
+        setSelectedTeam(e.target.value.split(",")[1]);
         handleTeamChange(e);
     }
     //only show certain project options when a team is selected
@@ -199,37 +199,39 @@ function FormPage() {
         setProjects(updatedList);
     }
 
+
+
     //organize form data before submitting them to Monday
     const handleSubmit=(e)=>{
         e.preventDefault();
-        const personName = e.target.name;
+        const personName = e.target.employeeName.value.split(",")[0];
         console.log(personName);
         const dateValue = new Date(e.target.date.value);
         const month = ("0" + (dateValue.getMonth() + 1)).slice(-2)
         const day = ("0" + dateValue.getDate()).slice(-2);
         const year = dateValue.getFullYear();
         const formattedDate = `${year}-${month}-${day}`;
-        console.log(formattedDate);
-        console.log(e.target.teamName.value);
+        // console.log(formattedDate);
+        // console.log(e.target.teamName.value);
         const teamName = e.target.date.value;
-        console.log(e.target.projectType.value);
+        // console.log(e.target.projectType.value);
         const projectGenre = e.target.projectType.value;
-        console.log(projects);
+        // console.log(projects);
 
-        let query = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:3962685859, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
+        let query = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
         let vars = {
-        "groupName" : "new_group3217",
+        "groupName" : "topics",
         "myItemName" : personName,
         "columnVals" : JSON.stringify({
-            "date8" : {"date" : formattedDate},
-            //program project 1 name
-            "updated_programs_options":{"labels":(projectGenre=="Program-related Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]},
-            //internal project 1 name
-            "dup__of_2__project_name9":{"labels": (projectGenre=="Internal Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]} , 
-            //project role 1
-            "dup__of_2__what_is_your_role_in_the_project_6" : {"label" : (0<projects.length) ? projects[0].projectRole:"n/a"}, 
-            //project hours 1
-            "dup__of_2__how_many_hours_did_you_spend_this_week_on_the_selected_project_0" : (0<projects.length) ? projects[0].projectHours:"n/a"
+            "date4" : {"date" : formattedDate},
+            // //program project 1 name
+            // "updated_programs_options":{"labels":(projectGenre=="Program-related Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]},
+            // //internal project 1 name
+            // "dup__of_2__project_name9":{"labels": (projectGenre=="Internal Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]} , 
+            // //project role 1
+            // "dup__of_2__what_is_your_role_in_the_project_6" : {"label" : (0<projects.length) ? projects[0].projectRole:"n/a"}, 
+            // //project hours 1
+            // "dup__of_2__how_many_hours_did_you_spend_this_week_on_the_selected_project_0" : (0<projects.length) ? projects[0].projectHours:"n/a"
 
         })
         };
@@ -276,10 +278,10 @@ function FormPage() {
                 
             <Form.Group className="mb-5" controlId="formBasicSite">
                     <Form.Label><strong>What's your name?</strong></Form.Label>
-                    <Form.Select name="name" aria-label="Default select example" onChange={handleNameTeamMatch}>
+                    <Form.Select name="employeeName" aria-label="Default select example" onChange={handleNameTeamMatch}>
                         <option></option>
                         {employmentInfo.map((val,idx)=>(
-                            <option value={val.department}>{val.name}</option>
+                            <option value={[val.name, val.department]}>{val.name}</option>
                         ))}
                     </Form.Select>
                 </Form.Group>
