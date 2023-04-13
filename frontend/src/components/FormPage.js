@@ -37,11 +37,6 @@ function FormPage() {
         "CA_West Contra Costa_Michelle Obama",
         "TL_Client Project Evaluation"
     ]);
-
-
-
-
-
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
@@ -90,12 +85,16 @@ function FormPage() {
     const handleNameTeamMatch=(e)=>{
         console.log(e.target.value.split(",")[1]);
         setSelectedTeam(e.target.value.split(",")[1]);
-        handleTeamChange(e);
+        handleTeamChange(e.target.value.split(",")[1]);
     }
     //only show certain project options when a team is selected
     const handleTeamChange=(e)=>{
         const projectTypes = ["Internal Project","Program-related Project"];
-        switch(e.target.value){
+        console.log(e);
+        var teamVal =  "";
+        (e.target != undefined)? teamVal = e.target.value : teamVal = e;
+        console.log(teamVal);
+        switch(teamVal){
             case "Operations": setTeam([projectTypes[0]]); handleTypeChange(); break;
             case "Finance": setTeam([projectTypes[0]]); handleTypeChange();break;
             case "Marketing & Communications": setTeam([projectTypes[0]]); handleTypeChange();break;
@@ -143,7 +142,7 @@ function FormPage() {
                     sumHours += parseInt(0);
                 }
                 else{
-                    sumHours += parseInt(e.projectHours);
+                    sumHours += parseFloat(e.projectHours);
                 }
             })
             setCount(sumHours);
@@ -193,7 +192,7 @@ function FormPage() {
     //remove project row from the widget
     const removeProjectFields=(ele)=>{
         if(ele.projectHours != ""){
-            setCount(count-parseInt(ele.projectHours));
+            setCount(count-parseFloat(ele.projectHours));
         }
         const updatedList = projects.filter((object, i) => object.projectId != ele.projectId);
         setProjects(updatedList);
