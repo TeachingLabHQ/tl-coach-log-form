@@ -27,20 +27,15 @@ function FormPage() {
     const pjTypeRef = createRef("");
     const [reminderInfo, setReminderInfo] = useState([]);
     const [popup, setPopup] = useState([]);
-    const[internalPj,setInternalPj] = useState([
-        "TL_Internal Program Evaluation",
-        "TL_LMS Transition to Canvas",
-        "TL_Technology Operations and Support"
-    ]);
-    const[programPj,setProgramPj] = useState([
-        "CA_San Diego AMS Study", 
-        "CA_West Contra Costa_Michelle Obama",
-        "TL_Client Project Evaluation"
-    ]);
+    // const [parentID,setParentID] = useState("");
+    const[internalPj,setInternalPj] = useState([]);
+    const[programPj,setProgramPj] = useState([]);
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
         getEmployee();
+        getProject();
+        console.log(internalPj);
         // getProjectCategorizaton();
         console.log(reminderInfo);
         fetch(`http://localhost:9000/demo/info?myParam=${getQuote}`)
@@ -69,6 +64,19 @@ function FormPage() {
                 [...employmentInfo,{name:val.name, department:val.column_values[2].text}])
                 ));
         })
+        }
+
+    //project information from Monday
+    const getProject=(e)=>{
+        setEmploymentInfo([]);
+        setReminderInfo([]);
+        let query = "{boards(ids: 4271509592) { groups{items {name}}}}";
+        return axios.post("http://localhost:9000/demo/getMonday",{
+            query:query,
+        })
+        .then((res)=>res.data.data.boards)
+        // .then((data)=>console.log(data[0]))
+        .then((data)=>{setInternalPj(internalPj=>([...internalPj,data[0].groups[0].items]));setProgramPj(programPj=>([...programPj,data[0].groups[1].items]))})
         }
 
      //project Categorization
@@ -149,26 +157,26 @@ function FormPage() {
         }
     }
 
-    //only show certain project when a project type is selecte
+    //only show certain project when a project type is selected
     const handleTypeChange=(e,ele)=>{
         //if it is either one
         if(typeof e == "object"){
             var exist = pjOptions.filter((e)=>{return e.hasOwnProperty(ele.projectId)});
             if(e.target.value == "Internal Project" ){
                 if(exist.length != 0){
-                    setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=internalPj}return e}));
+                    setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=internalPj[0]}return e}));
                 }
                 else{
-                    setPjOptions([...pjOptions,{[ele.projectId]:internalPj}]);
+                    setPjOptions([...pjOptions,{[ele.projectId]:internalPj[0]}]);
                 }
                 
             }
             else if(e.target.value == "Program-related Project" ){
                 if(exist.length != 0){
-                    setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=programPj}return e}));
+                    setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=programPj[0]}return e}));
                 }
                 else{
-                    setPjOptions([...pjOptions,{[ele.projectId]:programPj}]);
+                    setPjOptions([...pjOptions,{[ele.projectId]:programPj[0]}]);
                 }
             }
             else{
@@ -177,7 +185,7 @@ function FormPage() {
                 }
             }
         }
-        //if the team is changed, clear all project inputs
+        //if the team name is manually reselected, clear all project inputs
         else{
             setProjects([{projectId: new Date().getTime(), projectType:"",projectName:"",projectRole:"",projectHours:0}]);
             setPjOptions([]);
@@ -210,15 +218,15 @@ function FormPage() {
         const day = ("0" + dateValue.getDate()).slice(-2);
         const year = dateValue.getFullYear();
         const formattedDate = `${year}-${month}-${day}`;
-        // console.log(formattedDate);
-        // console.log(e.target.teamName.value);
+        console.log(formattedDate);
+        console.log(e.target.teamName.value);
         const teamName = e.target.date.value;
         // console.log(e.target.projectType.value);
-        const projectGenre = e.target.projectType.value;
+        const capacity = e.target.capacity.value;
         // console.log(projects);
 
-        let query = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
-        let vars = {
+        let queryParent = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
+        let varsParent = {
         "groupName" : "topics",
         "myItemName" : personName,
         "columnVals" : JSON.stringify({
@@ -227,27 +235,70 @@ function FormPage() {
             // "updated_programs_options":{"labels":(projectGenre=="Program-related Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]},
             // //internal project 1 name
             // "dup__of_2__project_name9":{"labels": (projectGenre=="Internal Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]} , 
-            // //project role 1
-            // "dup__of_2__what_is_your_role_in_the_project_6" : {"label" : (0<projects.length) ? projects[0].projectRole:"n/a"}, 
-            // //project hours 1
-            // "dup__of_2__how_many_hours_did_you_spend_this_week_on_the_selected_project_0" : (0<projects.length) ? projects[0].projectHours:"n/a"
+            // capacity
+            "status1" : {"label" : capacity}, 
+            //total hours
+            "numbers8" : count,
 
         })
         };
-        createItem(query,vars);
+        
+        // createItem(queryParent,varsParent);
+        createItem(queryParent,varsParent).then((response)=>{
+            for(var i = 0; i<projects.length;i++){
+                const parentID = response;
+
+                console.log(123);
+                const projectName = projects[i].projectName;
+                const projectGenre = projects[i].projectType;
+                console.log(projects)
+                const projectRole = projects[i].projectRole;
+                const projectHours = projects[i].projectHours;
+                let querySub = 'mutation ($myItemName: String!,$parentID: Int!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }';
+                let varsSub = {
+                "myItemName" : personName,
+                "parentID" : parseInt(parentID),
+                "columnVals" : JSON.stringify({
+                    "date" : {"date" : formattedDate},
+                    "project_role" : projectRole,
+                    //project type
+                    "project_type":projectGenre,
+                    //project name
+                    "name6": projectName, 
+                    //project hours
+                    "numbers" : parseFloat(projectHours),
+
+                })
+                };
+                createItemSub(querySub,varsSub).then(e=>console.log(e));
+            }
+        });
+        
     }
 
     //push data to Monday
     const createItem = (query,vars) =>{
-        axios.post("http://localhost:9000/demo/boardUpdate",{
+       return axios.post("http://localhost:9000/demo/boardUpdate",{
             apiKey: accessToken,
             query: query,
             vars:vars
         })
         //item id
-        .then((res)=>console.log(res.data.data.create_item.id))
+        .then((res)=>res.data.data.create_item.id)
         .catch((err)=>console.log(err))
     }
+
+     //push data to Monday
+     const createItemSub = (query,vars) =>{
+        return axios.post("http://localhost:9000/demo/boardUpdate",{
+             apiKey: accessToken,
+             query: query,
+             vars:vars
+         })
+         //item id
+         .then((res)=>res)
+         .catch((err)=>console.log(err))
+     }
 
 
     const toggleShowA = (ele)=>{
@@ -317,7 +368,7 @@ function FormPage() {
                             <Row>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">type</Form.Label>
-                                <Form.Select name="projectType" aria-label="Default select example" ref={pjTypeRef} onChange={e=>handleTypeChange(e,ele)}>
+                                <Form.Select name="projectType" aria-label="Default select example" ref={pjTypeRef} onChange={e=>{handleTypeChange(e,ele);handleProjectChange(idx,e)}}>
                                     <option></option>
                                     {team && team.map((val,index)=>(
                                         <option value={val} >{val}</option>
@@ -328,7 +379,7 @@ function FormPage() {
                                 <Form.Label visuallyHidden="true">name</Form.Label>
                                 <Form.Select  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e,ele.projectId)} >
                                     <option></option>
-                                    {pjOptions && pjOptions.map((value)=>( value.hasOwnProperty(ele.projectId)? value[ele.projectId].map((v,idx)=>(<option value={v}>{v}</option>)) :null))
+                                    {pjOptions && pjOptions.map((value)=>( value.hasOwnProperty(ele.projectId)? value[ele.projectId].map((v,idx)=>(<option value={v.name}>{v.name}</option>)) :null))
 
                                     }
                                     {/* {pjOptions.has(ele.projectId) ? pjOptions[ele.projectId].map((v)=>(<option value={v}>{v}</option>)) : (<option></option>)} */}
@@ -344,7 +395,7 @@ function FormPage() {
                             </Col>    
                             <Col className="my-1">
                                 <Form.Label visuallyHidden="true" >hours</Form.Label>
-                                <Form.Control type="number" name="projectHours" min="0" onChange={e=>handleProjectChange(idx,e)} placeholder="Enter Time" />
+                                <Form.Control type="number" name="projectHours" min="0" onChange={e=>handleProjectChange(idx,e)} step="any" placeholder="Enter Time" />
                             </Col>
 
                             {projects.length>1 ? 
@@ -356,7 +407,7 @@ function FormPage() {
                             {popup.map((el,idx)=>(
                                 (el.reminderId == ele.projectId) ?
                             <Alert key='info' variant='info' onClose={() => toggleShowA(ele)} dismissible>
-                           Note:This will go to {el.reminderContent}
+                           Note: The hours will be counted towards {el.reminderContent}
                           </Alert> :null
                                 
                            ))}
