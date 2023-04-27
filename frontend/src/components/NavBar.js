@@ -46,17 +46,17 @@ function NavBar(props) {
        <>
        <Navbar bg="light" expand="lg">
         <Container>
-            <Navbar.Brand href="#home">Teaching Lab Form System</Navbar.Brand>
+            <Navbar.Brand href="#home">Teaching Lab Survey</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-                <Nav.Link as={Link} to="/">Home</Nav.Link>
+                {/* <Nav.Link as={Link} to="/">Home</Nav.Link> */}
                 <Nav.Link as={Link} to="/form">Form</Nav.Link>
             </Nav>
             </Navbar.Collapse>
-            <Navbar.Collapse className="justify-content-end">
+            {/* <Navbar.Collapse className="justify-content-end">
                 <Nav.Link  onClick={signInWithGoogle} id="auth-text">Log in</Nav.Link>
-            </Navbar.Collapse>
+            </Navbar.Collapse> */}
         </Container>
         </Navbar>
        </>
