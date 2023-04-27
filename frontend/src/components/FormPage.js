@@ -30,6 +30,7 @@ function FormPage() {
     // const [parentID,setParentID] = useState("");
     const[internalPj,setInternalPj] = useState([]);
     const[programPj,setProgramPj] = useState([]);
+    const [validated, setValidated] = useState(false);
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
@@ -210,8 +211,16 @@ function FormPage() {
 
     //organize form data before submitting them to Monday
     const handleSubmit=(e)=>{
+        const form = e.currentTarget;
+        if(form.checkValidity() === false){
+            e.preventDefault();
+            e.stopPropagation();
+            
+        }
+        else{
         e.preventDefault();
-        const errorCheck = true;
+        setValidated(true);
+        let errorCheck = true;
         const personName = e.target.employeeName.value.split(",")[0];
         console.log(personName);
         const dateValue = new Date(e.target.date.value);
@@ -269,13 +278,16 @@ function FormPage() {
 
                 })
                 };
-                createItemSub(querySub,varsSub).then(e=>{if(e.data.hasOwnProperty('errors')){
+                createItemSub(querySub,varsSub).then(e=>{console.log(e);
+                    if(e.data.hasOwnProperty('errors') || (e.status < 600 && e.status>399) ){
                     errorCheck = false;
-                }});
+                    }
+                    console.log(typeof e.status);
+                });
             }
         });
 
-  
+    }
         
     }
 
@@ -315,7 +327,7 @@ function FormPage() {
         <div className='formAll'>
         <div className='formSection'>
 
-            <Form className='formBlock' onSubmit={handleSubmit}>
+            <Form className='formBlock' onSubmit={handleSubmit} noValidate validated={validated}>
             <h1>Weekly Project Data Log Form</h1>
             <Form.Group className="mb-5" as={Col} controlId="formBasicEmail">
                     <Form.Label><strong>Enter the Monday of the week:</strong></Form.Label>
@@ -332,23 +344,29 @@ function FormPage() {
                 
             <Form.Group className="mb-5" controlId="formBasicSite">
                     <Form.Label><strong>What's your name?</strong></Form.Label>
-                    <Form.Select name="employeeName" aria-label="Default select example" onChange={handleNameTeamMatch}>
+                    <Form.Control name="employeeName" as="select" aria-label="Default select example" onChange={handleNameTeamMatch} required>
                         <option></option>
                         {employmentInfo.map((val,idx)=>(
                             <option value={[val.name, val.department]}>{val.name}</option>
                         ))}
-                    </Form.Select>
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">
+                        Please choose a name.
+                    </Form.Control.Feedback>
                 </Form.Group>
                 
                 <Form.Group className="mb-5" controlId="formBasicSite">
                     <Form.Label><strong>Which team are you on?</strong></Form.Label>
-                    <Form.Select name="teamName" aria-label="Default select example"  onChange={handleTeamChange}>
+                    <Form.Control as="select" name="teamName" aria-label="Default select example"  onChange={handleTeamChange} required>
                         <option></option>
                         {options.map((val,idx)=>(
                             (selectedTeam == val)?<option value={val} selected >{val}</option>:
                             <option value={val} >{val}</option>
                         ))}
-                    </Form.Select>
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">
+                        Please choose a team.
+                    </Form.Control.Feedback>
                 </Form.Group>
 
                 {/* <Form.Group className="mb-1" controlId="formCapacity">
@@ -371,26 +389,26 @@ function FormPage() {
                             <Row>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">type</Form.Label>
-                                <Form.Select name="projectType" aria-label="Default select example" ref={pjTypeRef} onChange={e=>{handleTypeChange(e,ele);handleProjectChange(idx,e)}}>
+                                <Form.Control as="select" name="projectType" aria-label="Default select example" ref={pjTypeRef} onChange={e=>{handleTypeChange(e,ele);handleProjectChange(idx,e)}} required>
                                     <option></option>
                                     {team && team.map((val,index)=>(
                                         <option value={val} >{val}</option>
                                     ))}
-                                </Form.Select>
+                                </Form.Control>
                             </Col>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
-                                <Form.Select  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e,ele.projectId)} >
+                                <Form.Control as="select"  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e,ele.projectId)} required>
                                     <option></option>
                                     {pjOptions && pjOptions.map((value)=>( value.hasOwnProperty(ele.projectId)? value[ele.projectId].map((v,idx)=>(<option value={v.name}>{v.name}</option>)) :null))
 
                                     }
                                     {/* {pjOptions.has(ele.projectId) ? pjOptions[ele.projectId].map((v)=>(<option value={v}>{v}</option>)) : (<option></option>)} */}
-                                </Form.Select>
+                                </Form.Control>
                             </Col>
                             <Col className="my-1">
                                 <Form.Label visuallyHidden="true">role</Form.Label>
-                                <Form.Select aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)}>
+                                <Form.Control as="select" aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)} required>
                                     <option></option>
                                     <option>Project Lead</option>
                                     <option>Project Sponsor</option>
@@ -401,11 +419,11 @@ function FormPage() {
                                     <option>Client/PM</option>
                                     <option>Analyst</option>
                                     <option>Other</option>
-                                </Form.Select>
+                                </Form.Control>
                             </Col>    
                             <Col className="my-1">
                                 <Form.Label visuallyHidden="true" >hours</Form.Label>
-                                <Form.Control type="number" name="projectHours" min="0" onChange={e=>handleProjectChange(idx,e)} step="any" placeholder="Enter Time" />
+                                <Form.Control type="number" name="projectHours" min="0" onChange={e=>handleProjectChange(idx,e)} step="any" placeholder="Enter Time" required />
                             </Col>
 
                             {projects.length>1 ? 
@@ -432,11 +450,14 @@ function FormPage() {
 
                 <Form.Group className="mb-5" controlId="formCapacity">
                     <Form.Label><strong>Do you feel you have the capacity to take on a new project?</strong></Form.Label>
-                    <Form.Select name="capacity" aria-label="Default select example" >
+                    <Form.Control as="select" name="capacity" aria-label="Default select example" required>
                         <option></option>
                         <option>Yes</option>
                         <option>No</option>
-                    </Form.Select>
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">
+                        Please choose an option.
+                    </Form.Control.Feedback>
                 </Form.Group>
 
 
