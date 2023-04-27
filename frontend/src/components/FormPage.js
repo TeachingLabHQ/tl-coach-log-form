@@ -31,6 +31,7 @@ function FormPage() {
     const[internalPj,setInternalPj] = useState([]);
     const[programPj,setProgramPj] = useState([]);
     const [validated, setValidated] = useState(false);
+    const [errorCheck, setErrorCheck] = useState();
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
@@ -213,14 +214,14 @@ function FormPage() {
     const handleSubmit=(e)=>{
         const form = e.currentTarget;
         if(form.checkValidity() === false){
+            console.log(1111111);
             e.preventDefault();
             e.stopPropagation();
-            
+            setValidated(true);
         }
         else{
         e.preventDefault();
         setValidated(true);
-        let errorCheck = true;
         const personName = e.target.employeeName.value.split(",")[0];
         console.log(personName);
         const dateValue = new Date(e.target.date.value);
@@ -280,9 +281,12 @@ function FormPage() {
                 };
                 createItemSub(querySub,varsSub).then(e=>{console.log(e);
                     if(e.data.hasOwnProperty('errors') || (e.status < 600 && e.status>399) ){
-                    errorCheck = false;
+                     setErrorCheck(true);
                     }
-                    console.log(typeof e.status);
+                    else{
+                    setErrorCheck(false);}
+
+                    console.log(e);
                 });
             }
         });
@@ -462,10 +466,19 @@ function FormPage() {
 
 
                 <div className='submitButton'>
-                <Button className='submitButton' variant="primary" type="submit">
+                <Button className='submitButton mb-3' variant="primary" type="submit" >
                     Submit
-                </Button>
+                </Button>      
                 </div>         
+                {errorCheck==false ? 
+                <Alert key='success' variant='success' >
+                    Your form is submitted successfully!
+                </Alert>:null};
+                {errorCheck==true ? 
+                <Alert key='danger' variant='danger'>
+                Something went wrong! If this happens constantly, please contact technology support.
+                </Alert>:null
+                }
                 
             </Form>
             <div className='notificationAisle'>
