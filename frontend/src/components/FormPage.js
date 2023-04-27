@@ -211,6 +211,7 @@ function FormPage() {
     //organize form data before submitting them to Monday
     const handleSubmit=(e)=>{
         e.preventDefault();
+        const errorCheck = true;
         const personName = e.target.employeeName.value.split(",")[0];
         console.log(personName);
         const dateValue = new Date(e.target.date.value);
@@ -247,8 +248,6 @@ function FormPage() {
         createItem(queryParent,varsParent).then((response)=>{
             for(var i = 0; i<projects.length;i++){
                 const parentID = response;
-
-                console.log(123);
                 const projectName = projects[i].projectName;
                 const projectGenre = projects[i].projectType;
                 console.log(projects)
@@ -270,9 +269,13 @@ function FormPage() {
 
                 })
                 };
-                createItemSub(querySub,varsSub).then(e=>console.log(e));
+                createItemSub(querySub,varsSub).then(e=>{if(e.data.hasOwnProperty('errors')){
+                    errorCheck = false;
+                }});
             }
         });
+
+  
         
     }
 
@@ -285,7 +288,7 @@ function FormPage() {
         })
         //item id
         .then((res)=>res.data.data.create_item.id)
-        .catch((err)=>console.log(err))
+        .catch((err)=>err)
     }
 
      //push data to Monday
@@ -297,7 +300,7 @@ function FormPage() {
          })
          //item id
          .then((res)=>res)
-         .catch((err)=>console.log(err))
+         .catch((err)=>err)
      }
 
 
@@ -390,7 +393,14 @@ function FormPage() {
                                 <Form.Select aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)}>
                                     <option></option>
                                     <option>Project Lead</option>
+                                    <option>Project Sponsor</option>
+                                    <option>Instructional Designer</option>
+                                    <option>Subject Matter Expert</option>
+                                    <option>Facilitator/Coach</option>
+                                    <option>Tech Engineer/Developer</option>
+                                    <option>Client/PM</option>
                                     <option>Analyst</option>
+                                    <option>Other</option>
                                 </Form.Select>
                             </Col>    
                             <Col className="my-1">
