@@ -35,8 +35,8 @@ function FormPage() {
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
-        getEmployee();
-        getProject();
+        getMondayInfo();
+        // getProject();
         console.log(internalPj);
         // getProjectCategorizaton();
         console.log(reminderInfo);
@@ -47,7 +47,7 @@ function FormPage() {
     },[])
 
     //employee information(name,deparment)
-    const getEmployee=(e)=>{
+    const getMondayInfo=(e)=>{
         setEmploymentInfo([]);
         setReminderInfo([]);
         let queryReminder = "{boards(ids:4271509592) {items() { name column_values{text} }}}";
@@ -85,32 +85,17 @@ function FormPage() {
                     return 0;}))
                 ));
         })
-       
-       
-        }
 
-    //project information from Monday
-    const getProject=(e)=>{
-        setEmploymentInfo([]);
-        setReminderInfo([]);
-        let query = "{boards(ids: 4271509592) { groups{items {name}}}}";
-        return axios.post("http://localhost:9000/demo/getMonday",{
-            query:query,
+        let queryPj = "{boards(ids: 4271509592) { groups{items {name}}}}";
+        axios.post("http://localhost:9000/demo/getMonday",{
+            query:queryPj,
         })
         .then((res)=>res.data.data.boards)
         // .then((data)=>console.log(data[0]))
         .then((data)=>{setInternalPj(internalPj=>([...internalPj,data[0].groups[0].items]));setProgramPj(programPj=>([...programPj,data[0].groups[1].items]))})
+      
         }
 
-     //project Categorization
-    //  const getProjectCategorization=(e)=>{
-    //     let query = "{boards(ids: 4271509592) {items() { name column_values{text} }}}";
-    //     axios.post("http://localhost:9000/demo/getMonday",{
-    //         query:query,
-    //     })
-    //     .then((res)=>res.data.data.boards[0])
-    //     .then((data)=>data.items.map((val,index)=>setReminder(reminder=>([...reminder,{content:val.name, type:val.column_values[0].text}]))));
-    // }
 
     //auto select team when name is selected
     const handleNameTeamMatch=(e)=>{
