@@ -17,7 +17,7 @@ function FormPage() {
     const [quote,setQuote] = useState({sentence:"",author:""});
     const[team,setTeam] = useState([""]);
     const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectType:"", projectName:"",projectRole:"",projectHours:0}]);
-    const[options,setOptions] = useState(["Operations", "Program", "Business Development","Finance","Learning & Research","Marketing & Communications","Office of CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
+    const[options,setOptions] = useState(["Operations", "Program", "Business Development","Finance","Learning & Research","Marketing & Communication","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
     const[pjOptions,setPjOptions] = useState([]);
     const[employmentInfo,setEmploymentInfo] = useState([]);
     const[selectedTeam,setSelectedTeam] = useState();
@@ -50,22 +50,43 @@ function FormPage() {
     const getEmployee=(e)=>{
         setEmploymentInfo([]);
         setReminderInfo([]);
-        let query = "{boards(ids: [4271509592, 4266679896]) {items() { name column_values{text} }}}";
-        return axios.post("http://localhost:9000/demo/getMonday",{
-            query:query,
+        let queryReminder = "{boards(ids:4271509592) {items() { name column_values{text} }}}";
+        axios.post("http://localhost:9000/demo/getMonday",{
+            query:queryReminder,
         })
         .then((res)=>res.data.data.boards)
-        // .then((data)=>console.log(data[0]))
+        // .then((data)=>console.log(data))
         .then((data)=>{
             data[0].items.map((v,index)=>
             setReminderInfo(reminderInfo=>(
                 [...reminderInfo,{content:v.name, type:v.column_values[0].text}])
                 ));
-            data[1].items.map((val,index)=>
+            // data[1].items.map((val,index)=>
+            // setEmploymentInfo(employmentInfo=>(
+            //     [...employmentInfo,{name:val.name, department:val.column_values[2].text}])
+            //     ));
+        });
+
+        let queryEmployee = "{boards(ids:2227132353) {items() { name column_values(ids:dropdown7){text} }}}";
+        axios.post("http://localhost:9000/demo/getMonday",{
+            query:queryEmployee,
+        })
+        .then((res)=>res.data.data.boards)
+        // .then((data)=>console.log(data))
+        .then((data)=>{
+            // data[0].items.map((v,index)=>
+            // setReminderInfo(reminderInfo=>(
+            //     [...reminderInfo,{content:v.name, type:v.column_values[0].text}])
+            //     ));
+            data[0].items.map((val,index)=>
             setEmploymentInfo(employmentInfo=>(
-                [...employmentInfo,{name:val.name, department:val.column_values[2].text}])
+                [...employmentInfo,{name:val.name, department:val.column_values[0].text}].sort((a,b)=>{ if(a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+                    if(a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+                    return 0;}))
                 ));
         })
+       
+       
         }
 
     //project information from Monday
@@ -107,14 +128,14 @@ function FormPage() {
         switch(teamVal){
             case "Operations": setTeam([projectTypes[0]]); handleTypeChange(); break;
             case "Finance": setTeam([projectTypes[0]]); handleTypeChange();break;
-            case "Marketing & Communications": setTeam([projectTypes[0]]); handleTypeChange();break;
+            case "Marketing & Communication": setTeam([projectTypes[0]]); handleTypeChange();break;
             case "People & Culture": setTeam([projectTypes[0]]);handleTypeChange(); break;
             case "Fundraising": setTeam([projectTypes[0]]); handleTypeChange();break;
             case "Business Development": setTeam([projectTypes[1]]); handleTypeChange();break;
             case "Program": setTeam([projectTypes[1]]); handleTypeChange();break;
             case "Innovation Studio": setTeam([projectTypes[1]]);handleTypeChange(); break;
             case "Learning & Research": setTeam([...projectTypes]);handleTypeChange(); break;
-            case "Office of CEO": setTeam([...projectTypes]); handleTypeChange();break;
+            case "Office of the CEO": setTeam([...projectTypes]); handleTypeChange();break;
             case "Technology":setTeam([...projectTypes]);handleTypeChange(); break;
             case "": setTeam([]); break;
         }
