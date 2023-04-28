@@ -42,7 +42,7 @@ function FormPage() {
         console.log(reminderInfo);
         fetch(`http://localhost:9000/demo/info?myParam=${getQuote}`)
         .then((res)=>res.json())
-        .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) + 1);setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
+        .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );console.log(x);setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
         .catch((err)=>console.log(err))
     },[])
 
