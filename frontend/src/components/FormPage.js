@@ -458,9 +458,9 @@ function FormPage() {
                             : null}
                             </Row>
                             {popup.map((el,idx)=>(
-                                (el.reminderId == ele.projectId) ?
+                                (el.reminderId == ele.projectId & el.reminderContent != "") ?
                             <Alert key='info' variant='info' onClose={() => toggleShowA(ele)} dismissible>
-                           Note: The hours will be counted towards {el.reminderContent}
+                           Note: {el.reminderContent}
                           </Alert> :null
                                 
                            ))}
