@@ -38,7 +38,7 @@ h2{
 .timeCounter{
   border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.1);
-  border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
+  border-radius: 25px;
   box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
   color: rgb(255, 255, 255);
   width: 15rem;
@@ -52,7 +52,7 @@ h2{
 .quoteContainer{
   border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.1);
-  border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
+  border-radius: 25px;
   box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
   color: rgb(255, 255, 255);
   width: 25rem;
@@ -79,7 +79,7 @@ h2{
   padding: 3%;
   border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.292);
-    border-radius: min( var(--sampler-comp-radius-scale),var(--sampler-comp-radius-scale-max) );
+    border-radius: 25px;
     box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
     color: rgb(255, 255, 255);
   margin-bottom: 3rem;
