@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/Row';
 import '../App.css';
 import DatePicker from "react-datepicker";
 import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 
 
 
@@ -27,11 +28,11 @@ function FormPage() {
     const pjTypeRef = createRef("");
     const [reminderInfo, setReminderInfo] = useState([]);
     const [popup, setPopup] = useState([]);
-    // const [parentID,setParentID] = useState("");
     const[internalPj,setInternalPj] = useState([]);
     const[programPj,setProgramPj] = useState([]);
     const [validated, setValidated] = useState(false);
     const [errorCheck, setErrorCheck] = useState();
+    const [submitCheck, setSubmitCheck] = useState();
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
@@ -218,6 +219,8 @@ function FormPage() {
 
     //organize form data before submitting them to Monday
     const handleSubmit=(e)=>{
+        setErrorCheck();
+        setSubmitCheck();
         const form = e.currentTarget;
         if(form.checkValidity() === false){
             console.log(1111111);
@@ -228,6 +231,7 @@ function FormPage() {
         else{
         e.preventDefault();
         setValidated(true);
+        setSubmitCheck(true);
         const personName = e.target.employeeName.value.split(",")[0];
         console.log(personName);
         const dateValue = new Date(e.target.date.value);
@@ -475,7 +479,10 @@ function FormPage() {
                 <Button className='submitButton mb-3' variant="primary" type="submit" >
                     Submit
                 </Button>      
-                </div>         
+                </div>     
+                {submitCheck==true && errorCheck == undefined ? 
+                <Spinner animation="border" variant="light" />:null
+                }    
                 {errorCheck==false ? 
                 <Alert key='success' variant='success' >
                     Your form is submitted successfully!
