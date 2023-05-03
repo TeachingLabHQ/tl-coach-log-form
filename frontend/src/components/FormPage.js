@@ -60,7 +60,7 @@ function FormPage() {
         .then((data)=>{
             data[0].items.map((v,index)=>
             setReminderInfo(reminderInfo=>(
-                [...reminderInfo,{content:v.name, type:v.column_values[0].text}])
+                [...reminderInfo,{content:v.name, type:v.column_values[0].text, url:v.column_values[1].text.match(/\bhttps?:\/\/\S+/gi)}])
                 ));
             // data[1].items.map((val,index)=>
             // setEmploymentInfo(employmentInfo=>(
@@ -140,13 +140,14 @@ function FormPage() {
             console.log(reminderInfo);
             var reminderNeed = reminderInfo.filter((ele)=>{return ele.content == e.target.value })
             var reminderExisted = popup.filter((ele)=>{return ele.reminderId == pjId })
+            console.log(reminderNeed);
             if(reminderNeed && reminderExisted.length == 0){
                 console.log(1);
-                setPopup([...popup,{reminderId:pjId,reminderContent:reminderNeed[0].type}]);
+                setPopup([...popup,{reminderId:pjId,reminderContent:reminderNeed[0].type,reminderUrl:reminderNeed[0].url}]);
             }
             else if(reminderNeed && reminderExisted.length != 0){
 
-                const updatedReminder = popup.map((object, i) => {if(object.reminderId == pjId){object.reminderContent=reminderNeed[0].type}return object});
+                const updatedReminder = popup.map((object, i) => {if(object.reminderId == pjId){object.reminderContent=reminderNeed[0].type;object.reminderUrl=reminderNeed[0].url }return object});
 
                 setPopup(updatedReminder);
             }
@@ -447,12 +448,12 @@ function FormPage() {
                             : null}
                             </Row>
                             {popup.map((el,idx)=>(
-                                (el.reminderId == ele.projectId & el.reminderContent != "") ?
-                            <Alert key='info' variant='info' onClose={() => toggleShowA(ele)} dismissible>
-                           Note: {el.reminderContent}
-                          </Alert> :null
-                                
-                           ))}
+                                (el.reminderId == ele.projectId & el.reminderContent != "" ) ?
+                            <Alert url={el.reminderUrl} key='info' variant='info' onClose={() => toggleShowA(ele)} dismissible>
+                           {(el.reminderUrl == null ? "Note: " : <Alert.Link href={el.reminderUrl[0]}> Click the Link </Alert.Link>)}
+                        {el.reminderContent}
+                          </Alert> :null)
+                          )}
                         </Row>
                         
                     ))}
