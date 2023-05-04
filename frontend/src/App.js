@@ -10,6 +10,7 @@ import app from "./firebase/firebase"
 import {  getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 import React, {useState} from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import {Helmet} from "react-helmet";
 
 
 function App() {
@@ -23,7 +24,11 @@ function App() {
   })
   return (
     <div className="App">
-      
+      <Helmet>
+                <meta charSet="utf-8" />
+                <title>Project Log Form</title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
       <BrowserRouter>
       <AccessTokenProvider>
       <NavBar userStatus={isUserSignedIn}/>
