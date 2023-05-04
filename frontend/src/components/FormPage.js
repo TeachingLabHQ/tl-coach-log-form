@@ -41,7 +41,7 @@ function FormPage() {
         console.log(internalPj);
         // getProjectCategorizaton();
         console.log(reminderInfo);
-        fetch(`http://localhost:9000/demo/info?myParam=${getQuote}`)
+        fetch(`/demo/info?myParam=${getQuote}`)
         .then((res)=>res.json())
         .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );console.log(x);setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
         .catch((err)=>console.log(err))
@@ -52,7 +52,7 @@ function FormPage() {
         setEmploymentInfo([]);
         setReminderInfo([]);
         let queryReminder = "{boards(ids:4271509592) {items() { name column_values{text} }}}";
-        axios.post("http://localhost:9000/demo/getMonday",{
+        axios.post("/demo/getMonday",{
             query:queryReminder,
         })
         .then((res)=>res.data.data.boards)
@@ -69,7 +69,7 @@ function FormPage() {
         });
 
         let queryEmployee = "{boards(ids:2227132353) {items() { name column_values(ids:dropdown7){text} }}}";
-        axios.post("http://localhost:9000/demo/getMonday",{
+        axios.post("/demo/getMonday",{
             query:queryEmployee,
         })
         .then((res)=>res.data.data.boards)
@@ -88,7 +88,7 @@ function FormPage() {
         })
 
         let queryPj = "{boards(ids: 4271509592) { groups{items {name}}}}";
-        axios.post("http://localhost:9000/demo/getMonday",{
+        axios.post("/demo/getMonday",{
             query:queryPj,
         })
         .then((res)=>res.data.data.boards)
@@ -308,7 +308,7 @@ function FormPage() {
 
     //push data to Monday
     const createItem = (query,vars) =>{
-       return axios.post("http://localhost:9000/demo/boardUpdate",{
+       return axios.post("demo/boardUpdate",{
             apiKey: accessToken,
             query: query,
             vars:vars
@@ -320,7 +320,7 @@ function FormPage() {
 
      //push data to Monday
      const createItemSub = (query,vars) =>{
-        return axios.post("http://localhost:9000/demo/boardUpdate",{
+        return axios.post("/demo/boardUpdate",{
              apiKey: accessToken,
              query: query,
              vars:vars

@@ -29,7 +29,7 @@ function App() {
       <NavBar userStatus={isUserSignedIn}/>
         <Routes>
           {/* <Route element={<Home/>} path="/"/> */}
-          <Route element={<FormPage/>} path="/form"/>
+          <Route element={<FormPage/>} path="/"/>
         </Routes>
         </AccessTokenProvider>
       </BrowserRouter>
