@@ -33,17 +33,16 @@ function FormPage() {
     const [validated, setValidated] = useState(false);
     const [errorCheck, setErrorCheck] = useState();
     const [submitCheck, setSubmitCheck] = useState();
+    const [capCheck, setCapCheck] = useState();
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
         getMondayInfo();
         // getProject();
-        console.log(internalPj);
         // getProjectCategorizaton();
-        console.log(reminderInfo);
         fetch(`/demo/info?myParam=${getQuote}`)
         .then((res)=>res.json())
-        .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );console.log(x);setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
+        .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
         .catch((err)=>console.log(err))
     },[])
 
@@ -100,19 +99,16 @@ function FormPage() {
 
     //auto select team when name is selected
     const handleNameTeamMatch=(e)=>{
-        console.log(e.target.value.split(",")[1]);
         setSelectedTeam(e.target.value.split(",")[1]);
         handleTeamChange(e.target.value.split(",")[1]);
     }
     //only show certain project options when a team is selected
     const handleTeamChange=(e)=>{
         const projectTypes = ["Internal Project","Program-related Project"];
-        console.log(e);
         var teamVal =  "";
         (e.target != undefined)? teamVal = e.target.value : teamVal = e;
-        console.log(teamVal);
         switch(teamVal){
-            case "Operations": setTeam([projectTypes[0]]); handleTypeChange(); break;
+            case "Operations": setTeam([...projectTypes]); handleTypeChange(); break;
             case "Finance": setTeam([projectTypes[0]]); handleTypeChange();break;
             case "Marketing & Communication": setTeam([projectTypes[0]]); handleTypeChange();break;
             case "People & Culture": setTeam([projectTypes[0]]);handleTypeChange(); break;
@@ -136,13 +132,9 @@ function FormPage() {
         setProjects(newProjectValues);
         //add popup reminders
         if(e.target.name == "projectName"){
-            console.log(e.target.value);
-            console.log(reminderInfo);
             var reminderNeed = reminderInfo.filter((ele)=>{return ele.content == e.target.value })
             var reminderExisted = popup.filter((ele)=>{return ele.reminderId == pjId })
-            console.log(reminderNeed);
             if(reminderNeed && reminderExisted.length == 0){
-                console.log(1);
                 setPopup([...popup,{reminderId:pjId,reminderContent:reminderNeed[0].type,reminderUrl:reminderNeed[0].url}]);
             }
             else if(reminderNeed && reminderExisted.length != 0){
@@ -201,6 +193,15 @@ function FormPage() {
             setPjOptions([]);
         }
     }
+    const handleCapacity=(e)=>{
+        if(e.target.value == "Yes"){
+            setCapCheck(true);
+        }
+        else{
+            setCapCheck(false);
+        }
+
+    }
 
     //add project rows into the widget
     const addProjectFields=()=>{
@@ -224,7 +225,6 @@ function FormPage() {
         setSubmitCheck();
         const form = e.currentTarget;
         if(form.checkValidity() === false){
-            console.log(1111111);
             e.preventDefault();
             e.stopPropagation();
             setValidated(true);
@@ -234,18 +234,14 @@ function FormPage() {
         setValidated(true);
         setSubmitCheck(true);
         const personName = e.target.employeeName.value.split(",")[0];
-        console.log(personName);
         const dateValue = new Date(e.target.date.value);
         const month = ("0" + (dateValue.getMonth() + 1)).slice(-2)
         const day = ("0" + dateValue.getDate()).slice(-2);
         const year = dateValue.getFullYear();
         const formattedDate = `${year}-${month}-${day}`;
-        console.log(formattedDate);
-        console.log(e.target.teamName.value);
         const teamName = e.target.date.value;
-        // console.log(e.target.projectType.value);
         const capacity = e.target.capacity.value;
-        // console.log(projects);
+        const extraHours = (e.target.additionalHours == undefined ? 0 : e.target.additionalHours.value );
 
         let queryParent = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
         let varsParent = {
@@ -261,7 +257,8 @@ function FormPage() {
             "status1" : {"label" : capacity}, 
             //total hours
             "numbers8" : count,
-
+            //additional hours
+            "numbers85": extraHours
         })
         };
         
@@ -271,7 +268,6 @@ function FormPage() {
                 const parentID = response;
                 const projectName = projects[i].projectName;
                 const projectGenre = projects[i].projectType;
-                console.log(projects)
                 const projectRole = projects[i].projectRole;
                 const projectHours = projects[i].projectHours;
                 let querySub = 'mutation ($myItemName: String!,$parentID: Int!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }';
@@ -290,15 +286,18 @@ function FormPage() {
 
                 })
                 };
+                const myTimeout = setTimeout(setErrorCheck(false), 60000);
                 createItemSub(querySub,varsSub).then(e=>{console.log(e);
                     if(e.data.hasOwnProperty('errors') || (e.status < 600 && e.status>399) ){
                      setErrorCheck(true);
                     }
                     else{
                     setErrorCheck(false);}
-
-                    console.log(e);
+                    clearTimeout(myTimeout);   
+                    console.log("submission check result: "+e);
                 });
+
+                
             }
         });
 
@@ -332,9 +331,7 @@ function FormPage() {
 
 
     const toggleShowA = (ele)=>{
-        console.log(111);
         const updatedReminder = popup.filter((object, i) => {return object.reminderId != ele.projectId});
-        console.log(updatedReminder);
         setPopup(updatedReminder);
     }
 
@@ -343,7 +340,7 @@ function FormPage() {
         <div className='formSection'>
 
             <Form className='formBlock' onSubmit={handleSubmit} noValidate validated={validated}>
-            <h1>Weekly Project Data Log Form</h1>
+            <h1>Weekly Project Log Form</h1>
             <Form.Group className="mb-5" as={Col} controlId="formBasicEmail">
                     <Form.Label><strong>Enter the Monday of the week:</strong></Form.Label>
                     <div className='customDatePickerWidth'>
@@ -431,7 +428,8 @@ function FormPage() {
                                     <option>Subject Matter Expert</option>
                                     <option>Facilitator/Coach</option>
                                     <option>Tech Engineer/Developer</option>
-                                    <option>Client/PM</option>
+                                    <option>Client/Partnership Manager</option>
+                                    <option>Project Management Support</option>
                                     <option>Analyst</option>
                                     <option>Other</option>
                                 </Form.Control>
@@ -465,7 +463,7 @@ function FormPage() {
 
                 <Form.Group className="mb-5" controlId="formCapacity">
                     <Form.Label><strong>Do you feel you have the capacity to take on a new project?</strong></Form.Label>
-                    <Form.Control as="select" name="capacity" aria-label="Default select example" required>
+                    <Form.Control as="select" name="capacity" aria-label="Default select example" required onChange={(e)=>handleCapacity(e)}>
                         <option></option>
                         <option>Yes</option>
                         <option>No</option>
@@ -474,7 +472,17 @@ function FormPage() {
                         Please choose an option.
                     </Form.Control.Feedback>
                 </Form.Group>
+                {capCheck ? 
+                <Form.Group className="mb-5" controlId="formCapacity">
+                <Form.Label><strong>If yes, how many hours per week would you estimate you could dedicate to a new project? </strong></Form.Label>
+                <Form.Control type="number" name="additionalHours" step="any" placeholder="Enter Time" required />
+                <Form.Control.Feedback type="invalid">
+                    Please input a number.
+                </Form.Control.Feedback>
+            </Form.Group>
+                :null
 
+                }
 
                 <div className='submitButton'>
                 <Button className='submitButton mb-3' variant="primary" type="submit" >

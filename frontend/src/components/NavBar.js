@@ -46,7 +46,16 @@ function NavBar(props) {
        <>
        <Navbar bg="light" expand="lg">
         <Container>
-            <Navbar.Brand href="#home">Teaching Lab Survey</Navbar.Brand>
+            
+            <Navbar.Brand href="#home">
+            <img
+              alt=""
+              src={require("../img/tllogo.png")}
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{' '}
+            Teaching Lab Survey Platform</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
