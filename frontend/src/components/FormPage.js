@@ -487,7 +487,7 @@ function FormPage() {
                 {errorCheck==false ? 
                 <Alert key='success' variant='success' >
                     Your form is submitted successfully!
-                </Alert>:null};
+                </Alert>:null}
                 {errorCheck==true ? 
                 <Alert key='danger' variant='danger'>
                 Something went wrong! If this happens constantly, please contact technology support.
