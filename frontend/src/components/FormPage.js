@@ -34,6 +34,7 @@ function FormPage() {
     const [errorCheck, setErrorCheck] = useState();
     const [submitCheck, setSubmitCheck] = useState();
     const [capCheck, setCapCheck] = useState();
+    const [nameCheck,setNameCheck] = useState();
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
@@ -101,6 +102,13 @@ function FormPage() {
     const handleNameTeamMatch=(e)=>{
         setSelectedTeam(e.target.value.split(",")[1]);
         handleTeamChange(e.target.value.split(",")[1]);
+        console.log(e.target.value[0])
+        if(e.target.value.split(",")[0] == "missing name"){
+            setNameCheck(true);
+        }
+        else{
+            setNameCheck(false);
+        }
     }
     //only show certain project options when a team is selected
     const handleTeamChange=(e)=>{
@@ -233,7 +241,8 @@ function FormPage() {
         e.preventDefault();
         setValidated(true);
         setSubmitCheck(true);
-        const personName = e.target.employeeName.value.split(",")[0];
+        
+        const personName = (nameCheck ? e.target.employeeNameManual.value : e.target.employeeName.value.split(",")[0]);
         const dateValue = new Date(e.target.date.value);
         const month = ("0" + (dateValue.getMonth() + 1)).slice(-2)
         const day = ("0" + dateValue.getDate()).slice(-2);
@@ -354,18 +363,28 @@ function FormPage() {
                     </div>
                 </Form.Group>
                 
-            <Form.Group className="mb-5" controlId="formBasicSite">
+                <Form.Group className="mb-5" controlId="formBasicSite">
                     <Form.Label><strong>What's your name?</strong></Form.Label>
                     <Form.Control name="employeeName" as="select" aria-label="Default select example" onChange={handleNameTeamMatch} required>
                         <option></option>
                         {employmentInfo.map((val,idx)=>(
                             <option value={[val.name, val.department]}>{val.name}</option>
                         ))}
+                         <option value={["missing name", "missing name"]}>Others: My name is not here</option>
                     </Form.Control>
                     <Form.Control.Feedback type="invalid">
                         Please choose a name.
                     </Form.Control.Feedback>
                 </Form.Group>
+
+                {nameCheck? <Form.Group className="mb-5" controlId="formBasicSite">
+                    <Form.Label><strong>Please input your name: </strong></Form.Label>
+                    <Form.Control name="employeeNameManual" as="input" aria-label="Default select example" required>
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">
+                        Please input a name.
+                    </Form.Control.Feedback>
+                </Form.Group> : null}
                 
                 <Form.Group className="mb-5" controlId="formBasicSite">
                     <Form.Label><strong>Which team are you on?</strong></Form.Label>
