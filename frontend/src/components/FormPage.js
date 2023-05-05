@@ -378,7 +378,7 @@ function FormPage() {
                 </Form.Group>
 
                 {nameCheck? <Form.Group className="mb-5" controlId="formBasicSite">
-                    <Form.Label><strong>Please input your name: </strong></Form.Label>
+                    <Form.Label><strong>Please input your full name: </strong></Form.Label>
                     <Form.Control name="employeeNameManual" as="input" aria-label="Default select example" required>
                     </Form.Control>
                     <Form.Control.Feedback type="invalid">
