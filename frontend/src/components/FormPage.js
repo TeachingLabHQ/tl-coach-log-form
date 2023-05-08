@@ -494,7 +494,7 @@ function FormPage() {
                 {capCheck ? 
                 <Form.Group className="mb-5" controlId="formCapacity">
                 <Form.Label><strong>If yes, how many hours per week would you estimate you could dedicate to a new project? </strong></Form.Label>
-                <Form.Control type="number" name="additionalHours" step="any" placeholder="Enter Time" required />
+                <Form.Control type="number" name="additionalHours" step="any" min="0" placeholder="Enter Time" required />
                 <Form.Control.Feedback type="invalid">
                     Please input a number.
                 </Form.Control.Feedback>
