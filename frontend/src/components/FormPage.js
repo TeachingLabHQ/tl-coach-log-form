@@ -605,7 +605,7 @@ function FormPage() {
             </Form>
             <div className='notificationAisle'>
                 <div className='quoteContainer'>
-                    <h4>Org-wide Updates</h4>
+                    <h3>Org-wide Updates</h3>
                     {orgUpdate.map((e)=>
                         <ul>
                             <h5> {e.updateTitle}:</h5>
