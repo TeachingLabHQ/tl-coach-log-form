@@ -56,13 +56,18 @@ h2{
   box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
   color: rgb(255, 255, 255);
   width: 25rem;
-  height: 8rem;
+  max-height: 30rem;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  overflow-y: scroll;
   margin-bottom: 3rem;
   padding:2rem
+}
+
+.quoteContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .formSection{
@@ -102,6 +107,31 @@ h2{
 .ListGroup{
   width:25rem;
   margin: 5rem;
+}
+
+@media screen and (max-width: 1230px) {
+  .formSection {
+    display: flex;
+    justify-content: center;
+    padding-top: 3rem;
+    flex-direction: column-reverse;
+    align-items: center;}
+    .notificationAisle {
+      margin-left: 0rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;}
+
+      .formBlock {
+        width: auto;
+        padding: 3%;
+        border-radius: 3px;
+        background-color: rgba(255, 255, 255, 0.292);
+        border-radius: 25px;
+        box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 0px 1px inset;
+        color: rgb(255, 255, 255);
+        margin-bottom: 3rem;}
+  
 }
 
 @keyframes App-logo-spin {

@@ -23,6 +23,8 @@ function FormPage() {
     const[employmentInfo,setEmploymentInfo] = useState([]);
     const[selectedTeam,setSelectedTeam] = useState();
     const [pickedDate, setPickedDate] = useState(new Date().setDate(new Date().getDate() - new Date().getDay() + 1));
+    const [formattedDateStart, setFormattedDateStart] = useState();
+    const [formattedDateEnd, setFormattedDateEnd] = useState();
     const{accessToken, setAccessToken} = useContext(AccessTokenContext);
     const [count,setCount] = useState(0);
     const pjTypeRef = createRef("");
@@ -35,6 +37,8 @@ function FormPage() {
     const [submitCheck, setSubmitCheck] = useState();
     const [capCheck, setCapCheck] = useState();
     const [nameCheck,setNameCheck] = useState();
+    const [orgUpdate, setOrgUpdate] =useState([]);
+
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
@@ -44,13 +48,32 @@ function FormPage() {
         fetch(`/demo/info?myParam=${getQuote}`)
         .then((res)=>res.json())
         .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
-        .catch((err)=>console.log(err))
+        .catch((err)=>console.log(err));
+        formatDate();
+        
     },[])
+
+    const formatDate=(e)=>{
+        let ogDate = (e == null)? pickedDate:e;
+        const dateValue = new Date(ogDate);
+        const startMonth = ("0" + (dateValue.getMonth() + 1)).slice(-2)
+        const startDay = ("0" + dateValue.getDate()).slice(-2);
+        const formattedDateStart = `${startMonth}/${startDay}`;
+        const endDateValue = new Date (dateValue.setDate(dateValue.getDate()+6));
+        const endMonth = ("0" + (endDateValue.getMonth() + 1)).slice(-2)
+        const endDay = ("0" + endDateValue.getDate()).slice(-2);
+        const formattedDateEnd = `${endMonth}/${endDay}`;
+        setFormattedDateStart(formattedDateStart);
+        setFormattedDateEnd(formattedDateEnd);
+    }
 
     //employee information(name,deparment)
     const getMondayInfo=(e)=>{
         setEmploymentInfo([]);
         setReminderInfo([]);
+        setOrgUpdate([]);
+
+        //fetch notes for projects
         let queryReminder = "{boards(ids:4271509592) {items() { name column_values{text} }}}";
         axios.post("/demo/getMonday",{
             query:queryReminder,
@@ -93,7 +116,56 @@ function FormPage() {
         })
         .then((res)=>res.data.data.boards)
         // .then((data)=>console.log(data[0]))
-        .then((data)=>{setInternalPj(internalPj=>([...internalPj,data[0].groups[0].items]));setProgramPj(programPj=>([...programPj,data[0].groups[1].items]))})
+        .then((data)=>{
+            setInternalPj(internalPj=>([...internalPj,data[0].groups[0].items.sort((a,b)=>{
+ 
+                if(a.name.toLowerCase() < b.name.toLowerCase()){
+                    return -1;
+                }
+                if(a.name.toLowerCase()>b.name.toLowerCase()){
+                    return 1;
+                }
+                return 0;
+            })]));
+            
+            setProgramPj(programPj=>([...programPj,data[0].groups[1].items.sort((a,b)=>{
+ 
+                if(a.name.toLowerCase() < b.name.toLowerCase()){
+                    return -1;
+                }
+                if(a.name.toLowerCase()>b.name.toLowerCase()){
+                    return 1;
+                }
+                return 0;
+            })]))})
+
+            const updatePrep=[];
+            //fetch org updates
+            let queryUpdates = "{boards(ids:4497279600) {items() { name column_values(ids:update_content1){text} }}}";
+            axios.post("/demo/getMonday",{
+                query:queryUpdates,
+            })
+            .then((res)=>res.data.data.boards)
+            .then((data)=>data[0].items.forEach((v)=>{
+                var exist = updatePrep.filter((e)=>{return e.updateTitle == v.name});
+                if(exist.length!=0){
+                    updatePrep.map((e)=>{
+                        if(e.updateTitle == v.name){
+                            e.updateContent.push(v.column_values[0].text)
+                        }
+                        return e;
+                    })
+                }
+                else{
+                    updatePrep.push({updateTitle: v.name, updateContent: [v.column_values[0].text]});
+                   
+                }
+                
+        
+            }));
+            setOrgUpdate(updatePrep);
+            console.log(orgUpdate);
+           
       
         }
 
@@ -248,9 +320,11 @@ function FormPage() {
         const day = ("0" + dateValue.getDate()).slice(-2);
         const year = dateValue.getFullYear();
         const formattedDate = `${year}-${month}-${day}`;
+
         const teamName = e.target.date.value;
         const capacity = e.target.capacity.value;
         const extraHours = (e.target.additionalHours == undefined ? 0 : e.target.additionalHours.value );
+        const comment = e.target.comment.value
 
         let queryParent = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
         let varsParent = {
@@ -267,7 +341,9 @@ function FormPage() {
             //total hours
             "numbers8" : count,
             //additional hours
-            "numbers85": extraHours
+            "numbers85": extraHours,
+            //comment
+            "notes": comment
         })
         };
         
@@ -350,17 +426,19 @@ function FormPage() {
 
             <Form className='formBlock' onSubmit={handleSubmit} noValidate validated={validated}>
             <h1>Weekly Project Log Form</h1>
-            <Form.Group className="mb-5" as={Col} controlId="formBasicEmail">
+            <Form.Group className="mb-4" as={Col} controlId="formBasicEmail">
                     <Form.Label><strong>Enter the Monday of the week:</strong></Form.Label>
                     <div className='customDatePickerWidth'>
                         <DatePicker 
                         showIcon 
                         selected={pickedDate}
-                        onChange={(date) => setPickedDate(date)}
+                        onChange={(date) => {setPickedDate(date);formatDate(date)}}
                         filterDate={(date) => date.getDay() === 1}
                         name="date"
                         style={{width: "100%"}} />
+                        <strong>The date indicates the week from {formattedDateStart} to {formattedDateEnd}. (Please log any weekend hours as appropriate)</strong>
                     </div>
+                    
                 </Form.Group>
                 
                 <Form.Group className="mb-5" controlId="formBasicSite">
@@ -378,7 +456,7 @@ function FormPage() {
                 </Form.Group>
 
                 {nameCheck? <Form.Group className="mb-5" controlId="formBasicSite">
-                    <Form.Label><strong>Please input your full name: </strong></Form.Label>
+                    <Form.Label><strong>Please enter your full name: </strong></Form.Label>
                     <Form.Control name="employeeNameManual" as="input" aria-label="Default select example" required>
                     </Form.Control>
                     <Form.Control.Feedback type="invalid">
@@ -467,7 +545,7 @@ function FormPage() {
                             {popup.map((el,idx)=>(
                                 (el.reminderId == ele.projectId & el.reminderContent != "" ) ?
                             <Alert url={el.reminderUrl} key='info' variant='info' onClose={() => toggleShowA(ele)} dismissible>
-                           {(el.reminderUrl == null ? "Note: " : <Alert.Link href={el.reminderUrl[0]}> Click the Link </Alert.Link>)}
+                           {(el.reminderUrl == null ? "Note: " : <Alert.Link href={el.reminderUrl[0]} target="_blank"> Click the Link </Alert.Link>)}
                         {el.reminderContent}
                           </Alert> :null)
                           )}
@@ -482,15 +560,13 @@ function FormPage() {
 
                 <Form.Group className="mb-5" controlId="formCapacity">
                     <Form.Label><strong>Do you feel you have the capacity to take on a new project?</strong></Form.Label>
-                    <Form.Control as="select" name="capacity" aria-label="Default select example" required onChange={(e)=>handleCapacity(e)}>
+                    <Form.Control as="select" name="capacity" aria-label="Default select example" onChange={(e)=>handleCapacity(e)}>
                         <option></option>
                         <option>Yes</option>
                         <option>No</option>
                     </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                        Please choose an option.
-                    </Form.Control.Feedback>
                 </Form.Group>
+
                 {capCheck ? 
                 <Form.Group className="mb-5" controlId="formCapacity">
                 <Form.Label><strong>If yes, how many hours per week would you estimate you could dedicate to a new project? </strong></Form.Label>
@@ -500,8 +576,13 @@ function FormPage() {
                 </Form.Control.Feedback>
             </Form.Group>
                 :null
-
                 }
+
+                <Form.Group className="mb-5" controlId="formBasicSite">
+                    <Form.Label><strong>Do you have any additional comments? </strong></Form.Label>
+                    <Form.Control name="comment" as="input" aria-label="Default select example">
+                    </Form.Control>
+                </Form.Group> 
 
                 <div className='submitButton'>
                 <Button className='submitButton mb-3' variant="primary" type="submit" >
@@ -524,9 +605,17 @@ function FormPage() {
             </Form>
             <div className='notificationAisle'>
                 <div className='quoteContainer'>
-                    <h4>Quote of the Week</h4>
-                    <h6>{quote.sentence}</h6>
-                    <h6>{quote.author}</h6>
+                    <h4>Org-wide Updates</h4>
+                    {orgUpdate.map((e)=>
+                        <ul>
+                            <h5> {e.updateTitle}:</h5>
+                            {e.updateContent.map((c)=>
+                                <li>{c}</li>
+                            )}
+                            
+                         </ul>
+                    )}
+                   
                 </div>
                 <div className='timeCounter'>
                     <h3>Total Time</h3>
