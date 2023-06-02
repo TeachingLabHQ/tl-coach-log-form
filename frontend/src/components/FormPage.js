@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect, createRef} from 'react';
+import React, {useState, useContext, useEffect, createRef, useRef} from 'react';
 import {AccessTokenContext} from "../contexts/accessTokenContext";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -10,6 +10,8 @@ import '../App.css';
 import DatePicker from "react-datepicker";
 import Alert from 'react-bootstrap/Alert';
 import Spinner from 'react-bootstrap/Spinner';
+import Modal from 'react-bootstrap/Modal';
+import Select from "react-select";
 
 
 
@@ -19,7 +21,7 @@ function FormPage() {
     const[team,setTeam] = useState([""]);
     const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectType:"", projectName:"",projectRole:"",projectHours:0}]);
     const[options,setOptions] = useState(["Operations", "Program", "Business Development","Finance","Learning & Research","Marketing & Communication","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
-    const[pjOptions,setPjOptions] = useState([]);
+    const[pjOptions,setPjOptions] = useState([""]);
     const[employmentInfo,setEmploymentInfo] = useState([]);
     const[selectedTeam,setSelectedTeam] = useState();
     const [pickedDate, setPickedDate] = useState(new Date().setDate(new Date().getDate() - new Date().getDay() + 1));
@@ -38,13 +40,28 @@ function FormPage() {
     const [capCheck, setCapCheck] = useState();
     const [nameCheck,setNameCheck] = useState();
     const [orgUpdate, setOrgUpdate] =useState([]);
+    const [show, setShow] = useState(false);
+    const [showCheck, setShowCheck] = useState(false);
+    const handleModalClose = () => {setShowCheck(true)};
+    const handleClose = () => setShow(false);
+    const pjRoles = [
+        { target: {name:"projectRole", value: "Analyst" }, label: "Analyst", value: "Analyst" },
+        { target: {name:"projectRole", value: "Client/Partnership Manager"}, label: "Client/Partnership Manager", value: "Client/Partnership Manager" },
+        { target: {name:"projectRole", value: "Facilitator/Coach" }, label: "Facilitator/Coach", value: "Facilitator/Coach"},
+        { target: {name:"projectRole", value: "Instructional Designer"}, label: "Instructional Designer", value: "Instructional Designer" },
+        { target: {name:"projectRole", value: "Project Lead"}, label: "Project Lead", value: "Project Lead"},
+        { target: {name:"projectRole", value: "Project Sponsor"}, label: "Project Sponsor", value: "Project Sponsor"},
+        { target: {name:"projectRole", value: "Project Management Support"}, label: "Project Management Support", value: "Project Management Support" },
+        { target: {name:"projectRole", value: "Subject Matter Expert"}, label: "Subject Matter Expert", value: "Subject Matter Expert"},
+        { target: {name:"projectRole", value: "Tech Engineer/Developer"}, label: "Tech Engineer/Developer", value: "Tech Engineer/Developer" },
+        { target: {name:"projectRole", value: "Others"}, label: "Others", value: "Others" }
+      ];
+
 
  
     // to get empolyee info from Monday whe the page loads
     useEffect(()=>{
         getMondayInfo();
-        // getProject();
-        // getProjectCategorizaton();
         fetch(`/demo/info?myParam=${getQuote}`)
         .then((res)=>res.json())
         .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
@@ -73,7 +90,7 @@ function FormPage() {
         setReminderInfo([]);
         setOrgUpdate([]);
 
-        //fetch notes for projects
+        //fetch reminder info for projects
         let queryReminder = "{boards(ids:4271509592) {items() { name column_values{text} }}}";
         axios.post("/demo/getMonday",{
             query:queryReminder,
@@ -85,10 +102,6 @@ function FormPage() {
             setReminderInfo(reminderInfo=>(
                 [...reminderInfo,{content:v.name, type:v.column_values[0].text, url:v.column_values[1].text.match(/\bhttps?:\/\/\S+/gi)}])
                 ));
-            // data[1].items.map((val,index)=>
-            // setEmploymentInfo(employmentInfo=>(
-            //     [...employmentInfo,{name:val.name, department:val.column_values[2].text}])
-            //     ));
         });
 
         let queryEmployee = "{boards(ids:2227132353) {items() { name column_values(ids:dropdown7){text} }}}";
@@ -98,10 +111,6 @@ function FormPage() {
         .then((res)=>res.data.data.boards)
         // .then((data)=>console.log(data))
         .then((data)=>{
-            // data[0].items.map((v,index)=>
-            // setReminderInfo(reminderInfo=>(
-            //     [...reminderInfo,{content:v.name, type:v.column_values[0].text}])
-            //     ));
             data[0].items.map((val,index)=>
             setEmploymentInfo(employmentInfo=>(
                 [...employmentInfo,{name:val.name, department:val.column_values[0].text}].sort((a,b)=>{ if(a.name.toLowerCase() < b.name.toLowerCase()) return -1;
@@ -126,7 +135,7 @@ function FormPage() {
                     return 1;
                 }
                 return 0;
-            })]));
+            }).map(e=>{return ({target:{name:"projectName",value:e.name},label:e.name,value:e.name})})]));
             
             setProgramPj(programPj=>([...programPj,data[0].groups[1].items.sort((a,b)=>{
  
@@ -137,7 +146,7 @@ function FormPage() {
                     return 1;
                 }
                 return 0;
-            })]))})
+            }).map(e=>{return ({target:{name:"projectName",value:e.name},label:e.name,value:e.name})})]))})
 
             const updatePrep=[];
             //fetch org updates
@@ -160,8 +169,7 @@ function FormPage() {
                     updatePrep.push({updateTitle: v.name, updateContent: [v.column_values[0].text]});
                    
                 }
-                
-        
+
             }));
             setOrgUpdate(updatePrep);
             console.log(orgUpdate);
@@ -208,6 +216,7 @@ function FormPage() {
         let newProjectValues = [...projects];
         let sumHours = 0;
         //update project information (project name/role/time)
+        console.log(e);
         newProjectValues[i][e.target.name] = e.target.value;
         setProjects(newProjectValues);
         //add popup reminders
@@ -245,20 +254,37 @@ function FormPage() {
         if(typeof e == "object"){
             var exist = pjOptions.filter((e)=>{return e.hasOwnProperty(ele.projectId)});
             if(e.target.value == "Internal Project" ){
+                // { target: {name:"projectRole", value: "Project Lead"}, label: "Project Lead"},
+                // let internalPjList = [];
+                // internalPj.map((e,idx)=>(
+                //     ...internalPj[idx],internalPjList.push({target:{name:e.name,value:e.name},label:e.name});
+                // ));
+                // console.log(internalPj)
+                // let nextInternalPj;
+                // if(internalPj.length == 1 ){
+                //     nextInternalPj = internalPj[0].map(e=>{return ({target:{name:e.name,value:e.name},label:e.name})});
+                //     setInternalPj(nextInternalPj);
+                // }
+               
+                // console.log(internalPj);
                 if(exist.length != 0){
                     setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=internalPj[0]}return e}));
+                    console.log(pjOptions);
                 }
                 else{
                     setPjOptions([...pjOptions,{[ele.projectId]:internalPj[0]}]);
+                    console.log(pjOptions);
                 }
                 
             }
             else if(e.target.value == "Program-related Project" ){
                 if(exist.length != 0){
                     setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=programPj[0]}return e}));
+                    console.log(pjOptions);
                 }
                 else{
                     setPjOptions([...pjOptions,{[ele.projectId]:programPj[0]}]);
+                    console.log(pjOptions);
                 }
             }
             else{
@@ -270,7 +296,7 @@ function FormPage() {
         //if the team name is manually reselected, clear all project inputs
         else{
             setProjects([{projectId: new Date().getTime(), projectType:"",projectName:"",projectRole:"",projectHours:0}]);
-            setPjOptions([]);
+            setPjOptions([""]);
         }
     }
     const handleCapacity=(e)=>{
@@ -308,12 +334,21 @@ function FormPage() {
             e.preventDefault();
             e.stopPropagation();
             setValidated(true);
+            setSubmitCheck(false)
+            console.log(111);
         }
         else{
         e.preventDefault();
         setValidated(true);
+
+        //check admin
+        let projectCheck = projects.some((e)=>{ return e.projectName.includes('Admin')});
+        if(projectCheck == false && showCheck==false){
+            setShow(true);
+            return;
+        }
         setSubmitCheck(true);
-        
+        setShowCheck(false);
         const personName = (nameCheck ? e.target.employeeNameManual.value : e.target.employeeName.value.split(",")[0]);
         const dateValue = new Date(e.target.date.value);
         const month = ("0" + (dateValue.getMonth() + 1)).slice(-2)
@@ -347,7 +382,7 @@ function FormPage() {
         })
         };
         
-        // createItem(queryParent,varsParent);
+        // create subitems on Monday
         createItem(queryParent,varsParent).then((response)=>{
             for(var i = 0; i<projects.length;i++){
                 const parentID = response;
@@ -379,7 +414,7 @@ function FormPage() {
                     else{
                     setErrorCheck(false);}
                     clearTimeout(myTimeout);   
-                    console.log("submission check result: "+e);
+                    console.log(e);
                 });
 
                 
@@ -427,7 +462,7 @@ function FormPage() {
             <Form className='formBlock' onSubmit={handleSubmit} noValidate validated={validated}>
             <h1>Weekly Project Log Form</h1>
             <Form.Group className="mb-4" as={Col} controlId="formBasicEmail">
-                    <Form.Label><strong>Enter the Monday of the week:</strong></Form.Label>
+                    <Form.Label><strong>Enter the Monday of the week:*</strong></Form.Label>
                     <div className='customDatePickerWidth'>
                         <DatePicker 
                         showIcon 
@@ -442,7 +477,7 @@ function FormPage() {
                 </Form.Group>
                 
                 <Form.Group className="mb-5" controlId="formBasicSite">
-                    <Form.Label><strong>What's your name?</strong></Form.Label>
+                    <Form.Label><strong>What's your name?*</strong></Form.Label>
                     <Form.Control name="employeeName" as="select" aria-label="Default select example" onChange={handleNameTeamMatch} required>
                         <option></option>
                         {employmentInfo.map((val,idx)=>(
@@ -456,7 +491,7 @@ function FormPage() {
                 </Form.Group>
 
                 {nameCheck? <Form.Group className="mb-5" controlId="formBasicSite">
-                    <Form.Label><strong>Please enter your full name: </strong></Form.Label>
+                    <Form.Label><strong>Please enter your full name:*</strong></Form.Label>
                     <Form.Control name="employeeNameManual" as="input" aria-label="Default select example" required>
                     </Form.Control>
                     <Form.Control.Feedback type="invalid">
@@ -465,7 +500,7 @@ function FormPage() {
                 </Form.Group> : null}
                 
                 <Form.Group className="mb-5" controlId="formBasicSite">
-                    <Form.Label><strong>Which team are you on?</strong></Form.Label>
+                    <Form.Label><strong>Which team are you on?*</strong></Form.Label>
                     <Form.Control as="select" name="teamName" aria-label="Default select example"  onChange={handleTeamChange} required>
                         <option></option>
                         {options.map((val,idx)=>(
@@ -477,17 +512,13 @@ function FormPage() {
                         Please choose a team.
                     </Form.Control.Feedback>
                 </Form.Group>
-
-                {/* <Form.Group className="mb-1" controlId="formCapacity">
-                    <Form.Label>Total Hours: <bold>{count}</bold></Form.Label>
-                </Form.Group> */}
                 
                 <Form.Group className="mb-3" controlId="formBasicCourse"  >
                     <Row >
-                        <Col  className="my-1"><Form.Label><strong>Project Type</strong></Form.Label></Col>
-                        <Col  className="my-1"><Form.Label><strong>Project Name</strong></Form.Label></Col>
-                        <Col className="my-1"><Form.Label><strong>Project Role</strong></Form.Label></Col>
-                        <Col className="my-1"><Form.Label><strong>Work Hours</strong></Form.Label></Col>
+                        <Col  className="my-1"><Form.Label><strong>Project Type*</strong></Form.Label></Col>
+                        <Col  className="my-1"><Form.Label><strong>Project Name*</strong></Form.Label></Col>
+                        <Col className="my-1"><Form.Label><strong>Project Role*</strong></Form.Label></Col>
+                        <Col className="my-1"><Form.Label><strong>Work Hours*</strong></Form.Label></Col>
                         {projects.length>1 ? 
                             <Col sm={1} className="my-1">
                             </Col>
@@ -507,17 +538,42 @@ function FormPage() {
                             </Col>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
-                                <Form.Control as="select"  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e,ele.projectId)} required>
+                                {/* <Form.Control as="select"  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e,ele.projectId)} required>
                                     <option></option>
                                     {pjOptions && pjOptions.map((value)=>( value.hasOwnProperty(ele.projectId)? value[ele.projectId].map((v,idx)=>(<option value={v.name}>{v.name}</option>)) :null))
 
-                                    }
+                                    } */}
                                     {/* {pjOptions.has(ele.projectId) ? pjOptions[ele.projectId].map((v)=>(<option value={v}>{v}</option>)) : (<option></option>)} */}
-                                </Form.Control>
+                                {/* </Form.Control> */}
+                                <Select options={projects[idx].projectType==="" ? pjOptions[0][ele.projectId]:pjOptions[idx+1][ele.projectId]} name="projectRole" onChange={e=>handleProjectChange(idx,e)} 
+                                styles={{
+                                    option: (provided, state) => ({
+                                        ...provided,
+                                        color: "black",
+                                        
+                                      }),
+                                      menu: styles => ({ ...styles,                 
+                                        width: '250px'
+                                       })  
+                                  }}
+                                required/>
                             </Col>
                             <Col className="my-1">
                                 <Form.Label visuallyHidden="true">role</Form.Label>
-                                <Form.Control as="select" aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)} required>
+
+                                <Select  options={pjRoles} name="projectRole" onChange={e=>handleProjectChange(idx,e)} 
+                                styles={{
+                                    option: (provided, state) => ({
+                                        ...provided,
+                                        color: "black",
+                                      }),
+                                      menu: styles => ({ ...styles,                 
+                                        width: '250px'
+                                       })  
+                                  }}
+                                required/>
+                               
+                                {/* <Form.Control as="select" aria-label="Default select example" name="projectRole" onChange={e=>{handleProjectChange(idx,e)}}  ref={inputRef} required>
                                     <option></option>
                                     <option>Project Lead</option>
                                     <option>Project Sponsor</option>
@@ -529,7 +585,8 @@ function FormPage() {
                                     <option>Project Management Support</option>
                                     <option>Analyst</option>
                                     <option>Other</option>
-                                </Form.Control>
+                                </Form.Control> */}
+                                
                             </Col>    
                             <Col className="my-1">
                                 <Form.Label visuallyHidden="true" >hours</Form.Label>
@@ -588,10 +645,30 @@ function FormPage() {
                 <Button className='submitButton mb-3' variant="primary" type="submit" >
                     Submit
                 </Button>      
-                </div>     
+                </div>  
+
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Reminder</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Are you sure you don't want to submit any admin time?</Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        No
+                    </Button>
+                    <Button variant="primary" onClick={(e)=>{handleClose();handleModalClose()}}>
+                        If Yes, please click submit again
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
+
                 {submitCheck==true && errorCheck == undefined ? 
                 <Spinner animation="border" variant="light" />:null
                 }    
+                {submitCheck==false ? 
+                <Alert key='warning' variant='warning' >
+                    Error: Please make sure all required fields (*) are filled out.
+                </Alert>:null}
                 {errorCheck==false ? 
                 <Alert key='success' variant='success' >
                     Your form is submitted successfully!
@@ -605,7 +682,7 @@ function FormPage() {
             </Form>
             <div className='notificationAisle'>
                 <div className='quoteContainer'>
-                    <h3>Org-wide Updates</h3>
+                    <h3>Org-wide Updates (Test)</h3>
                     {orgUpdate.map((e)=>
                         <ul>
                             <h5> {e.updateTitle}:</h5>
