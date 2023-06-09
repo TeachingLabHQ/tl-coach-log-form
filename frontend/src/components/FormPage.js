@@ -22,7 +22,7 @@ function FormPage() {
     const[team,setTeam] = useState([""]);
     const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectType:"", projectName:"",projectRole:"",projectHours:0}]);
     const[options,setOptions] = useState(["Operations", "Program", "Business Development","Finance","Learning & Research","Marketing & Communication","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
-    const[pjOptions,setPjOptions] = useState([""]);
+    const[pjOptions,setPjOptions] = useState([{"":""}]);
     const[employmentInfo,setEmploymentInfo] = useState([]);
     const[selectedTeam,setSelectedTeam] = useState();
     const [pickedDate, setPickedDate] = useState(new Date().setDate(new Date().getDate() - new Date().getDay() + 1));
@@ -320,7 +320,7 @@ function FormPage() {
         //if the team name is manually reselected, clear all project inputs
         else{
             setProjects([{projectId: new Date().getTime(), projectType:"",projectName:"",projectRole:"",projectHours:0}]);
-            setPjOptions([""]);
+        setPjOptions([{"":""}]);
         }
     }
     const handleCapacity=(e)=>{
@@ -345,6 +345,9 @@ function FormPage() {
         }
         const updatedList = projects.filter((object, i) => object.projectId != ele.projectId);
         setProjects(updatedList);
+        const updatedpjOptionList = pjOptions.filter((object, i) => object != ele.projectId);
+        setPjOptions(updatedpjOptionList);
+        console.log(pjOptions)
     }
 
 
@@ -563,7 +566,7 @@ function FormPage() {
                             </Col>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
-                                <Select options={projects[idx].projectType==="" ? pjOptions[0][ele.projectId]:pjOptions[idx+1][ele.projectId]} name="projectRole" onChange={e=>{handleProjectChange(idx,e)}} 
+                                <Select options={   projects[idx].projectType==="" ? pjOptions[0][ele.projectId]: pjOptions.filter((e)=>{return e.hasOwnProperty(ele.projectId)})[0][ele.projectId] } name="projectRole" onChange={e=>{handleProjectChange(idx,e)}} 
                                 styles={{
                                     option: (provided, state) => ({
                                         ...provided,
