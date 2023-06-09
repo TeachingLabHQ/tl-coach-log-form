@@ -177,22 +177,28 @@ function FormPage() {
 
         }
 
-        const[preRole, setPreRole] = useState()
+        const[preRole, setPreRole] = useState([])
         //auto select others for admin project
-        const presetRole = (idx,e) => {
-            console.log(e.target.value);
-            if(e.target.value == "TL_Internal Admin" || e.target.value == "TL_Programmatic Admin"){
-                setPreRole("Other");
-                let newProjectValues = [...projects];
-                //update project information (project name/role/time)
-                console.log(e.target.value);
-                newProjectValues[idx]["projectRole"] = "Other";
-                setProjects(newProjectValues);
-            }
-            else{
-                setPreRole("");
-            }
-        }
+        // const presetRole = (idx,e) => {
+        //     console.log(e.target.value);
+
+        //     if(e.target.value == "TL_Internal Admin" || e.target.value == "TL_Programmatic Admin"){
+              
+
+        //         setPreRole(preRole=>([...preRole,["Other",idx]]));
+        //         let newProjectValues = [...projects];
+        //         //update project information (project name/role/time)
+        //         console.log(e.target.value);
+        //         newProjectValues[idx]["projectRole"] = "Other";
+        //         setProjects(newProjectValues);
+        //     }
+        //     else{
+        //         if(preRole.some((i)=>{return i[1] == })){
+
+        //         }
+        //     }
+            
+        // }
         //auto select team when name is selected
     const handleNameTeamMatch=(e)=>{
         setSelectedTeam(e.target.value.split(",")[1]);
@@ -233,6 +239,9 @@ function FormPage() {
         //update project information (project name/role/time)
         console.log(e.target.value);
         newProjectValues[i][e.target.name] = e.target.value;
+        if(e.target.value == "TL_Internal Admin" || e.target.value == "TL_Programmatic Admin"){
+            newProjectValues[i]["projectRole"] = "Other";
+        }
         setProjects(newProjectValues);
         //add popup reminders
         if(e.target.name == "projectName"){
@@ -554,7 +563,7 @@ function FormPage() {
                             </Col>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
-                                <Select options={projects[idx].projectType==="" ? pjOptions[0][ele.projectId]:pjOptions[idx+1][ele.projectId]} name="projectRole" onChange={e=>{handleProjectChange(idx,e);presetRole(idx,e)}} 
+                                <Select options={projects[idx].projectType==="" ? pjOptions[0][ele.projectId]:pjOptions[idx+1][ele.projectId]} name="projectRole" onChange={e=>{handleProjectChange(idx,e)}} 
                                 styles={{
                                     option: (provided, state) => ({
                                         ...provided,
@@ -583,8 +592,8 @@ function FormPage() {
                                 required/> */}
                                 <Form.Control as="select" aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)} required>
                                 <option></option>
-                                {pjRoles.map((val,idx)=>(
-                                    (preRole == val.value)?<option value={val.value} selected >{val.value}</option>:
+                                {pjRoles.map((val)=>(
+                                    (projects.some((i)=> {return i.projectId == ele.projectId}) && projects[projects.findIndex((i)=> {return i.projectId == ele.projectId})].projectRole == val.value)?<option value={val.value} selected >{val.value}</option>:
                                     <option value={val.value} >{val.value}</option>
                                 ))}
                                 </Form.Control>
