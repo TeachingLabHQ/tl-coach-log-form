@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React, {useState, useContext, useEffect, createRef, useRef} from 'react';
 import {AccessTokenContext} from "../contexts/accessTokenContext";
 import Form from 'react-bootstrap/Form';
@@ -54,7 +55,7 @@ function FormPage() {
         { target: {name:"projectRole", value: "Project Management Support"}, label: "Project Management Support", value: "Project Management Support" },
         { target: {name:"projectRole", value: "Subject Matter Expert"}, label: "Subject Matter Expert", value: "Subject Matter Expert"},
         { target: {name:"projectRole", value: "Tech Engineer/Developer"}, label: "Tech Engineer/Developer", value: "Tech Engineer/Developer" },
-        { target: {name:"projectRole", value: "Others"}, label: "Others", value: "Others" }
+        { target: {name:"projectRole", value: "Other"}, label: "Other", value: "Other" }
       ];
 
 
@@ -173,12 +174,26 @@ function FormPage() {
             }));
             setOrgUpdate(updatePrep);
             console.log(orgUpdate);
-           
-      
+
         }
 
-
-    //auto select team when name is selected
+        const[preRole, setPreRole] = useState()
+        //auto select others for admin project
+        const presetRole = (idx,e) => {
+            console.log(e.target.value);
+            if(e.target.value == "TL_Internal Admin" || e.target.value == "TL_Programmatic Admin"){
+                setPreRole("Other");
+                let newProjectValues = [...projects];
+                //update project information (project name/role/time)
+                console.log(e.target.value);
+                newProjectValues[idx]["projectRole"] = "Other";
+                setProjects(newProjectValues);
+            }
+            else{
+                setPreRole("");
+            }
+        }
+        //auto select team when name is selected
     const handleNameTeamMatch=(e)=>{
         setSelectedTeam(e.target.value.split(",")[1]);
         handleTeamChange(e.target.value.split(",")[1]);
@@ -216,7 +231,7 @@ function FormPage() {
         let newProjectValues = [...projects];
         let sumHours = 0;
         //update project information (project name/role/time)
-        console.log(e);
+        console.log(e.target.value);
         newProjectValues[i][e.target.name] = e.target.value;
         setProjects(newProjectValues);
         //add popup reminders
@@ -342,11 +357,11 @@ function FormPage() {
         setValidated(true);
 
         //check admin
-        let projectCheck = projects.some((e)=>{ return e.projectName.includes('Admin')});
-        if(projectCheck == false && showCheck==false){
-            setShow(true);
-            return;
-        }
+        // let projectCheck = projects.some((e)=>{ return e.projectName.includes('Admin')});
+        // if(projectCheck == false && showCheck==false){
+        //     setShow(true);
+        //     return;
+        // }
         setSubmitCheck(true);
         setShowCheck(false);
         const personName = (nameCheck ? e.target.employeeNameManual.value : e.target.employeeName.value.split(",")[0]);
@@ -461,6 +476,7 @@ function FormPage() {
 
             <Form className='formBlock' onSubmit={handleSubmit} noValidate validated={validated}>
             <h1>Weekly Project Log Form</h1>
+
             <Form.Group className="mb-4" as={Col} controlId="formBasicEmail">
                     <Form.Label><strong>Enter the Monday of the week:*</strong></Form.Label>
                     <div className='customDatePickerWidth'>
@@ -538,14 +554,7 @@ function FormPage() {
                             </Col>
                             <Col className="my-1" >
                                 <Form.Label visuallyHidden="true">name</Form.Label>
-                                {/* <Form.Control as="select"  aria-label="Default select example" name="projectName"  onChange={e=>handleProjectChange(idx,e,ele.projectId)} required>
-                                    <option></option>
-                                    {pjOptions && pjOptions.map((value)=>( value.hasOwnProperty(ele.projectId)? value[ele.projectId].map((v,idx)=>(<option value={v.name}>{v.name}</option>)) :null))
-
-                                    } */}
-                                    {/* {pjOptions.has(ele.projectId) ? pjOptions[ele.projectId].map((v)=>(<option value={v}>{v}</option>)) : (<option></option>)} */}
-                                {/* </Form.Control> */}
-                                <Select options={projects[idx].projectType==="" ? pjOptions[0][ele.projectId]:pjOptions[idx+1][ele.projectId]} name="projectRole" onChange={e=>handleProjectChange(idx,e)} 
+                                <Select options={projects[idx].projectType==="" ? pjOptions[0][ele.projectId]:pjOptions[idx+1][ele.projectId]} name="projectRole" onChange={e=>{handleProjectChange(idx,e);presetRole(idx,e)}} 
                                 styles={{
                                     option: (provided, state) => ({
                                         ...provided,
@@ -561,7 +570,7 @@ function FormPage() {
                             <Col className="my-1">
                                 <Form.Label visuallyHidden="true">role</Form.Label>
 
-                                <Select  options={pjRoles} name="projectRole" onChange={e=>handleProjectChange(idx,e)} 
+                                {/* <Select  options={pjRoles} name="projectRole" defaultValue={preRole} onChange={e=>handleProjectChange(idx,e)} 
                                 styles={{
                                     option: (provided, state) => ({
                                         ...provided,
@@ -571,21 +580,14 @@ function FormPage() {
                                         width: '250px'
                                        })  
                                   }}
-                                required/>
-                               
-                                {/* <Form.Control as="select" aria-label="Default select example" name="projectRole" onChange={e=>{handleProjectChange(idx,e)}}  ref={inputRef} required>
-                                    <option></option>
-                                    <option>Project Lead</option>
-                                    <option>Project Sponsor</option>
-                                    <option>Instructional Designer</option>
-                                    <option>Subject Matter Expert</option>
-                                    <option>Facilitator/Coach</option>
-                                    <option>Tech Engineer/Developer</option>
-                                    <option>Client/Partnership Manager</option>
-                                    <option>Project Management Support</option>
-                                    <option>Analyst</option>
-                                    <option>Other</option>
-                                </Form.Control> */}
+                                required/> */}
+                                <Form.Control as="select" aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)} required>
+                                <option></option>
+                                {pjRoles.map((val,idx)=>(
+                                    (preRole == val.value)?<option value={val.value} selected >{val.value}</option>:
+                                    <option value={val.value} >{val.value}</option>
+                                ))}
+                                </Form.Control>
                                 
                             </Col>    
                             <Col className="my-1">
@@ -671,35 +673,36 @@ function FormPage() {
                 </Alert>:null}
                 {errorCheck==false ? 
                 <Alert key='success' variant='success' >
-                    Your form is submitted successfully!
+                    Your log is submitted successfully!
                 </Alert>:null}
                 {errorCheck==true ? 
                 <Alert key='danger' variant='danger'>
-                Something went wrong! If this happens constantly, please contact technology support.
+                    Something went wrong! If this happens constantly, please contact project management or technology team.
                 </Alert>:null
                 }
                 
             </Form>
             <div className='notificationAisle'>
                 <div className='quoteContainer'>
-                    <h3>Org-wide Updates (Test)</h3>
+                    <h3 style={{marginBottom:"1.5rem"}}>Updates & Reminders (Test)</h3>
                     {orgUpdate.map((e)=>
-                        <ul>
+                        <>
                             <h5> {e.updateTitle}:</h5>
-                            {e.updateContent.map((c)=>
-                                <li>{c}</li>
-                            )}
-                            
-                         </ul>
+                            <ul>
+                                {e.updateContent.map((c)=>
+                                    <li style={{marginBottom:"1.3rem"}}>{c}</li>
+                                )}
+
+                            </ul>
+                            <hr style={{border: "1px solid #FFFFFF",width: "413px"}}/>
+                        </>
                     )}
-                   
                 </div>
                 <div className='timeCounter'>
                     <h3>Total Time</h3>
                     <h1>{count}</h1>
                 </div>
-                
-            
+
             </div>
        
         </div>
