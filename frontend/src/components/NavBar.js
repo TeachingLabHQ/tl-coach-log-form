@@ -46,7 +46,6 @@ function NavBar(props) {
        <>
        <Navbar bg="light" expand="lg">
         <Container>
-            
             <Navbar.Brand href="#home">
             <img
               alt=""

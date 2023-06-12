@@ -1,11 +1,9 @@
-/* eslint-disable default-case */
-import React, {useState, useContext, useEffect, createRef, useRef} from 'react';
+import React, {useState, useContext, useEffect, createRef} from 'react';
 import {AccessTokenContext} from "../contexts/accessTokenContext";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import Col from 'react-bootstrap/esm/Col';
-import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import '../App.css';
 import DatePicker from "react-datepicker";
@@ -17,8 +15,6 @@ import Select from "react-select";
 
 
 function FormPage() {
-    const getQuote = 'quote';
-    const [quote,setQuote] = useState({sentence:"",author:""});
     const[team,setTeam] = useState([""]);
     const[projects,setProjects] = useState([{projectId: new Date().getTime(), projectType:"", projectName:"",projectRole:"",projectHours:0}]);
     const[options,setOptions] = useState(["Operations", "Program", "Business Development","Finance","Learning & Research","Marketing & Communication","Office of the CEO",,"People & Culture","Technology","Fundraising","Innovation Studio"]);
@@ -58,19 +54,17 @@ function FormPage() {
         { target: {name:"projectRole", value: "Other"}, label: "Other", value: "Other" }
       ];
 
-
- 
-    // to get empolyee info from Monday whe the page loads
+    //get information from Monday and format the current date when the page loads
     useEffect(()=>{
         getMondayInfo();
-        fetch(`/demo/info?myParam=${getQuote}`)
-        .then((res)=>res.json())
-        .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
-        .catch((err)=>console.log(err));
+        // fetch(`/demo/info?myParam=${getQuote}`)
+        // .then((res)=>res.json())
+        // .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
+        // .catch((err)=>console.log(err));
         formatDate();
-        
     },[])
 
+    //format date object
     const formatDate=(e)=>{
         let ogDate = (e == null)? pickedDate:e;
         const dateValue = new Date(ogDate);
@@ -85,13 +79,14 @@ function FormPage() {
         setFormattedDateEnd(formattedDateEnd);
     }
 
-    //employee information(name,deparment)
+    //get employee information(name,deparment)/reminder info from FTE/PTE board and 
     const getMondayInfo=(e)=>{
         setEmploymentInfo([]);
         setReminderInfo([]);
         setOrgUpdate([]);
+        const updatePrep=[];
 
-        //fetch reminder info for projects
+        //fetch reminder info for projects from Project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
         let queryReminder = "{boards(ids:4271509592) {items() { name column_values{text} }}}";
         axios.post("/demo/getMonday",{
             query:queryReminder,
@@ -105,6 +100,7 @@ function FormPage() {
                 ));
         });
 
+        //fetch employee info (name/department) from FTE/PTE board (https://teachinglab.monday.com/boards/2227132353/)
         let queryEmployee = "{boards(ids:2227132353) {items() { name column_values(ids:dropdown7){text} }}}";
         axios.post("/demo/getMonday",{
             query:queryEmployee,
@@ -120,6 +116,7 @@ function FormPage() {
                 ));
         })
 
+        //fetch project information from project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
         let queryPj = "{boards(ids: 4271509592) { groups{items {name}}}}";
         axios.post("/demo/getMonday",{
             query:queryPj,
@@ -149,8 +146,8 @@ function FormPage() {
                 return 0;
             }).map(e=>{return ({target:{name:"projectName",value:e.name},label:e.name,value:e.name})})]))})
 
-            const updatePrep=[];
-            //fetch org updates
+            
+            //fetch org updates from Org updates board (https://teachinglab.monday.com/boards/4497279600)
             let queryUpdates = "{boards(ids:4497279600) {items() { name column_values(ids:update_content1){text} }}}";
             axios.post("/demo/getMonday",{
                 query:queryUpdates,
@@ -173,37 +170,13 @@ function FormPage() {
 
             }));
             setOrgUpdate(updatePrep);
-            console.log(orgUpdate);
 
         }
 
-        const[preRole, setPreRole] = useState([])
-        //auto select others for admin project
-        // const presetRole = (idx,e) => {
-        //     console.log(e.target.value);
-
-        //     if(e.target.value == "TL_Internal Admin" || e.target.value == "TL_Programmatic Admin"){
-              
-
-        //         setPreRole(preRole=>([...preRole,["Other",idx]]));
-        //         let newProjectValues = [...projects];
-        //         //update project information (project name/role/time)
-        //         console.log(e.target.value);
-        //         newProjectValues[idx]["projectRole"] = "Other";
-        //         setProjects(newProjectValues);
-        //     }
-        //     else{
-        //         if(preRole.some((i)=>{return i[1] == })){
-
-        //         }
-        //     }
-            
-        // }
-        //auto select team when name is selected
+    //auto select team when name is selected
     const handleNameTeamMatch=(e)=>{
         setSelectedTeam(e.target.value.split(",")[1]);
         handleTeamChange(e.target.value.split(",")[1]);
-        console.log(e.target.value[0])
         if(e.target.value.split(",")[0] == "missing name"){
             setNameCheck(true);
         }
@@ -211,6 +184,7 @@ function FormPage() {
             setNameCheck(false);
         }
     }
+
     //only show certain project options when a team is selected
     const handleTeamChange=(e)=>{
         const projectTypes = ["Internal Project","Program-related Project"];
@@ -232,13 +206,13 @@ function FormPage() {
         }
     }
 
-    //update project list
+    //document projects logged by users in an array
     const handleProjectChange=(i,e,pjId)=>{
         let newProjectValues = [...projects];
         let sumHours = 0;
         //update project information (project name/role/time)
-        console.log(e.target.value);
         newProjectValues[i][e.target.name] = e.target.value;
+        //auto select project role as "other" when select admin options for project name
         if(e.target.value == "TL_Internal Admin" || e.target.value == "TL_Programmatic Admin"){
             newProjectValues[i]["projectRole"] = "Other";
         }
@@ -258,7 +232,7 @@ function FormPage() {
             }
  
         }
-        //add hours to the total time counter
+        //add hours to the time counter
         if(e.target.name == "projectHours"){
             projects.forEach(e=>{
                 if(e.projectHours==""){
@@ -278,19 +252,6 @@ function FormPage() {
         if(typeof e == "object"){
             var exist = pjOptions.filter((e)=>{return e.hasOwnProperty(ele.projectId)});
             if(e.target.value == "Internal Project" ){
-                // { target: {name:"projectRole", value: "Project Lead"}, label: "Project Lead"},
-                // let internalPjList = [];
-                // internalPj.map((e,idx)=>(
-                //     ...internalPj[idx],internalPjList.push({target:{name:e.name,value:e.name},label:e.name});
-                // ));
-                // console.log(internalPj)
-                // let nextInternalPj;
-                // if(internalPj.length == 1 ){
-                //     nextInternalPj = internalPj[0].map(e=>{return ({target:{name:e.name,value:e.name},label:e.name})});
-                //     setInternalPj(nextInternalPj);
-                // }
-               
-                // console.log(internalPj);
                 if(exist.length != 0){
                     setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=internalPj[0]}return e}));
                     console.log(pjOptions);
@@ -323,6 +284,8 @@ function FormPage() {
         setPjOptions([{"":""}]);
         }
     }
+
+    //show additional question if user say yes to capcity question
     const handleCapacity=(e)=>{
         if(e.target.value == "Yes"){
             setCapCheck(true);
@@ -338,7 +301,7 @@ function FormPage() {
         setProjects([...projects,{projectId:new Date().getTime(),projectType:"",projectName:"",projectRole:"",projectHours:""}])
     }
 
-    //remove project row from the widget
+    //delete project row from the widget
     const removeProjectFields=(ele)=>{
         if(ele.projectHours != ""){
             setCount(count-parseFloat(ele.projectHours));
@@ -350,13 +313,12 @@ function FormPage() {
         console.log(pjOptions)
     }
 
-
-
-    //organize form data before submitting them to Monday
+    //submit data to Monday in the projet log board (https://teachinglab.monday.com/boards/4284585496/views/99921004)
     const handleSubmit=(e)=>{
         setErrorCheck();
         setSubmitCheck();
         const form = e.currentTarget;
+        //form validation
         if(form.checkValidity() === false){
             e.preventDefault();
             e.stopPropagation();
@@ -367,13 +329,6 @@ function FormPage() {
         else{
         e.preventDefault();
         setValidated(true);
-
-        //check admin
-        // let projectCheck = projects.some((e)=>{ return e.projectName.includes('Admin')});
-        // if(projectCheck == false && showCheck==false){
-        //     setShow(true);
-        //     return;
-        // }
         setSubmitCheck(true);
         setShowCheck(false);
         const personName = (nameCheck ? e.target.employeeNameManual.value : e.target.employeeName.value.split(",")[0]);
@@ -387,17 +342,13 @@ function FormPage() {
         const capacity = e.target.capacity.value;
         const extraHours = (e.target.additionalHours == undefined ? 0 : e.target.additionalHours.value );
         const comment = e.target.comment.value
-
+        //create parent items
         let queryParent = 'mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }';
         let varsParent = {
         "groupName" : "topics",
         "myItemName" : personName,
         "columnVals" : JSON.stringify({
             "date4" : {"date" : formattedDate},
-            // //program project 1 name
-            // "updated_programs_options":{"labels":(projectGenre=="Program-related Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]},
-            // //internal project 1 name
-            // "dup__of_2__project_name9":{"labels": (projectGenre=="Internal Project" && 0<projects.length) ? [projects[0].projectName] : ["n/a"]} , 
             // capacity
             "status1" : {"label" : capacity}, 
             //total hours
@@ -452,7 +403,7 @@ function FormPage() {
         
     }
 
-    //push data to Monday
+    //push parent item data to Monday
     const createItem = (query,vars) =>{
        return axios.post("demo/boardUpdate",{
             apiKey: accessToken,
@@ -464,7 +415,7 @@ function FormPage() {
         .catch((err)=>err)
     }
 
-     //push data to Monday
+     //push subitem data to Monday
      const createItemSub = (query,vars) =>{
         return axios.post("/demo/boardUpdate",{
              apiKey: accessToken,
@@ -581,18 +532,6 @@ function FormPage() {
                             </Col>
                             <Col className="my-1">
                                 <Form.Label visuallyHidden="true">role</Form.Label>
-
-                                {/* <Select  options={pjRoles} name="projectRole" defaultValue={preRole} onChange={e=>handleProjectChange(idx,e)} 
-                                styles={{
-                                    option: (provided, state) => ({
-                                        ...provided,
-                                        color: "black",
-                                      }),
-                                      menu: styles => ({ ...styles,                 
-                                        width: '250px'
-                                       })  
-                                  }}
-                                required/> */}
                                 <Form.Control as="select" aria-label="Default select example" name="projectRole" onChange={e=>handleProjectChange(idx,e)} required>
                                 <option></option>
                                 {pjRoles.map((val)=>(
@@ -661,7 +600,7 @@ function FormPage() {
                 </Button>      
                 </div>  
 
-                <Modal show={show} onHide={handleClose}>
+                {/* <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
                     <Modal.Title>Reminder</Modal.Title>
                     </Modal.Header>
@@ -674,7 +613,7 @@ function FormPage() {
                         If Yes, please click submit again
                     </Button>
                     </Modal.Footer>
-                </Modal>
+                </Modal> */}
 
                 {submitCheck==true && errorCheck == undefined ? 
                 <Spinner animation="border" variant="light" />:null

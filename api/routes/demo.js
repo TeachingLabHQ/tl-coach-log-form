@@ -5,6 +5,7 @@ var fetch = require("node-fetch");
 
 const {getDocs, collection} = require("firebase/firestore")
 
+//firebase-not currently using
 router.get("/info", async(req,res,next)=>{
     const allDocData = [];
     console.log(req.query.myParam);
@@ -14,9 +15,8 @@ router.get("/info", async(req,res,next)=>{
 })
 
 
-
+//get data from Monday
 router.post("/getMonday", async(req,res,next)=>{
-
     fetch ("https://api.monday.com/v2", {
         method: 'post',
         headers: {
@@ -34,9 +34,8 @@ router.post("/getMonday", async(req,res,next)=>{
        
 })
 
-
+//upload data to Monday
 router.post("/boardUpdate", async(req,res,next)=>{
-
     fetch ("https://api.monday.com/v2", {
         method: 'post',
         headers: {
