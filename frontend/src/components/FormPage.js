@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React, {useState, useContext, useEffect, createRef} from 'react';
 import {AccessTokenContext} from "../contexts/accessTokenContext";
 import Form from 'react-bootstrap/Form';
@@ -57,10 +58,6 @@ function FormPage() {
     //get information from Monday and format the current date when the page loads
     useEffect(()=>{
         getMondayInfo();
-        // fetch(`/demo/info?myParam=${getQuote}`)
-        // .then((res)=>res.json())
-        // .then((text)=>{let x = Math.floor((Math.random() * text.result[0].quotes.length) );setQuote({sentence:text.result[0].quotes[x].quoteContent,author:text.result[0].quotes[x].quoteAuthor})})
-        // .catch((err)=>console.log(err));
         formatDate();
     },[])
 
@@ -92,7 +89,6 @@ function FormPage() {
             query:queryReminder,
         })
         .then((res)=>res.data.data.boards)
-        // .then((data)=>console.log(data))
         .then((data)=>{
             data[0].items.map((v,index)=>
             setReminderInfo(reminderInfo=>(
@@ -106,7 +102,6 @@ function FormPage() {
             query:queryEmployee,
         })
         .then((res)=>res.data.data.boards)
-        // .then((data)=>console.log(data))
         .then((data)=>{
             data[0].items.map((val,index)=>
             setEmploymentInfo(employmentInfo=>(
@@ -122,7 +117,6 @@ function FormPage() {
             query:queryPj,
         })
         .then((res)=>res.data.data.boards)
-        // .then((data)=>console.log(data[0]))
         .then((data)=>{
             setInternalPj(internalPj=>([...internalPj,data[0].groups[0].items.sort((a,b)=>{
  
@@ -254,22 +248,18 @@ function FormPage() {
             if(e.target.value == "Internal Project" ){
                 if(exist.length != 0){
                     setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=internalPj[0]}return e}));
-                    console.log(pjOptions);
                 }
                 else{
                     setPjOptions([...pjOptions,{[ele.projectId]:internalPj[0]}]);
-                    console.log(pjOptions);
                 }
                 
             }
             else if(e.target.value === "Program-related Project" ){
                 if(exist.length !== 0){
                     setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=programPj[0]}return e}));
-                    console.log(pjOptions);
                 }
                 else{
                     setPjOptions([...pjOptions,{[ele.projectId]:programPj[0]}]);
-                    console.log(pjOptions);
                 }
             }
             else{
@@ -310,7 +300,6 @@ function FormPage() {
         setProjects(updatedList);
         const updatedpjOptionList = pjOptions.filter((object, i) => object != ele.projectId);
         setPjOptions(updatedpjOptionList);
-        console.log(pjOptions)
     }
 
     //submit data to Monday in the projet log board (https://teachinglab.monday.com/boards/4284585496/views/99921004)
@@ -324,7 +313,6 @@ function FormPage() {
             e.stopPropagation();
             setValidated(true);
             setSubmitCheck(false)
-            console.log(111);
         }
         else{
         e.preventDefault();
@@ -590,7 +578,7 @@ function FormPage() {
 
                 <Form.Group className="mb-5" controlId="formBasicSite">
                     <Form.Label><strong>Do you have any additional comments? </strong></Form.Label>
-                    <Form.Control name="comment" as="textarea" rows={5} aria-label="Default select example">
+                    <Form.Control name="comment" as="textarea" rows={4} aria-label="Default select example">
                     </Form.Control>
                 </Form.Group> 
 
