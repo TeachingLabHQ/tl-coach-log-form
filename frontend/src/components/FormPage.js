@@ -262,8 +262,8 @@ function FormPage() {
                 }
                 
             }
-            else if(e.target.value == "Program-related Project" ){
-                if(exist.length != 0){
+            else if(e.target.value === "Program-related Project" ){
+                if(exist.length !== 0){
                     setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=programPj[0]}return e}));
                     console.log(pjOptions);
                 }
@@ -273,7 +273,7 @@ function FormPage() {
                 }
             }
             else{
-                if(exist.length != 0){
+                if(exist.length !== 0){
                     setPjOptions(pjOptions.map((e)=>{if(e.hasOwnProperty(ele.projectId)){e[ele.projectId]=[]}return e}));
                 }
             }
@@ -590,7 +590,7 @@ function FormPage() {
 
                 <Form.Group className="mb-5" controlId="formBasicSite">
                     <Form.Label><strong>Do you have any additional comments? </strong></Form.Label>
-                    <Form.Control name="comment" as="input" aria-label="Default select example">
+                    <Form.Control name="comment" as="textarea" rows={5} aria-label="Default select example">
                     </Form.Control>
                 </Form.Group> 
 
@@ -599,21 +599,6 @@ function FormPage() {
                     Submit
                 </Button>      
                 </div>  
-
-                {/* <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                    <Modal.Title>Reminder</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you don't want to submit any admin time?</Modal.Body>
-                    <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        No
-                    </Button>
-                    <Button variant="primary" onClick={(e)=>{handleClose();handleModalClose()}}>
-                        If Yes, please click submit again
-                    </Button>
-                    </Modal.Footer>
-                </Modal> */}
 
                 {submitCheck==true && errorCheck == undefined ? 
                 <Spinner animation="border" variant="light" />:null
