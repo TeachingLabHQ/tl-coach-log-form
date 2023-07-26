@@ -607,21 +607,13 @@ function FormPage() {
                 
             </Form>
             <div className='notificationAisle'>
-                <div className='quoteContainer'>
-                    <h3 style={{marginBottom:"1.5rem"}}>Updates & Reminders (Test)</h3>
-                    {orgUpdate.map((e)=>
-                        <>
-                            <h5> {e.updateTitle}:</h5>
-                            <ul>
-                                {e.updateContent.map((c)=>
-                                    <li style={{marginBottom:"1.3rem"}}>{c}</li>
-                                )}
+                {/* <div className='quoteContainer'>
+                    <h3 style={{marginBottom:"1.5rem"}}>Quote of the Week</h3>
 
-                            </ul>
-                            <hr style={{border: "1px solid #FFFFFF",width: "413px"}}/>
-                        </>
-                    )}
-                </div>
+                    <h5 style={{fontFamily:"Argent CF", letterSpacing: "-0.5px"}}> {orgUpdate[0]?orgUpdate[0].updateContent:""}</h5>
+                    <p style={{fontFamily:"Argent CF", letterSpacing: "-0.5px"}}>- {orgUpdate[0]?orgUpdate[0].updateTitle:""}</p>
+
+                </div> */}
                 <div className='timeCounter'>
                     <h3>Total Time</h3>
                     <h1>{count}</h1>
