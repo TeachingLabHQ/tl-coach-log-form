@@ -38,10 +38,8 @@ function FormPage() {
     const [capCheck, setCapCheck] = useState();
     const [nameCheck,setNameCheck] = useState();
     const [orgUpdate, setOrgUpdate] =useState([]);
-    const [show, setShow] = useState(false);
-    const [showCheck, setShowCheck] = useState(false);
-    const handleModalClose = () => {setShowCheck(true)};
-    const handleClose = () => setShow(false);
+    const randomIdx = Math.floor(Math.random()*4)
+
     const pjRoles = [
         { target: {name:"projectRole", value: "Analyst" }, label: "Analyst", value: "Analyst" },
         { target: {name:"projectRole", value: "Client/Partnership Manager"}, label: "Client/Partnership Manager", value: "Client/Partnership Manager" },
@@ -158,7 +156,7 @@ function FormPage() {
                     })
                 }
                 else{
-                    updatePrep.push({updateTitle: v.name, updateContent: [v.column_values[0].text]});
+                    updatePrep.push({quoteContent: v.name, quoteArthur: [v.column_values[0].text]});
                    
                 }
 
@@ -318,7 +316,6 @@ function FormPage() {
         e.preventDefault();
         setValidated(true);
         setSubmitCheck(true);
-        setShowCheck(false);
         const personName = (nameCheck ? e.target.employeeNameManual.value : e.target.employeeName.value.split(",")[0]);
         const dateValue = new Date(e.target.date.value);
         const month = ("0" + (dateValue.getMonth() + 1)).slice(-2)
@@ -607,13 +604,13 @@ function FormPage() {
                 
             </Form>
             <div className='notificationAisle'>
-                {/* <div className='quoteContainer'>
+                <div className='quoteContainer'>
                     <h3 style={{marginBottom:"1.5rem"}}>Quote of the Week</h3>
 
-                    <h5 style={{fontFamily:"Argent CF", letterSpacing: "-0.5px"}}> {orgUpdate[0]?orgUpdate[0].updateContent:""}</h5>
-                    <p style={{fontFamily:"Argent CF", letterSpacing: "-0.5px"}}>- {orgUpdate[0]?orgUpdate[0].updateTitle:""}</p>
+                    <h5 style={{fontFamily:"Argent CF", letterSpacing: "-0.5px", fontStyle:"italic", fontSize:"25px"}}> "{orgUpdate[randomIdx]?orgUpdate[randomIdx].quoteContent:""}" </h5>
+                    <p style={{fontFamily:"Argent CF", letterSpacing: "-0.5px", fontSize:"20px"}}>-- {orgUpdate[0]?orgUpdate[randomIdx].quoteArthur:""}</p>
 
-                </div> */}
+                </div>
                 <div className='timeCounter'>
                     <h3>Total Time</h3>
                     <h1>{count}</h1>
