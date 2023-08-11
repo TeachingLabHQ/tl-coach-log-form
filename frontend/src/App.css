@@ -106,6 +106,7 @@ h2 {
   width: 100%;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
+  color: black;
 }
 .submitButton {
   text-align: center;
