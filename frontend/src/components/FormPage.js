@@ -628,11 +628,6 @@ function FormPage() {
 
   return (
     <div className="formAll">
-      <Modals
-        openModal={openModal}
-        modalBody={modalBody}
-        modalHeader={"Reminder: Don't see your project?"}
-      />
       <div className="formSection">
         <Form
           className="formBlock"
@@ -659,7 +654,7 @@ function FormPage() {
                 style={{ width: "100%" }}
               />
               <strong>
-                The date indicates the week from {formattedDateStart} to{" "}
+                *The date indicates the week from {formattedDateStart} to{" "}
                 {formattedDateEnd}. (Please log any weekend hours as
                 appropriate)
               </strong>
@@ -939,6 +934,12 @@ function FormPage() {
               rows={4}
               aria-label="Default select example"
             ></Form.Control>
+            <strong>
+              *Please use this notes section to add details about time
+              allocation this week. If you have concerns about your capacity or
+              your projects, please discuss with your home manager and/or
+              project lead.
+            </strong>
           </Form.Group>
 
           <div className="submitButton">
@@ -984,7 +985,9 @@ function FormPage() {
               }}
             >
               {" "}
-              "{orgUpdate[randomIdx] ? orgUpdate[randomIdx].quoteContent : ""}"{" "}
+              "{orgUpdate[randomIdx]
+                ? orgUpdate[randomIdx].quoteContent
+                : ""}"{" "}
             </h5>
             <p
               style={{
