@@ -974,7 +974,7 @@ function FormPage() {
         </Form>
         <div className="notificationAisle">
           <div className="quoteContainer">
-            <h3 style={{ marginBottom: "1.5rem" }}>Quote of the Week</h3>
+            {/* <h3 style={{ marginBottom: "1.5rem" }}>Quote of the Week</h3>
 
             <h5
               style={{
@@ -997,8 +997,8 @@ function FormPage() {
               }}
             >
               -- {orgUpdate[0] ? orgUpdate[randomIdx].quoteArthur : ""}
-            </p>
-            <Divider />
+            </p> */}
+            {/* <Divider /> */}
             <p
               style={{
                 fontSize: "23px",
