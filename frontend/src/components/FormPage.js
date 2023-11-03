@@ -998,23 +998,58 @@ function FormPage() {
             >
               -- {orgUpdate[0] ? orgUpdate[randomIdx].quoteArthur : ""}
             </p> */}
-            {/* <Divider /> */}
-            <p
-              style={{
-                fontSize: "23px",
-                fontWeight: "700",
-              }}
-            >
-              Reminder: Don't see your project?
-            </p>
-            <p
-              style={{
-                fontSize: "19px",
-                fontWeight: "500",
-              }}
-            >
-              {modalBody}
-            </p>
+            <div>
+              <p
+                style={{
+                  fontSize: "23px",
+                  fontWeight: "700",
+                  textAlign: "center",
+                }}
+              >
+                Annoncement:
+              </p>
+              <p
+                style={{
+                  fontSize: "19px",
+                  fontWeight: "500",
+                }}
+              >
+                Operations team is currently in the process of beta testing an
+                automated project log report process tailored for project
+                leadership. The weekly email will summarize your team’s project
+                logs for a comprehensive overview.{" "}
+              </p>
+              <p
+                style={{
+                  fontSize: "19px",
+                  fontWeight: "500",
+                }}
+              >
+                We invite any project leaders and sponsors to partake in the
+                beta testing process and provide feedback. The beta testing runs
+                until 11/08. Please reach out to Vee Johnson, Kelly Sanders, or
+                YC Pan if interested.
+              </p>
+            </div>
+            <Divider />
+            <div>
+              <p
+                style={{
+                  fontSize: "23px",
+                  fontWeight: "700",
+                }}
+              >
+                Reminder: Don't see your project?
+              </p>
+              <p
+                style={{
+                  fontSize: "19px",
+                  fontWeight: "500",
+                }}
+              >
+                {modalBody}
+              </p>
+            </div>
           </div>
           <div className="timeCounter">
             <h3>Total Time</h3>
