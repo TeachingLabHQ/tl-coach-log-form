@@ -527,6 +527,9 @@ function FormPage() {
           ? 0
           : e.target.additionalHours.value;
       const comment = e.target.comment.value;
+      let totalHours = projects.reduce((a, b) => {
+        return a + parseFloat(b.projectHours);
+      }, 0);
       //create parent items
       let queryParent =
         "mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }";
@@ -538,7 +541,7 @@ function FormPage() {
           // capacity
           status1: { label: capacity },
           //total hours
-          numbers8: count,
+          numbers8: totalHours,
           //additional hours
           numbers85: extraHours,
           //comment
