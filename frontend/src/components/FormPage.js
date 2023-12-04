@@ -1001,7 +1001,7 @@ function FormPage() {
             >
               -- {orgUpdate[0] ? orgUpdate[randomIdx].quoteArthur : ""}
             </p> */}
-            <div>
+            {/* <div>
               <p
                 style={{
                   fontSize: "23px",
@@ -1034,7 +1034,7 @@ function FormPage() {
                 YC Pan if interested.
               </p>
             </div>
-            <Divider />
+            <Divider /> */}
             <div>
               <p
                 style={{
