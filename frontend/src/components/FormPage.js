@@ -79,6 +79,11 @@ function FormPage() {
       value: "Client/Partnership Manager",
     },
     {
+      target: { name: "projectRole", value: "Coach Coordinator" },
+      label: "Coach Coordinator",
+      value: "Coach Coordinator",
+    },
+    {
       target: { name: "projectRole", value: "Facilitator/Coach" },
       label: "Facilitator/Coach",
       value: "Facilitator/Coach",
