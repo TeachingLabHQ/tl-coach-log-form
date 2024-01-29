@@ -153,37 +153,16 @@ function FormPage() {
     setOrgUpdate([]);
     const updatePrep = [];
 
-    //fetch reminder info for projects from Project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
-    let queryReminder =
-      "{boards(ids:4271509592) {items() { name column_values{text} }}}";
-    axios
-      .post("/demo/getMonday", {
-        query: queryReminder,
-      })
-      .then((res) => res.data.data.boards)
-      .then((data) => {
-        data[0].items.map((v, index) =>
-          setReminderInfo((reminderInfo) => [
-            ...reminderInfo,
-            {
-              content: v.name,
-              type: v.column_values[0].text,
-              url: v.column_values[1].text.match(/\bhttps?:\/\/\S+/gi),
-            },
-          ])
-        );
-      });
-
     //fetch employee info (name/department) from FTE/PTE board (https://teachinglab.monday.com/boards/2227132353/)
     let queryEmployee =
-      "{boards(ids:2227132353) {items() { name column_values(ids:dropdown7){text} }}}";
+      '{boards(ids:2227132353) {items_page (limit:200) { items { name column_values(ids:"dropdown7"){text}}}}}';
     axios
       .post("/demo/getMonday", {
         query: queryEmployee,
       })
-      .then((res) => res.data.data.boards)
-      .then((data) => {
-        data[0].items.map((val, index) =>
+      .then((res) => res.data.data.boards[0].items_page.items)
+      .then((items) => {
+        items.map((val, index) =>
           setEmploymentInfo((employmentInfo) =>
             [
               ...employmentInfo,
@@ -195,88 +174,66 @@ function FormPage() {
             })
           )
         );
-      });
-
-    //fetch project information from project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
-    let queryPj = "{boards(ids: 4271509592) { groups{items {name}}}}";
-    axios
-      .post("/demo/getMonday", {
-        query: queryPj,
       })
-      .then((res) => res.data.data.boards)
-      .then((data) => {
-        setInternalPj((internalPj) => [
-          ...internalPj,
-          data[0].groups[0].items
-            .sort((a, b) => {
-              if (a.name.toLowerCase() < b.name.toLowerCase()) {
-                return -1;
-              }
-              if (a.name.toLowerCase() > b.name.toLowerCase()) {
-                return 1;
-              }
-              return 0;
-            })
-            .map((e) => {
-              return {
-                target: { name: "projectName", value: e.name },
-                label: e.name,
-                value: e.name,
-              };
-            }),
-        ]);
+      .finally(() => {
+        //fetch project information from project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
+        let queryPj =
+          "{boards(ids: 4271509592) { items_page (limit:150) { items { name group{title} }}}}";
+        axios
+          .post("/demo/getMonday", {
+            query: queryPj,
+          })
+          .then((res) => res.data.data.boards[0].items_page.items)
+          .then((items) => {
+            const internalPjList = items.filter((i) => {
+              return i.group.title == "Internal Project";
+            });
+            const programPjList = items.filter((i) => {
+              return i.group.title == "Program Project";
+            });
+            setInternalPj((internalPj) => [
+              ...internalPj,
+              internalPjList
+                .sort((a, b) => {
+                  if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                    return -1;
+                  }
+                  if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                    return 1;
+                  }
+                  return 0;
+                })
+                .map((e) => {
+                  return {
+                    target: { name: "projectName", value: e.name },
+                    label: e.name,
+                    value: e.name,
+                  };
+                }),
+            ]);
 
-        setProgramPj((programPj) => [
-          ...programPj,
-          data[0].groups[1].items
-            .sort((a, b) => {
-              if (a.name.toLowerCase() < b.name.toLowerCase()) {
-                return -1;
-              }
-              if (a.name.toLowerCase() > b.name.toLowerCase()) {
-                return 1;
-              }
-              return 0;
-            })
-            .map((e) => {
-              return {
-                target: { name: "projectName", value: e.name },
-                label: e.name,
-                value: e.name,
-              };
-            }),
-        ]);
-      });
-
-    //fetch org updates from Org updates board (https://teachinglab.monday.com/boards/4497279600)
-    let queryUpdates =
-      "{boards(ids:4497279600) {items() { name column_values(ids:update_content1){text} }}}";
-    axios
-      .post("/demo/getMonday", {
-        query: queryUpdates,
-      })
-      .then((res) => res.data.data.boards)
-      .then((data) =>
-        data[0].items.forEach((v) => {
-          var exist = updatePrep.filter((e) => {
-            return e.updateTitle == v.name;
+            setProgramPj((programPj) => [
+              ...programPj,
+              programPjList
+                .sort((a, b) => {
+                  if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                    return -1;
+                  }
+                  if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                    return 1;
+                  }
+                  return 0;
+                })
+                .map((e) => {
+                  return {
+                    target: { name: "projectName", value: e.name },
+                    label: e.name,
+                    value: e.name,
+                  };
+                }),
+            ]);
           });
-          if (exist.length != 0) {
-            updatePrep.map((e) => {
-              if (e.updateTitle == v.name) {
-                e.updateContent.push(v.column_values[0].text);
-              }
-              return e;
-            });
-          } else {
-            updatePrep.push({
-              quoteContent: v.name,
-              quoteArthur: [v.column_values[0].text],
-            });
-          }
-        })
-      );
-    setOrgUpdate(updatePrep);
+      });
   };
 
   //auto select team when name is selected
@@ -360,35 +317,7 @@ function FormPage() {
       newProjectValues[i]["projectRole"] = "Other";
     }
     setProjects(newProjectValues);
-    //add popup reminders
-    if (e.target.name == "projectName") {
-      var reminderNeed = reminderInfo.filter((ele) => {
-        return ele.content == e.target.value;
-      });
-      var reminderExisted = popup.filter((ele) => {
-        return ele.reminderId == pjId;
-      });
-      if (reminderNeed && reminderExisted.length == 0) {
-        setPopup([
-          ...popup,
-          {
-            reminderId: pjId,
-            reminderContent: reminderNeed[0].type,
-            reminderUrl: reminderNeed[0].url,
-          },
-        ]);
-      } else if (reminderNeed && reminderExisted.length != 0) {
-        const updatedReminder = popup.map((object, i) => {
-          if (object.reminderId == pjId) {
-            object.reminderContent = reminderNeed[0].type;
-            object.reminderUrl = reminderNeed[0].url;
-          }
-          return object;
-        });
 
-        setPopup(updatedReminder);
-      }
-    }
     //add hours to the time counter
     if (e.target.name == "projectHours") {
       projects.forEach((e) => {
