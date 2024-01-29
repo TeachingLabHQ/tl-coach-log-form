@@ -492,10 +492,10 @@ function FormPage() {
           const projectRole = projects[i].projectRole;
           const projectHours = projects[i].projectHours;
           let querySub =
-            "mutation ($myItemName: String!,$parentID: Int!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }";
+            "mutation ($myItemName: String!,$parentID: ID!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }";
           let varsSub = {
             myItemName: personName,
-            parentID: parseInt(parentID),
+            parentID: String(parentID),
             columnVals: JSON.stringify({
               date: { date: formattedDate },
               project_role: projectRole,
