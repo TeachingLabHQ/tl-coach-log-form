@@ -32,7 +32,7 @@ function FormPage() {
     "Business Development",
     "Finance",
     "Learning & Research",
-    "Marketing & Communication",
+    "Strategy & Communications",
     "Office of the CEO",
     ,
     "People & Culture",
@@ -261,7 +261,7 @@ function FormPage() {
         setTeam([projectTypes[0]]);
         handleTypeChange();
         break;
-      case "Marketing & Communication":
+      case "Strategy & Communications":
         setTeam([projectTypes[0]]);
         handleTypeChange();
         break;
