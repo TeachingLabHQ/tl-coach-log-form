@@ -44,7 +44,7 @@ function FormPage() {
   const [employmentInfo, setEmploymentInfo] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState();
   const [pickedDate, setPickedDate] = useState(
-    new Date().setDate(new Date().getDate() - new Date().getDay() + 1)
+    new Date().setDate(new Date().getDate() - new Date().getDay() + 1),
   );
   const [formattedDateStart, setFormattedDateStart] = useState();
   const [formattedDateEnd, setFormattedDateEnd] = useState();
@@ -171,8 +171,8 @@ function FormPage() {
               if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
               if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
               return 0;
-            })
-          )
+            }),
+          ),
         );
       })
       .finally(() => {
@@ -346,7 +346,7 @@ function FormPage() {
                 e[ele.projectId] = internalPj[0];
               }
               return e;
-            })
+            }),
           );
         } else {
           setPjOptions([...pjOptions, { [ele.projectId]: internalPj[0] }]);
@@ -359,7 +359,7 @@ function FormPage() {
                 e[ele.projectId] = programPj[0];
               }
               return e;
-            })
+            }),
           );
         } else {
           setPjOptions([...pjOptions, { [ele.projectId]: programPj[0] }]);
@@ -372,7 +372,7 @@ function FormPage() {
                 e[ele.projectId] = [];
               }
               return e;
-            })
+            }),
           );
         }
       }
@@ -421,11 +421,11 @@ function FormPage() {
       setCount(count - parseFloat(ele.projectHours));
     }
     const updatedList = projects.filter(
-      (object, i) => object.projectId != ele.projectId
+      (object, i) => object.projectId != ele.projectId,
     );
     setProjects(updatedList);
     const updatedpjOptionList = pjOptions.filter(
-      (object, i) => object != ele.projectId
+      (object, i) => object != ele.projectId,
     );
     setPjOptions(updatedpjOptionList);
   };
@@ -658,7 +658,7 @@ function FormPage() {
                   </option>
                 ) : (
                   <option value={val}>{val}</option>
-                )
+                ),
               )}
             </Form.Control>
             <Form.Control.Feedback type="invalid">
@@ -761,7 +761,7 @@ function FormPage() {
                           </option>
                         ) : (
                           <option value={val.value}>{val.value}</option>
-                        )
+                        ),
                       )}
                     </Form.Control>
                   </Col>
@@ -809,7 +809,7 @@ function FormPage() {
                       )}
                       {el.reminderContent}
                     </Alert>
-                  ) : null
+                  ) : null,
                 )}
               </Row>
             ))}

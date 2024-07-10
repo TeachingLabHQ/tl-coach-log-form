@@ -10,7 +10,7 @@ const firebaseConfig = {
   projectId: "monday-api-app",
   storageBucket: "monday-api-app.appspot.com",
   messagingSenderId: "468898669698",
-  appId: "1:468898669698:web:ae593c6d1ac19c4277409b"
+  appId: "1:468898669698:web:ae593c6d1ac19c4277409b",
 };
 
 // Initialize Firebase

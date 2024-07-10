@@ -1,3 +1,4 @@
+/* eslint-disable no-sparse-arrays */
 /* eslint-disable default-case */
 import React, { useState, useContext, useEffect, createRef } from "react";
 import { AccessTokenContext } from "../contexts/accessTokenContext";
@@ -10,10 +11,11 @@ import "../App.css";
 import DatePicker from "react-datepicker";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
-import Modal from "react-bootstrap/Modal";
 import Select from "react-select";
+import Modals from "./Modals";
+import { Divider } from "@chakra-ui/react";
 
-function CoachLogPage() {
+function FormPage() {
   const [team, setTeam] = useState([""]);
   const [projects, setProjects] = useState([
     {
@@ -30,7 +32,7 @@ function CoachLogPage() {
     "Business Development",
     "Finance",
     "Learning & Research",
-    "Marketing & Communication",
+    "Strategy & Communications",
     "Office of the CEO",
     ,
     "People & Culture",
@@ -40,10 +42,9 @@ function CoachLogPage() {
   ]);
   const [pjOptions, setPjOptions] = useState([{ "": "" }]);
   const [employmentInfo, setEmploymentInfo] = useState([]);
-  const [] = useState();
   const [selectedTeam, setSelectedTeam] = useState();
   const [pickedDate, setPickedDate] = useState(
-    new Date().setDate(new Date().getDate() - new Date().getDay() + 1)
+    new Date().setDate(new Date().getDate() - new Date().getDay() + 1),
   );
   const [formattedDateStart, setFormattedDateStart] = useState();
   const [formattedDateEnd, setFormattedDateEnd] = useState();
@@ -61,6 +62,10 @@ function CoachLogPage() {
   const [nameCheck, setNameCheck] = useState();
   const [orgUpdate, setOrgUpdate] = useState([]);
   const randomIdx = Math.floor(Math.random() * 4);
+  const openModal = true;
+  const modalBody =
+    "New projects are created when partner contracts have been signed, or internal project budgets have been created. " +
+    "If you do not see your client project listed in the drop down, please contact Daissan Colbert(daissan.colbert@teachinglab.org) and Kelly Sanders(kelly.sanders@teachinglab.org).";
 
   const pjRoles = [
     {
@@ -72,6 +77,11 @@ function CoachLogPage() {
       target: { name: "projectRole", value: "Client/Partnership Manager" },
       label: "Client/Partnership Manager",
       value: "Client/Partnership Manager",
+    },
+    {
+      target: { name: "projectRole", value: "Coach Coordinator" },
+      label: "Coach Coordinator",
+      value: "Coach Coordinator",
     },
     {
       target: { name: "projectRole", value: "Facilitator/Coach" },
@@ -143,164 +153,87 @@ function CoachLogPage() {
     setOrgUpdate([]);
     const updatePrep = [];
 
-    //fetch reminder info for projects from Project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
-    let queryReminder =
-      "{boards(ids:4271509592) {items() { name column_values{text} }}}";
-    axios
-      .post("/demo/getMonday", {
-        query: queryReminder,
-      })
-      .then((res) => res.data.data.boards)
-      .then((data) => {
-        data[0].items.map((v, index) =>
-          setReminderInfo((reminderInfo) => [
-            ...reminderInfo,
-            {
-              content: v.name,
-              type: v.column_values[0].text,
-              url: v.column_values[1].text.match(/\bhttps?:\/\/\S+/gi),
-            },
-          ])
-        );
-      });
-
     //fetch employee info (name/department) from FTE/PTE board (https://teachinglab.monday.com/boards/2227132353/)
     let queryEmployee =
-      "{boards(ids:4898063979) {items() { name column_values(ids:[text,text5]){text} }}}";
-    let employmentInfoList = [];
+      '{boards(ids:2227132353) {items_page (limit:200) { items { name column_values(ids:"dropdown7"){text}}}}}';
     axios
       .post("/demo/getMonday", {
         query: queryEmployee,
       })
-      .then((res) => res.data.data.boards)
-      .then((data) => {
-        data[0].items.map((val, index) =>
+      .then((res) => res.data.data.boards[0].items_page.items)
+      .then((items) => {
+        items.map((val, index) =>
           setEmploymentInfo((employmentInfo) =>
             [
               ...employmentInfo,
-              {
-                name: val.name,
-                partner: val.column_values[0].text,
-                school: val.column_values[1].text,
-              },
+              { name: val.name, department: val.column_values[0].text },
             ].sort((a, b) => {
               if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
               if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
               return 0;
-            })
-          )
+            }),
+          ),
         );
-
-        employmentInfoList = data[0].items.map((val, index) => {
-          return {
-            name: val.name,
-            partner: val.column_values[0].text,
-            school: val.column_values[1].text,
-          };
-        });
-        return data[0].items.map((val, index) => {
-          return {
-            name: val.name,
-            partner: val.column_values[0].text,
-            school: val.column_values[1].text,
-          };
-        });
       })
-      .then((e) => {
-        let partnerList = [];
-        let schoolList = [];
-        if (e != []) {
-          partnerList = e.map((v, idx) => {
-            return v.partner;
-          });
-          schoolList = e.map((v, idx) => {
-            return { school: v.school, partner: v.partner };
-          });
-        }
-
-        console.log(schoolList);
-      });
-
-    //fetch project information from project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
-    let queryPj = "{boards(ids: 4271509592) { groups{items {name}}}}";
-    axios
-      .post("/demo/getMonday", {
-        query: queryPj,
-      })
-      .then((res) => res.data.data.boards)
-      .then((data) => {
-        setInternalPj((internalPj) => [
-          ...internalPj,
-          data[0].groups[0].items
-            .sort((a, b) => {
-              if (a.name.toLowerCase() < b.name.toLowerCase()) {
-                return -1;
-              }
-              if (a.name.toLowerCase() > b.name.toLowerCase()) {
-                return 1;
-              }
-              return 0;
-            })
-            .map((e) => {
-              return {
-                target: { name: "projectName", value: e.name },
-                label: e.name,
-                value: e.name,
-              };
-            }),
-        ]);
-
-        setProgramPj((programPj) => [
-          ...programPj,
-          data[0].groups[1].items
-            .sort((a, b) => {
-              if (a.name.toLowerCase() < b.name.toLowerCase()) {
-                return -1;
-              }
-              if (a.name.toLowerCase() > b.name.toLowerCase()) {
-                return 1;
-              }
-              return 0;
-            })
-            .map((e) => {
-              return {
-                target: { name: "projectName", value: e.name },
-                label: e.name,
-                value: e.name,
-              };
-            }),
-        ]);
-      });
-
-    //fetch org updates from Org updates board (https://teachinglab.monday.com/boards/4497279600)
-    let queryUpdates =
-      "{boards(ids:4497279600) {items() { name column_values(ids:update_content1){text} }}}";
-    axios
-      .post("/demo/getMonday", {
-        query: queryUpdates,
-      })
-      .then((res) => res.data.data.boards)
-      .then((data) =>
-        data[0].items.forEach((v) => {
-          var exist = updatePrep.filter((e) => {
-            return e.updateTitle == v.name;
-          });
-          if (exist.length != 0) {
-            updatePrep.map((e) => {
-              if (e.updateTitle == v.name) {
-                e.updateContent.push(v.column_values[0].text);
-              }
-              return e;
+      .finally(() => {
+        //fetch project information from project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
+        let queryPj =
+          "{boards(ids: 4271509592) { items_page (limit:150) { items { name group{title} }}}}";
+        axios
+          .post("/demo/getMonday", {
+            query: queryPj,
+          })
+          .then((res) => res.data.data.boards[0].items_page.items)
+          .then((items) => {
+            const internalPjList = items.filter((i) => {
+              return i.group.title == "Internal Project";
             });
-          } else {
-            updatePrep.push({
-              quoteContent: v.name,
-              quoteArthur: [v.column_values[0].text],
+            const programPjList = items.filter((i) => {
+              return i.group.title == "Program Project";
             });
-          }
-        })
-      );
-    setOrgUpdate(updatePrep);
+            setInternalPj((internalPj) => [
+              ...internalPj,
+              internalPjList
+                .sort((a, b) => {
+                  if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                    return -1;
+                  }
+                  if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                    return 1;
+                  }
+                  return 0;
+                })
+                .map((e) => {
+                  return {
+                    target: { name: "projectName", value: e.name },
+                    label: e.name,
+                    value: e.name,
+                  };
+                }),
+            ]);
+
+            setProgramPj((programPj) => [
+              ...programPj,
+              programPjList
+                .sort((a, b) => {
+                  if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                    return -1;
+                  }
+                  if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                    return 1;
+                  }
+                  return 0;
+                })
+                .map((e) => {
+                  return {
+                    target: { name: "projectName", value: e.name },
+                    label: e.name,
+                    value: e.name,
+                  };
+                }),
+            ]);
+          });
+      });
   };
 
   //auto select team when name is selected
@@ -325,10 +258,10 @@ function CoachLogPage() {
         handleTypeChange();
         break;
       case "Finance":
-        setTeam([projectTypes[0]]);
+        setTeam([...projectTypes]);
         handleTypeChange();
         break;
-      case "Marketing & Communication":
+      case "Strategy & Communications":
         setTeam([projectTypes[0]]);
         handleTypeChange();
         break;
@@ -384,35 +317,7 @@ function CoachLogPage() {
       newProjectValues[i]["projectRole"] = "Other";
     }
     setProjects(newProjectValues);
-    //add popup reminders
-    if (e.target.name == "projectName") {
-      var reminderNeed = reminderInfo.filter((ele) => {
-        return ele.content == e.target.value;
-      });
-      var reminderExisted = popup.filter((ele) => {
-        return ele.reminderId == pjId;
-      });
-      if (reminderNeed && reminderExisted.length == 0) {
-        setPopup([
-          ...popup,
-          {
-            reminderId: pjId,
-            reminderContent: reminderNeed[0].type,
-            reminderUrl: reminderNeed[0].url,
-          },
-        ]);
-      } else if (reminderNeed && reminderExisted.length != 0) {
-        const updatedReminder = popup.map((object, i) => {
-          if (object.reminderId == pjId) {
-            object.reminderContent = reminderNeed[0].type;
-            object.reminderUrl = reminderNeed[0].url;
-          }
-          return object;
-        });
 
-        setPopup(updatedReminder);
-      }
-    }
     //add hours to the time counter
     if (e.target.name == "projectHours") {
       projects.forEach((e) => {
@@ -441,7 +346,7 @@ function CoachLogPage() {
                 e[ele.projectId] = internalPj[0];
               }
               return e;
-            })
+            }),
           );
         } else {
           setPjOptions([...pjOptions, { [ele.projectId]: internalPj[0] }]);
@@ -454,7 +359,7 @@ function CoachLogPage() {
                 e[ele.projectId] = programPj[0];
               }
               return e;
-            })
+            }),
           );
         } else {
           setPjOptions([...pjOptions, { [ele.projectId]: programPj[0] }]);
@@ -467,7 +372,7 @@ function CoachLogPage() {
                 e[ele.projectId] = [];
               }
               return e;
-            })
+            }),
           );
         }
       }
@@ -516,11 +421,11 @@ function CoachLogPage() {
       setCount(count - parseFloat(ele.projectHours));
     }
     const updatedList = projects.filter(
-      (object, i) => object.projectId != ele.projectId
+      (object, i) => object.projectId != ele.projectId,
     );
     setProjects(updatedList);
     const updatedpjOptionList = pjOptions.filter(
-      (object, i) => object != ele.projectId
+      (object, i) => object != ele.projectId,
     );
     setPjOptions(updatedpjOptionList);
   };
@@ -556,6 +461,9 @@ function CoachLogPage() {
           ? 0
           : e.target.additionalHours.value;
       const comment = e.target.comment.value;
+      let totalHours = projects.reduce((a, b) => {
+        return a + parseFloat(b.projectHours);
+      }, 0);
       //create parent items
       let queryParent =
         "mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }";
@@ -567,7 +475,7 @@ function CoachLogPage() {
           // capacity
           status1: { label: capacity },
           //total hours
-          numbers8: count,
+          numbers8: totalHours,
           //additional hours
           numbers85: extraHours,
           //comment
@@ -584,10 +492,10 @@ function CoachLogPage() {
           const projectRole = projects[i].projectRole;
           const projectHours = projects[i].projectHours;
           let querySub =
-            "mutation ($myItemName: String!,$parentID: Int!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }";
+            "mutation ($myItemName: String!,$parentID: ID!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }";
           let varsSub = {
             myItemName: personName,
-            parentID: parseInt(parentID),
+            parentID: String(parentID),
             columnVals: JSON.stringify({
               date: { date: formattedDate },
               project_role: projectRole,
@@ -665,108 +573,9 @@ function CoachLogPage() {
           validated={validated}
         >
           <h1>Coach Log Form</h1>
-
-          <Form.Group className="mb-4" as={Col} controlId="formBasicEmail">
-            <Form.Label>
-              <strong>Enter the Monday of the week:*</strong>
-            </Form.Label>
-            <div className="customDatePickerWidth">
-              <DatePicker
-                showIcon
-                selected={pickedDate}
-                onChange={(date) => {
-                  setPickedDate(date);
-                  formatDate(date);
-                }}
-                filterDate={(date) => date.getDay() === 1}
-                name="date"
-                style={{ width: "100%" }}
-              />
-              <strong>
-                The date indicates the week from {formattedDateStart} to{" "}
-                {formattedDateEnd}. (Please log any weekend hours as
-                appropriate)
-              </strong>
-            </div>
-          </Form.Group>
-
           <Form.Group className="mb-5" controlId="formBasicSite">
             <Form.Label>
-              <strong>What's your partner?*</strong>
-            </Form.Label>
-            <Form.Control
-              name="employeeName"
-              as="select"
-              aria-label="Default select example"
-              onChange={handleNameTeamMatch}
-              required
-            >
-              <option></option>
-              {employmentInfo.map((val, idx) => (
-                <option value={[val.name, val.department]}>
-                  {val.partner}
-                </option>
-              ))}
-              <option value={["missing name", "missing name"]}>
-                Others: My name is not here
-              </option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              Please choose a name.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mb-5" controlId="formBasicSite">
-            <Form.Label>
-              <strong>What's your school?*</strong>
-            </Form.Label>
-            <Form.Control
-              name="employeeName"
-              as="select"
-              aria-label="Default select example"
-              onChange={handleNameTeamMatch}
-              required
-            >
-              <option></option>
-              {employmentInfo.map((val, idx) => (
-                <option value={[val.name, val.department]}>{val.name}</option>
-              ))}
-              <option value={["missing name", "missing name"]}>
-                Others: My name is not here
-              </option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              Please choose a name.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mb-5" controlId="formBasicSite">
-            <Form.Label>
-              <strong>What's your teacher's name?*</strong>
-            </Form.Label>
-            <Form.Control
-              name="employeeName"
-              as="select"
-              aria-label="Default select example"
-              onChange={handleNameTeamMatch}
-              required
-            >
-              <option></option>
-              {employmentInfo.map((val, idx) => (
-                <option value={[val.name, val.department]}>{val.name}</option>
-              ))}
-              <option value={["missing name", "missing name"]}>
-                Others: My name is not here
-              </option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              Please choose a name.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mb-5" controlId="formBasicSite">
-            <Form.Label>
-              <strong>What's your teacher's name?*</strong>
+              <strong>Please select your name from the drop-down menu*</strong>
             </Form.Label>
             <Form.Control
               name="employeeName"
@@ -805,6 +614,24 @@ function CoachLogPage() {
             </Form.Group>
           ) : null}
 
+          <Form.Group className="mb-4" as={Col} controlId="formBasicEmail">
+            <Form.Label>
+              <strong>Please select the date:*</strong>
+            </Form.Label>
+            <div className="customDatePickerWidth">
+              <DatePicker
+                showIcon
+                selected={pickedDate}
+                onChange={(date) => {
+                  setPickedDate(date);
+                  formatDate(date);
+                }}
+                name="date"
+                style={{ width: "100%" }}
+              />
+            </div>
+          </Form.Group>
+
           <Form.Group className="mb-5" controlId="formBasicSite">
             <Form.Label>
               <strong>Which team are you on?*</strong>
@@ -824,7 +651,7 @@ function CoachLogPage() {
                   </option>
                 ) : (
                   <option value={val}>{val}</option>
-                )
+                ),
               )}
             </Form.Control>
             <Form.Control.Feedback type="invalid">
@@ -927,7 +754,7 @@ function CoachLogPage() {
                           </option>
                         ) : (
                           <option value={val.value}>{val.value}</option>
-                        )
+                        ),
                       )}
                     </Form.Control>
                   </Col>
@@ -975,7 +802,7 @@ function CoachLogPage() {
                       )}
                       {el.reminderContent}
                     </Alert>
-                  ) : null
+                  ) : null,
                 )}
               </Row>
             ))}
@@ -1037,6 +864,12 @@ function CoachLogPage() {
               rows={4}
               aria-label="Default select example"
             ></Form.Control>
+            <strong>
+              *Please use this notes section to add details about time
+              allocation this week. If you have concerns about your capacity or
+              your projects, please discuss with your home manager and/or
+              project lead.
+            </strong>
           </Form.Group>
 
           <div className="submitButton">
@@ -1071,7 +904,7 @@ function CoachLogPage() {
         </Form>
         <div className="notificationAisle">
           <div className="quoteContainer">
-            <h3 style={{ marginBottom: "1.5rem" }}>Quote of the Week</h3>
+            {/* <h3 style={{ marginBottom: "1.5rem" }}>Quote of the Week</h3>
 
             <h5
               style={{
@@ -1094,7 +927,59 @@ function CoachLogPage() {
               }}
             >
               -- {orgUpdate[0] ? orgUpdate[randomIdx].quoteArthur : ""}
-            </p>
+            </p> */}
+            {/* <div>
+              <p
+                style={{
+                  fontSize: "23px",
+                  fontWeight: "700",
+                  textAlign: "center",
+                }}
+              >
+                Annoncement:
+              </p>
+              <p
+                style={{
+                  fontSize: "19px",
+                  fontWeight: "500",
+                }}
+              >
+                Operations team is currently in the process of beta testing an
+                automated project log report process tailored for project
+                leadership. The weekly email will summarize your team’s project
+                logs for a comprehensive overview.{" "}
+              </p>
+              <p
+                style={{
+                  fontSize: "19px",
+                  fontWeight: "500",
+                }}
+              >
+                We invite any project leaders and sponsors to partake in the
+                beta testing process and provide feedback. The beta testing runs
+                until 11/08. Please reach out to Vee Johnson, Kelly Sanders, or
+                YC Pan if interested.
+              </p>
+            </div>
+            <Divider /> */}
+            <div>
+              <p
+                style={{
+                  fontSize: "23px",
+                  fontWeight: "700",
+                }}
+              >
+                Reminder: Don't see your project?
+              </p>
+              <p
+                style={{
+                  fontSize: "19px",
+                  fontWeight: "500",
+                }}
+              >
+                {modalBody}
+              </p>
+            </div>
           </div>
           <div className="timeCounter">
             <h3>Total Time</h3>
@@ -1106,4 +991,4 @@ function CoachLogPage() {
   );
 }
 
-export default CoachLogPage;
+export default FormPage;

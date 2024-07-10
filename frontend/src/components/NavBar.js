@@ -63,11 +63,11 @@ function NavBar(props) {
             <Nav className="me-auto">
               {/* <Nav.Link as={Link} to="/">Home</Nav.Link> */}
               <Nav.Link as={Link} to="/">
-                Form
+                Weekly Project Log
               </Nav.Link>
-              {/* <Nav.Link as={Link} to="/coachlog">
+              <Nav.Link as={Link} to="/coachlog">
                 Coach Log
-              </Nav.Link> */}
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
           {/* <Navbar.Collapse className="justify-content-end">
