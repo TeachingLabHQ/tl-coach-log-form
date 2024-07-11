@@ -1,4 +1,20 @@
-export const projectQuestions = async () => {
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/esm/Col";
+import Row from "react-bootstrap/Row";
+import Select from "react-select";
+import Button from "react-bootstrap/Button";
+
+export const ProjectQuestions = ({
+  projects,
+  team,
+  pjRoles,
+  pjTypeRef,
+  pjOptions,
+  handleTypeChange,
+  handleProjectChange,
+  removeProjectFields,
+  addProjectFields,
+}) => {
   return (
     <>
       <Form.Group className="mb-3" controlId="formBasicCourse">
@@ -124,27 +140,6 @@ export const projectQuestions = async () => {
                 </Col>
               ) : null}
             </Row>
-            {popup.map((el, idx) =>
-              (el.reminderId == ele.projectId) & (el.reminderContent != "") ? (
-                <Alert
-                  url={el.reminderUrl}
-                  key="info"
-                  variant="info"
-                  onClose={() => toggleShowA(ele)}
-                  dismissible
-                >
-                  {el.reminderUrl == null ? (
-                    "Note: "
-                  ) : (
-                    <Alert.Link href={el.reminderUrl[0]} target="_blank">
-                      {" "}
-                      Click the Link{" "}
-                    </Alert.Link>
-                  )}
-                  {el.reminderContent}
-                </Alert>
-              ) : null,
-            )}
           </Row>
         ))}
       </Form.Group>

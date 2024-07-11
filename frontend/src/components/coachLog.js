@@ -11,9 +11,8 @@ import "../App.css";
 import DatePicker from "react-datepicker";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
-import Select from "react-select";
-import Modals from "./Modals";
 import { Divider } from "@chakra-ui/react";
+import { DTEQuestions } from "./coachLog/direct-to-educator-questions";
 
 function FormPage() {
   const [team, setTeam] = useState([""]);
@@ -60,6 +59,7 @@ function FormPage() {
   const [submitCheck, setSubmitCheck] = useState();
   const [capCheck, setCapCheck] = useState();
   const [nameCheck, setNameCheck] = useState();
+  const [schoolByDistrict, setSchoolByDistrict] = useState({});
   const [orgUpdate, setOrgUpdate] = useState([]);
   const randomIdx = Math.floor(Math.random() * 4);
   const openModal = true;
@@ -234,6 +234,22 @@ function FormPage() {
             ]);
           });
       });
+
+    let districtQuery =
+      "{boards(ids:6477891110){items_page(limit:500) {cursor items {name group{title}}}}}";
+    axios.post("/demo/getMonday", { query: districtQuery }).then((res) => {
+      let schoolsByDistrict = {};
+      res.data.data.boards[0].items_page.items.forEach((e) => {
+        const districtName = e.group.title;
+        const schoolName = e.name;
+        if (!schoolsByDistrict[districtName]) {
+          schoolsByDistrict[districtName] = [e.name];
+        } else {
+          schoolsByDistrict[districtName].push(schoolName);
+        }
+      });
+      setSchoolByDistrict(schoolsByDistrict);
+    });
   };
 
   //auto select team when name is selected
@@ -634,7 +650,7 @@ function FormPage() {
 
           <Form.Group className="mb-5" controlId="formBasicSite">
             <Form.Label>
-              <strong>Which team are you on?*</strong>
+              <strong>District you coached on this date*</strong>
             </Form.Label>
             <Form.Control
               as="select"
@@ -644,215 +660,28 @@ function FormPage() {
               required
             >
               <option></option>
-              {options.map((val, idx) =>
-                selectedTeam == val ? (
-                  <option value={val} selected>
-                    {val}
-                  </option>
-                ) : (
-                  <option value={val}>{val}</option>
-                ),
-              )}
+              {Object.keys(schoolByDistrict).map((val, idx) => (
+                <option value={val} selected>
+                  {val}
+                </option>
+              ))}
             </Form.Control>
             <Form.Control.Feedback type="invalid">
               Please choose a team.
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicCourse">
-            <Row>
-              <Col className="my-1">
-                <Form.Label>
-                  <strong>Project Type*</strong>
-                </Form.Label>
-              </Col>
-              <Col className="my-1">
-                <Form.Label>
-                  <strong>Project Name*</strong>
-                </Form.Label>
-              </Col>
-              <Col className="my-1">
-                <Form.Label>
-                  <strong>Project Role*</strong>
-                </Form.Label>
-              </Col>
-              <Col className="my-1">
-                <Form.Label>
-                  <strong>Work Hours*</strong>
-                </Form.Label>
-              </Col>
-              {projects.length > 1 ? <Col sm={1} className="my-1"></Col> : null}
-            </Row>
-            {projects.map((ele, idx) => (
-              <Row key={ele.projectId}>
-                <Row>
-                  <Col className="my-1">
-                    <Form.Label visuallyHidden="true">type</Form.Label>
-                    <Form.Control
-                      as="select"
-                      name="projectType"
-                      aria-label="Default select example"
-                      ref={pjTypeRef}
-                      onChange={(e) => {
-                        handleTypeChange(e, ele);
-                        handleProjectChange(idx, e);
-                      }}
-                      required
-                    >
-                      <option></option>
-                      {team &&
-                        team.map((val, index) => (
-                          <option value={val}>{val}</option>
-                        ))}
-                    </Form.Control>
-                  </Col>
-                  <Col className="my-1">
-                    <Form.Label visuallyHidden="true">name</Form.Label>
-                    <Select
-                      options={
-                        projects[idx].projectType === ""
-                          ? pjOptions[0][ele.projectId]
-                          : pjOptions.filter((e) => {
-                              return e.hasOwnProperty(ele.projectId);
-                            })[0][ele.projectId]
-                      }
-                      name="projectRole"
-                      onChange={(e) => {
-                        handleProjectChange(idx, e);
-                      }}
-                      styles={{
-                        option: (provided, state) => ({
-                          ...provided,
-                          color: "black",
-                        }),
-                        menu: (styles) => ({ ...styles, width: "250px" }),
-                      }}
-                      required
-                    />
-                  </Col>
-                  <Col className="my-1">
-                    <Form.Label visuallyHidden="true">role</Form.Label>
-                    <Form.Control
-                      as="select"
-                      aria-label="Default select example"
-                      name="projectRole"
-                      onChange={(e) => handleProjectChange(idx, e)}
-                      required
-                    >
-                      <option></option>
-                      {pjRoles.map((val) =>
-                        projects.some((i) => {
-                          return i.projectId == ele.projectId;
-                        }) &&
-                        projects[
-                          projects.findIndex((i) => {
-                            return i.projectId == ele.projectId;
-                          })
-                        ].projectRole == val.value ? (
-                          <option value={val.value} selected>
-                            {val.value}
-                          </option>
-                        ) : (
-                          <option value={val.value}>{val.value}</option>
-                        ),
-                      )}
-                    </Form.Control>
-                  </Col>
-                  <Col className="my-1">
-                    <Form.Label visuallyHidden="true">hours</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="projectHours"
-                      min="0"
-                      onChange={(e) => handleProjectChange(idx, e)}
-                      step="any"
-                      placeholder="Enter Time"
-                      required
-                    />
-                  </Col>
-
-                  {projects.length > 1 ? (
-                    <Col sm={1} className="my-1">
-                      <Button
-                        variant="danger"
-                        onClick={() => removeProjectFields(ele)}
-                      >
-                        X
-                      </Button>
-                    </Col>
-                  ) : null}
-                </Row>
-                {popup.map((el, idx) =>
-                  (el.reminderId == ele.projectId) &
-                  (el.reminderContent != "") ? (
-                    <Alert
-                      url={el.reminderUrl}
-                      key="info"
-                      variant="info"
-                      onClose={() => toggleShowA(ele)}
-                      dismissible
-                    >
-                      {el.reminderUrl == null ? (
-                        "Note: "
-                      ) : (
-                        <Alert.Link href={el.reminderUrl[0]} target="_blank">
-                          {" "}
-                          Click the Link{" "}
-                        </Alert.Link>
-                      )}
-                      {el.reminderContent}
-                    </Alert>
-                  ) : null,
-                )}
-              </Row>
-            ))}
-          </Form.Group>
-
-          <Form.Group className="mb-4" id="formGridCheckbox">
-            <Button variant="secondary" onClick={() => addProjectFields()}>
-              + Add Row
-            </Button>
-          </Form.Group>
-
-          <Form.Group className="mb-5" controlId="formCapacity">
-            <Form.Label>
-              <strong>
-                Do you feel you have the capacity to take on a new project?
-              </strong>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              name="capacity"
-              aria-label="Default select example"
-              onChange={(e) => handleCapacity(e)}
-            >
-              <option></option>
-              <option>Yes</option>
-              <option>No</option>
-            </Form.Control>
-          </Form.Group>
-
-          {capCheck ? (
-            <Form.Group className="mb-5" controlId="formCapacity">
-              <Form.Label>
-                <strong>
-                  If yes, how many hours per week would you estimate you could
-                  dedicate to a new project?{" "}
-                </strong>
-              </Form.Label>
-              <Form.Control
-                type="number"
-                name="additionalHours"
-                step="any"
-                min="0"
-                placeholder="Enter Time"
-                required
-              />
-              <Form.Control.Feedback type="invalid">
-                Please input a number.
-              </Form.Control.Feedback>
-            </Form.Group>
-          ) : null}
+          <DTEQuestions
+            projects={projects}
+            team={team}
+            pjRoles={pjRoles}
+            pjTypeRef={pjTypeRef}
+            pjOptions={pjOptions}
+            handleTypeChange={handleTypeChange}
+            handleProjectChange={handleProjectChange}
+            removeProjectFields={removeProjectFields}
+            addProjectFields={addProjectFields}
+          />
 
           <Form.Group className="mb-5" controlId="formBasicSite">
             <Form.Label>
@@ -902,90 +731,6 @@ function FormPage() {
             </Alert>
           ) : null}
         </Form>
-        <div className="notificationAisle">
-          <div className="quoteContainer">
-            {/* <h3 style={{ marginBottom: "1.5rem" }}>Quote of the Week</h3>
-
-            <h5
-              style={{
-                fontFamily: "Argent CF",
-                letterSpacing: "-0.5px",
-                fontStyle: "italic",
-                fontSize: "25px",
-              }}
-            >
-              {" "}
-              "{orgUpdate[randomIdx]
-                ? orgUpdate[randomIdx].quoteContent
-                : ""}"{" "}
-            </h5>
-            <p
-              style={{
-                fontFamily: "Argent CF",
-                letterSpacing: "-0.5px",
-                fontSize: "20px",
-              }}
-            >
-              -- {orgUpdate[0] ? orgUpdate[randomIdx].quoteArthur : ""}
-            </p> */}
-            {/* <div>
-              <p
-                style={{
-                  fontSize: "23px",
-                  fontWeight: "700",
-                  textAlign: "center",
-                }}
-              >
-                Annoncement:
-              </p>
-              <p
-                style={{
-                  fontSize: "19px",
-                  fontWeight: "500",
-                }}
-              >
-                Operations team is currently in the process of beta testing an
-                automated project log report process tailored for project
-                leadership. The weekly email will summarize your team’s project
-                logs for a comprehensive overview.{" "}
-              </p>
-              <p
-                style={{
-                  fontSize: "19px",
-                  fontWeight: "500",
-                }}
-              >
-                We invite any project leaders and sponsors to partake in the
-                beta testing process and provide feedback. The beta testing runs
-                until 11/08. Please reach out to Vee Johnson, Kelly Sanders, or
-                YC Pan if interested.
-              </p>
-            </div>
-            <Divider /> */}
-            <div>
-              <p
-                style={{
-                  fontSize: "23px",
-                  fontWeight: "700",
-                }}
-              >
-                Reminder: Don't see your project?
-              </p>
-              <p
-                style={{
-                  fontSize: "19px",
-                  fontWeight: "500",
-                }}
-              >
-                {modalBody}
-              </p>
-            </div>
-          </div>
-          <div className="timeCounter">
-            <h3>Total Time</h3>
-            <h1>{count}</h1>
-          </div>
-        </div>
       </div>
     </div>
   );

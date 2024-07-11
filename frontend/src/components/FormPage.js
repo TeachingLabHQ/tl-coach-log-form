@@ -14,6 +14,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Select from "react-select";
 import Modals from "./Modals";
 import { Divider } from "@chakra-ui/react";
+import { ProjectQuestions } from "./weeklyProjectLog/project-questions";
 
 function FormPage() {
   const [team, setTeam] = useState([""]);
@@ -160,7 +161,7 @@ function FormPage() {
       .post("/demo/getMonday", {
         query: queryEmployee,
       })
-      .then((res) => res.data.data.boards[0].items_page.items)
+      .then((res) => {console.log(res);return res.data.data.boards[0].items_page.items})
       .then((items) => {
         items.map((val, index) =>
           setEmploymentInfo((employmentInfo) =>
@@ -666,7 +667,7 @@ function FormPage() {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicCourse">
+          {/* <Form.Group className="mb-3" controlId="formBasicCourse">
             <Row>
               <Col className="my-1">
                 <Form.Label>
@@ -819,7 +820,18 @@ function FormPage() {
             <Button variant="secondary" onClick={() => addProjectFields()}>
               + Add Row
             </Button>
-          </Form.Group>
+          </Form.Group> */}
+          <ProjectQuestions
+            projects={projects}
+            team={team}
+            pjRoles={pjRoles}
+            pjTypeRef={pjTypeRef}
+            pjOptions={pjOptions}
+            handleTypeChange={handleTypeChange}
+            handleProjectChange={handleProjectChange}
+            removeProjectFields={removeProjectFields}
+            addProjectFields={addProjectFields}
+          />
 
           <Form.Group className="mb-5" controlId="formCapacity">
             <Form.Label>
