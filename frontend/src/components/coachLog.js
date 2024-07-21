@@ -12,9 +12,12 @@ import DatePicker from "react-datepicker";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
 import { Divider } from "@chakra-ui/react";
-import { DTEQuestions } from "./coachLog/direct-to-educator-questions";
+import { CoachingQuestion } from "./coach-log/CoachingQuestion";
+import { EmployeeNameQuestion } from "./utils/EmployeeNameQuestion";
+import { DateQuestion } from "./utils/DateQuestion";
+import { DistrictSchoolQuestion } from "./coach-log/DistrictSchoolQuestion";
 
-function FormPage() {
+function CoachFormPage() {
   const [team, setTeam] = useState([""]);
   const [projects, setProjects] = useState([
     {
@@ -40,10 +43,9 @@ function FormPage() {
     "Innovation Studio",
   ]);
   const [pjOptions, setPjOptions] = useState([{ "": "" }]);
-  const [employmentInfo, setEmploymentInfo] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState();
   const [pickedDate, setPickedDate] = useState(
-    new Date().setDate(new Date().getDate() - new Date().getDay() + 1),
+    new Date().setDate(new Date().getDate() - new Date().getDay() + 1)
   );
   const [formattedDateStart, setFormattedDateStart] = useState();
   const [formattedDateEnd, setFormattedDateEnd] = useState();
@@ -128,113 +130,10 @@ function FormPage() {
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
     getMondayInfo();
-    formatDate();
   }, []);
-
-  //format date object
-  const formatDate = (e) => {
-    let ogDate = e == null ? pickedDate : e;
-    const dateValue = new Date(ogDate);
-    const startMonth = ("0" + (dateValue.getMonth() + 1)).slice(-2);
-    const startDay = ("0" + dateValue.getDate()).slice(-2);
-    const formattedDateStart = `${startMonth}/${startDay}`;
-    const endDateValue = new Date(dateValue.setDate(dateValue.getDate() + 6));
-    const endMonth = ("0" + (endDateValue.getMonth() + 1)).slice(-2);
-    const endDay = ("0" + endDateValue.getDate()).slice(-2);
-    const formattedDateEnd = `${endMonth}/${endDay}`;
-    setFormattedDateStart(formattedDateStart);
-    setFormattedDateEnd(formattedDateEnd);
-  };
 
   //get employee information(name,deparment)/reminder info from FTE/PTE board and
   const getMondayInfo = (e) => {
-    setEmploymentInfo([]);
-    setReminderInfo([]);
-    setOrgUpdate([]);
-    const updatePrep = [];
-
-    //fetch employee info (name/department) from FTE/PTE board (https://teachinglab.monday.com/boards/2227132353/)
-    let queryEmployee =
-      '{boards(ids:2227132353) {items_page (limit:200) { items { name column_values(ids:"dropdown7"){text}}}}}';
-    axios
-      .post("/demo/getMonday", {
-        query: queryEmployee,
-      })
-      .then((res) => res.data.data.boards[0].items_page.items)
-      .then((items) => {
-        items.map((val, index) =>
-          setEmploymentInfo((employmentInfo) =>
-            [
-              ...employmentInfo,
-              { name: val.name, department: val.column_values[0].text },
-            ].sort((a, b) => {
-              if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-              if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-              return 0;
-            }),
-          ),
-        );
-      })
-      .finally(() => {
-        //fetch project information from project information board (https://teachinglab.monday.com/boards/4271509592/views/100531820)
-        let queryPj =
-          "{boards(ids: 4271509592) { items_page (limit:150) { items { name group{title} }}}}";
-        axios
-          .post("/demo/getMonday", {
-            query: queryPj,
-          })
-          .then((res) => res.data.data.boards[0].items_page.items)
-          .then((items) => {
-            const internalPjList = items.filter((i) => {
-              return i.group.title == "Internal Project";
-            });
-            const programPjList = items.filter((i) => {
-              return i.group.title == "Program Project";
-            });
-            setInternalPj((internalPj) => [
-              ...internalPj,
-              internalPjList
-                .sort((a, b) => {
-                  if (a.name.toLowerCase() < b.name.toLowerCase()) {
-                    return -1;
-                  }
-                  if (a.name.toLowerCase() > b.name.toLowerCase()) {
-                    return 1;
-                  }
-                  return 0;
-                })
-                .map((e) => {
-                  return {
-                    target: { name: "projectName", value: e.name },
-                    label: e.name,
-                    value: e.name,
-                  };
-                }),
-            ]);
-
-            setProgramPj((programPj) => [
-              ...programPj,
-              programPjList
-                .sort((a, b) => {
-                  if (a.name.toLowerCase() < b.name.toLowerCase()) {
-                    return -1;
-                  }
-                  if (a.name.toLowerCase() > b.name.toLowerCase()) {
-                    return 1;
-                  }
-                  return 0;
-                })
-                .map((e) => {
-                  return {
-                    target: { name: "projectName", value: e.name },
-                    label: e.name,
-                    value: e.name,
-                  };
-                }),
-            ]);
-          });
-      });
-
     let districtQuery =
       "{boards(ids:6477891110){items_page(limit:500) {cursor items {name group{title}}}}}";
     axios.post("/demo/getMonday", { query: districtQuery }).then((res) => {
@@ -250,17 +149,6 @@ function FormPage() {
       });
       setSchoolByDistrict(schoolsByDistrict);
     });
-  };
-
-  //auto select team when name is selected
-  const handleNameTeamMatch = (e) => {
-    setSelectedTeam(e.target.value.split(",")[1]);
-    handleTeamChange(e.target.value.split(",")[1]);
-    if (e.target.value.split(",")[0] == "missing name") {
-      setNameCheck(true);
-    } else {
-      setNameCheck(false);
-    }
   };
 
   //only show certain project options when a team is selected
@@ -362,7 +250,7 @@ function FormPage() {
                 e[ele.projectId] = internalPj[0];
               }
               return e;
-            }),
+            })
           );
         } else {
           setPjOptions([...pjOptions, { [ele.projectId]: internalPj[0] }]);
@@ -375,7 +263,7 @@ function FormPage() {
                 e[ele.projectId] = programPj[0];
               }
               return e;
-            }),
+            })
           );
         } else {
           setPjOptions([...pjOptions, { [ele.projectId]: programPj[0] }]);
@@ -388,7 +276,7 @@ function FormPage() {
                 e[ele.projectId] = [];
               }
               return e;
-            }),
+            })
           );
         }
       }
@@ -437,11 +325,11 @@ function FormPage() {
       setCount(count - parseFloat(ele.projectHours));
     }
     const updatedList = projects.filter(
-      (object, i) => object.projectId != ele.projectId,
+      (object, i) => object.projectId != ele.projectId
     );
     setProjects(updatedList);
     const updatedpjOptionList = pjOptions.filter(
-      (object, i) => object != ele.projectId,
+      (object, i) => object != ele.projectId
     );
     setPjOptions(updatedpjOptionList);
   };
@@ -578,6 +466,8 @@ function FormPage() {
     });
     setPopup(updatedReminder);
   };
+  const [districtSelected, setDistrictSelected] = useState();
+  const [schoolSelected, setSchoolSelected] = useState();
 
   return (
     <div className="formAll">
@@ -589,89 +479,16 @@ function FormPage() {
           validated={validated}
         >
           <h1>Coach Log Form</h1>
-          <Form.Group className="mb-5" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Please select your name from the drop-down menu*</strong>
-            </Form.Label>
-            <Form.Control
-              name="employeeName"
-              as="select"
-              aria-label="Default select example"
-              onChange={handleNameTeamMatch}
-              required
-            >
-              <option></option>
-              {employmentInfo.map((val, idx) => (
-                <option value={[val.name, val.department]}>{val.name}</option>
-              ))}
-              <option value={["missing name", "missing name"]}>
-                Others: My name is not here
-              </option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              Please choose a name.
-            </Form.Control.Feedback>
-          </Form.Group>
+          <DateQuestion />
+          <EmployeeNameQuestion />
+          <DistrictSchoolQuestion
+            setDistrictSelected={setDistrictSelected}
+            setSchoolSelected={setSchoolSelected}
+          />
 
-          {nameCheck ? (
-            <Form.Group className="mb-5" controlId="formBasicSite">
-              <Form.Label>
-                <strong>Please enter your full name:*</strong>
-              </Form.Label>
-              <Form.Control
-                name="employeeNameManual"
-                as="input"
-                aria-label="Default select example"
-                required
-              ></Form.Control>
-              <Form.Control.Feedback type="invalid">
-                Please input a name.
-              </Form.Control.Feedback>
-            </Form.Group>
-          ) : null}
-
-          <Form.Group className="mb-4" as={Col} controlId="formBasicEmail">
-            <Form.Label>
-              <strong>Please select the date:*</strong>
-            </Form.Label>
-            <div className="customDatePickerWidth">
-              <DatePicker
-                showIcon
-                selected={pickedDate}
-                onChange={(date) => {
-                  setPickedDate(date);
-                  formatDate(date);
-                }}
-                name="date"
-                style={{ width: "100%" }}
-              />
-            </div>
-          </Form.Group>
-
-          <Form.Group className="mb-5" controlId="formBasicSite">
-            <Form.Label>
-              <strong>District you coached on this date*</strong>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              name="teamName"
-              aria-label="Default select example"
-              onChange={handleTeamChange}
-              required
-            >
-              <option></option>
-              {Object.keys(schoolByDistrict).map((val, idx) => (
-                <option value={val} selected>
-                  {val}
-                </option>
-              ))}
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              Please choose a team.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <DTEQuestions
+          <CoachingQuestion
+            districtSelected={districtSelected}
+            schoolSelected={schoolSelected}
             projects={projects}
             team={team}
             pjRoles={pjRoles}
@@ -736,4 +553,4 @@ function FormPage() {
   );
 }
 
-export default FormPage;
+export default CoachFormPage;
