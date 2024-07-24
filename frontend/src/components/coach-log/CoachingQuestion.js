@@ -97,123 +97,124 @@ export const CoachingQuestion = ({
         </Form.Control.Feedback>
       </Form.Group>
       {coachingDone === "yes" ? (
-        <Form.Group className="mb-3" controlId="formBasicCourse">
-          <Row>
-            <Col className="my-1">
-              <Form.Label>
-                <strong>Coachee*</strong>
-              </Form.Label>
-            </Col>
-            <Col className="my-1">
-              <Form.Label>
-                <strong>Role*</strong>
-              </Form.Label>
-            </Col>
-            <Col className="my-1">
-              <Form.Label>
-                <strong>Activities*</strong>
-              </Form.Label>
-            </Col>
-            <Col className="my-1">
-              <Form.Label>
-                <strong>Duration*</strong>
-              </Form.Label>
-            </Col>
-            {projects.length > 1 ? <Col sm={1} className="my-1"></Col> : null}
-          </Row>
-          {projects.map((ele, idx) => (
-            <Row key={ele.projectId}>
-              <Row>
-                <Col className="my-1">
-                  <Form.Label visuallyHidden="true">Coachee Name</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="projectType"
-                    aria-label="Default select example"
-                    ref={pjTypeRef}
-                    onChange={(e) => {
-                      handleTypeChange(e, ele);
-                      handleProjectChange(idx, e);
-                    }}
-                    required
-                  >
-                    <option></option>
-                    {coacheeList &&
-                      coacheeList.map((val, index) => (
+        <>
+          <Form.Group className="mb-3" controlId="formBasicCourse">
+            <Row>
+              <Col className="my-1">
+                <Form.Label>
+                  <strong>Coachee*</strong>
+                </Form.Label>
+              </Col>
+              <Col className="my-1">
+                <Form.Label>
+                  <strong>Role*</strong>
+                </Form.Label>
+              </Col>
+              <Col className="my-1">
+                <Form.Label>
+                  <strong>Activities*</strong>
+                </Form.Label>
+              </Col>
+              <Col className="my-1">
+                <Form.Label>
+                  <strong>Duration*</strong>
+                </Form.Label>
+              </Col>
+              {projects.length > 1 ? <Col sm={1} className="my-1"></Col> : null}
+            </Row>
+            {projects.map((ele, idx) => (
+              <Row key={ele.projectId}>
+                <Row>
+                  <Col className="my-1">
+                    <Form.Label visuallyHidden="true">Coachee Name</Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="projectType"
+                      aria-label="Default select example"
+                      ref={pjTypeRef}
+                      onChange={(e) => {
+                        handleTypeChange(e, ele);
+                        handleProjectChange(idx, e);
+                      }}
+                      required
+                    >
+                      <option></option>
+                      {coacheeList &&
+                        coacheeList.map((val, index) => (
+                          <option value={val}>{val}</option>
+                        ))}
+                    </Form.Control>
+                  </Col>
+                  <Col className="my-1">
+                    <Form.Label visuallyHidden="true">Coachee Role</Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="coacheeRole"
+                      aria-label="Default select example"
+                      required
+                    >
+                      <option></option>
+                      {roleList.map((val, index) => (
                         <option value={val}>{val}</option>
                       ))}
-                  </Form.Control>
-                </Col>
-                <Col className="my-1">
-                  <Form.Label visuallyHidden="true">Coachee Role</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="coacheeRole"
-                    aria-label="Default select example"
-                    required
-                  >
-                    <option></option>
-                    {roleList.map((val, index) => (
-                      <option value={val}>{val}</option>
-                    ))}
-                  </Form.Control>
-                </Col>
-                <Col className="my-1">
-                  <Form.Label visuallyHidden="true">role</Form.Label>
-                  <Form.Control
-                    as="select"
-                    aria-label="Default select example"
-                    name="coacheeRole"
-                    onChange={(e) => handleProjectChange(idx, e)}
-                    required
-                  >
-                    <option></option>
-                    {coachingActivities.map((val, index) => (
-                      <option value={val}>{val}</option>
-                    ))}
-                  </Form.Control>
-                </Col>
-                <Col className="my-1">
-                  <Form.Label visuallyHidden="true">
-                    Coaching Duration
-                  </Form.Label>
-                  <Form.Control
-                    as="select"
-                    aria-label="Default select example"
-                    name="coachingDuration"
-                    onChange={(e) => handleProjectChange(idx, e)}
-                    required
-                  >
-                    <option></option>
-                    {timeOptions.map((val, index) => (
-                      <option value={val}>{val}</option>
-                    ))}
-                  </Form.Control>
-                </Col>
-
-                {projects.length > 1 ? (
-                  <Col sm={1} className="my-1">
-                    <Button
-                      variant="danger"
-                      onClick={() => removeProjectFields(ele)}
-                    >
-                      X
-                    </Button>
+                    </Form.Control>
                   </Col>
-                ) : null}
+                  <Col className="my-1">
+                    <Form.Label visuallyHidden="true">Activities</Form.Label>
+                    <Form.Control
+                      as="select"
+                      aria-label="Default select example"
+                      name="coacheeRole"
+                      onChange={(e) => handleProjectChange(idx, e)}
+                      required
+                    >
+                      <option></option>
+                      {coachingActivities.map((val, index) => (
+                        <option value={val}>{val}</option>
+                      ))}
+                    </Form.Control>
+                  </Col>
+                  <Col className="my-1">
+                    <Form.Label visuallyHidden="true">
+                      Coaching Duration
+                    </Form.Label>
+                    <Form.Control
+                      as="select"
+                      aria-label="Default select example"
+                      name="coachingDuration"
+                      onChange={(e) => handleProjectChange(idx, e)}
+                      required
+                    >
+                      <option></option>
+                      {timeOptions.map((val, index) => (
+                        <option value={val}>{val}</option>
+                      ))}
+                    </Form.Control>
+                  </Col>
+
+                  {projects.length > 1 ? (
+                    <Col sm={1} className="my-1">
+                      <Button
+                        variant="danger"
+                        onClick={() => removeProjectFields(ele)}
+                      >
+                        X
+                      </Button>
+                    </Col>
+                  ) : null}
+                </Row>
               </Row>
-            </Row>
-          ))}
-        </Form.Group>
+            ))}
+          </Form.Group>
+          <Form.Group className="mb-4" id="formGridCheckbox">
+            <Button variant="secondary" onClick={() => addProjectFields()}>
+              + Add Row
+            </Button>
+          </Form.Group>
+        </>
       ) : (
         <></>
       )}
-
-      <Form.Group className="mb-4" id="formGridCheckbox">
-        <Button variant="secondary" onClick={() => addProjectFields()}>
-          + Add Row
-        </Button>
-      </Form.Group>
     </>
   );
 };
