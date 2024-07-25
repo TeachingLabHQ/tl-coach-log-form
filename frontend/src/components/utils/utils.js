@@ -16,6 +16,22 @@ export const coachingActivities = [
   "Other",
 ];
 
+export const generalActivities = [
+  "1:1 Coaching/ Micro PL",
+  "Coaching",
+  "modeling",
+  "planning with a group of teachers",
+  "Walkthrough",
+];
+
+export const reasons = [
+  "The partner canceled the session",
+  "School was canceled",
+  "The coachee was absent",
+  "The coachee was unavailable",
+  "The group was unavailable",
+];
+
 export const timeOptions = [
   15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90,
 ];

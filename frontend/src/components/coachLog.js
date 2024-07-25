@@ -17,6 +17,9 @@ import { EmployeeNameQuestion } from "./utils/EmployeeNameQuestion";
 import { DateQuestion } from "./utils/DateQuestion";
 import { DistrictSchoolQuestion } from "./coach-log/DistrictSchoolQuestion";
 import { MicroPLQuestion } from "./coach-log/MicroPLQuestion";
+import { ModelQuestion } from "./coach-log/ModelQuestion";
+import { AdminQuestion } from "./coach-log/AdminQuestion";
+import { ReasonQuestion } from "./coach-log/ReasonQuestion";
 
 function CoachFormPage() {
   const [team, setTeam] = useState([""]);
@@ -486,7 +489,6 @@ function CoachFormPage() {
             setDistrictSelected={setDistrictSelected}
             setSchoolSelected={setSchoolSelected}
           />
-
           <CoachingQuestion
             districtSelected={districtSelected}
             schoolSelected={schoolSelected}
@@ -504,24 +506,18 @@ function CoachFormPage() {
             districtSelected={districtSelected}
             schoolSelected={schoolSelected}
           />
-
-          <Form.Group className="mb-5" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Do you have any additional comments? </strong>
-            </Form.Label>
-            <Form.Control
-              name="comment"
-              as="textarea"
-              rows={4}
-              aria-label="Default select example"
-            ></Form.Control>
-            <strong>
-              *Please use this notes section to add details about time
-              allocation this week. If you have concerns about your capacity or
-              your projects, please discuss with your home manager and/or
-              project lead.
-            </strong>
-          </Form.Group>
+          <ModelQuestion
+            districtSelected={districtSelected}
+            schoolSelected={schoolSelected}
+          />
+          <AdminQuestion
+            districtSelected={districtSelected}
+            schoolSelected={schoolSelected}
+          />
+          <ReasonQuestion
+            districtSelected={districtSelected}
+            schoolSelected={schoolSelected}
+          />
 
           <div className="submitButton">
             <Button
@@ -532,7 +528,6 @@ function CoachFormPage() {
               Submit
             </Button>
           </div>
-
           {submitCheck == true && errorCheck == undefined ? (
             <Spinner animation="border" variant="light" />
           ) : null}
