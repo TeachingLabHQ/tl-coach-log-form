@@ -1,14 +1,11 @@
 import Form from "react-bootstrap/Form";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { roleList, timeOptions } from "../utils/utils";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { classroomAmount, timeOptions } from "../utils/utils";
 
-export const MicroPLQuestion = ({
+export const AdminWalkthroughQuestion = ({
   districtSelected,
   schoolSelected,
-  setSelectedMicroPLParticipantRoles,
-  setSelectedMicroPLParticipants,
 }) => {
   const [microPLDone, setMicroPLDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
@@ -65,11 +62,13 @@ export const MicroPLQuestion = ({
     <>
       <Form.Group className="mb-3" controlId="formBasicSite">
         <Form.Label>
-          <strong>Did you deliver a micro PL at this school today?</strong>
+          <strong>
+            Did you complete a walkthrough with the admin at this school today?{" "}
+          </strong>
         </Form.Label>
         <Form.Control
           as="select"
-          name="CoachingDone"
+          name="walkthroughDone"
           aria-label="Default select example"
           onChange={(e) => {
             setMicroPLDone(e.target.value);
@@ -89,50 +88,32 @@ export const MicroPLQuestion = ({
       </Form.Group>
       {microPLDone === "yes" ? (
         <>
-          <Form.Group className="mb-1" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Names of participants: </strong>
-            </Form.Label>
-            <DropdownMultiselect
-              options={coacheeList}
-              name="microPLParticipants"
-              handleOnChange={(selected) => {
-                setSelectedMicroPLParticipants(selected);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="mb-1" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Participants were:</strong>
-            </Form.Label>
-            <DropdownMultiselect
-              options={roleList}
-              name="microPLParticipantRoles"
-              handleOnChange={(selected) => {
-                console.log(selected);
-                setSelectedMicroPLParticipantRoles(selected);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="mb-1" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Topic of micro PL </strong>
-            </Form.Label>
-            <Form.Control
-              name="microPLTopic"
-              as="textarea"
-              rows={1}
-              aria-label="Default select example"
-            ></Form.Control>
-          </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCourse">
             <Form.Label>
-              <strong>How many minutes was this micro PL?</strong>
+              <strong>
+                How many classrooms were observed during this walkthrough?{" "}
+              </strong>
             </Form.Label>
             <Form.Control
               as="select"
               aria-label="Default select example"
-              name="microPLDuration"
+              name="walkthroughClassrooms"
+              required
+            >
+              <option></option>
+              {classroomAmount.map((val, index) => (
+                <option value={val}>{val}</option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicCourse">
+            <Form.Label>
+              <strong>How many minutes was this meeting?</strong>
+            </Form.Label>
+            <Form.Control
+              as="select"
+              aria-label="Default select example"
+              name="walkthroughDuration"
               required
             >
               <option></option>

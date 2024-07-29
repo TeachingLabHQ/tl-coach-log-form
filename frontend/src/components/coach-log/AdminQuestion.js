@@ -4,7 +4,11 @@ import axios from "axios";
 import { coachingActivities, roleList, timeOptions } from "../utils/utils";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
-export const AdminQuestion = ({ districtSelected, schoolSelected }) => {
+export const AdminQuestion = ({
+  districtSelected,
+  schoolSelected,
+  setSelectedAdmins,
+}) => {
   const [microPLDone, setMicroPLDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
@@ -61,13 +65,13 @@ export const AdminQuestion = ({ districtSelected, schoolSelected }) => {
       <Form.Group className="mb-3" controlId="formBasicSite">
         <Form.Label>
           <strong>
-            Did you provide coaching, modeling, or planning with a group of
-            teachers at this school today?{" "}
+            Did you meet with the school administrators and/or school-based
+            coach about coaching progress at this school today?{" "}
           </strong>
         </Form.Label>
         <Form.Control
           as="select"
-          name="CoachingDone"
+          name="adminDone"
           aria-label="Default select example"
           onChange={(e) => {
             setMicroPLDone(e.target.value);
@@ -91,7 +95,13 @@ export const AdminQuestion = ({ districtSelected, schoolSelected }) => {
             <Form.Label>
               <strong>Names of admins: </strong>
             </Form.Label>
-            <DropdownMultiselect options={coacheeList} name="coachees" />
+            <DropdownMultiselect
+              options={coacheeList}
+              name="adminNames"
+              handleOnChange={(selected) => {
+                setSelectedAdmins(selected);
+              }}
+            />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCourse">
             <Form.Label>
@@ -100,7 +110,7 @@ export const AdminQuestion = ({ districtSelected, schoolSelected }) => {
             <Form.Control
               as="select"
               aria-label="Default select example"
-              name="microPLDuration"
+              name="adminDuration"
               required
             >
               <option></option>

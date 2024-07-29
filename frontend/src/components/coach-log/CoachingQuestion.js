@@ -6,15 +6,12 @@ import Button from "react-bootstrap/Button";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { coachingActivities, roleList, timeOptions } from "../utils/utils";
+import { getTeacherInfo } from "./utils";
 
 export const CoachingQuestion = ({
-  projects,
-  team,
-  pjRoles,
+  coachingLogs,
   pjTypeRef,
-  pjOptions,
-  handleTypeChange,
-  handleProjectChange,
+  handleCoachingLogsChange,
   removeProjectFields,
   addProjectFields,
   districtSelected,
@@ -22,54 +19,13 @@ export const CoachingQuestion = ({
 }) => {
   const [coachingDone, setCoachingDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
-  const getTeacherInfo = (e) => {
-    let teachersBySchool = {};
-    let teacherQuery = `{boards(ids:6197660733){items_page (limit:100) {items {column_values(ids:["short_text_2","coaching_partners","short_text66"]){text column{title}}}}}}`;
-    axios.post("/demo/getMonday", { query: teacherQuery }).then((res) => {
-      res.data.data.boards[0].items_page.items.forEach((e) => {
-        const district = e.column_values.filter((v) => {
-          return v.column.title === "District Name";
-        })[0].text;
-        const school = e.column_values.filter((v) => {
-          return v.column.title === "School Name";
-        })[0].text;
-        const teacherName = e.column_values.filter((v) => {
-          return v.column.title === "Coachee";
-        })[0].text;
-        if (!teachersBySchool[district]) {
-          teachersBySchool[district] = { [school]: [teacherName] };
-        } else if (
-          teachersBySchool[district] &&
-          !teachersBySchool[district][school]
-        ) {
-          teachersBySchool[district][school] = [teacherName];
-        } else {
-          teachersBySchool[district][school].push(teacherName);
-        }
-      });
-      const coachees = getCoacheeList(teachersBySchool);
-      setCoacheeList(coachees);
-    });
-  };
-  const getCoacheeList = (teachersBySchool) => {
-    const uniqueTeacherArray = [];
-    for (const [key, value] of Object.entries(teachersBySchool)) {
-      if (districtSelected === key) {
-        for (const [schoolName, teacherList] of Object.entries(value)) {
-          if (schoolSelected === schoolName) {
-            const uniqueTeacherSet = new Set(teacherList);
-            uniqueTeacherArray.push(...uniqueTeacherSet);
-            uniqueTeacherArray.push("N/A");
-          }
-        }
-      }
-    }
-    return uniqueTeacherArray;
-  };
+
   useEffect(() => {
-    getTeacherInfo();
+    if (districtSelected && schoolSelected) {
+      getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
+    }
     //teacher list should update when a new school is selected
-  }, [schoolSelected]);
+  }, [schoolSelected, districtSelected]);
   return (
     <>
       <Form.Group className="mb-5" controlId="formBasicSite">
@@ -83,7 +39,7 @@ export const CoachingQuestion = ({
           onChange={(e) => {
             setCoachingDone(e.target.value);
             if (e.target.value === "yes") {
-              getTeacherInfo();
+              getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
             }
           }}
           required
@@ -120,21 +76,23 @@ export const CoachingQuestion = ({
                   <strong>Duration*</strong>
                 </Form.Label>
               </Col>
-              {projects.length > 1 ? <Col sm={1} className="my-1"></Col> : null}
+              {coachingLogs.length > 1 ? (
+                <Col sm={1} className="my-1"></Col>
+              ) : null}
             </Row>
-            {projects.map((ele, idx) => (
+            {coachingLogs.map((ele, idx) => (
               <Row key={ele.projectId}>
                 <Row>
                   <Col className="my-1">
                     <Form.Label visuallyHidden="true">Coachee Name</Form.Label>
                     <Form.Control
                       as="select"
-                      name="projectType"
+                      name="coacheeName"
                       aria-label="Default select example"
                       ref={pjTypeRef}
+                      value={ele.coacheeName}
                       onChange={(e) => {
-                        handleTypeChange(e, ele);
-                        handleProjectChange(idx, e);
+                        handleCoachingLogsChange(idx, e);
                       }}
                       required
                     >
@@ -152,6 +110,10 @@ export const CoachingQuestion = ({
                       name="coacheeRole"
                       aria-label="Default select example"
                       required
+                      value={ele.coacheeRole}
+                      onChange={(e) => {
+                        handleCoachingLogsChange(idx, e);
+                      }}
                     >
                       <option></option>
                       {roleList.map((val, index) => (
@@ -160,13 +122,14 @@ export const CoachingQuestion = ({
                     </Form.Control>
                   </Col>
                   <Col className="my-1">
-                    <Form.Label visuallyHidden="true">Activities</Form.Label>
+                    <Form.Label visuallyHidden="true">Activity</Form.Label>
                     <Form.Control
                       as="select"
                       aria-label="Default select example"
-                      name="coacheeRole"
-                      onChange={(e) => handleProjectChange(idx, e)}
+                      name="coachingActivity"
+                      onChange={(e) => handleCoachingLogsChange(idx, e)}
                       required
+                      value={ele.coachingActivity}
                     >
                       <option></option>
                       {coachingActivities.map((val, index) => (
@@ -182,8 +145,9 @@ export const CoachingQuestion = ({
                       as="select"
                       aria-label="Default select example"
                       name="coachingDuration"
-                      onChange={(e) => handleProjectChange(idx, e)}
+                      onChange={(e) => handleCoachingLogsChange(idx, e)}
                       required
+                      value={ele.coachingDuration}
                     >
                       <option></option>
                       {timeOptions.map((val, index) => (
@@ -192,7 +156,7 @@ export const CoachingQuestion = ({
                     </Form.Control>
                   </Col>
 
-                  {projects.length > 1 ? (
+                  {coachingLogs.length > 1 ? (
                     <Col sm={1} className="my-1">
                       <Button
                         variant="danger"

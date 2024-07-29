@@ -1,15 +1,9 @@
 import Form from "react-bootstrap/Form";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { roleList, timeOptions } from "../utils/utils";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { timeOptions } from "../utils/utils";
 
-export const MicroPLQuestion = ({
-  districtSelected,
-  schoolSelected,
-  setSelectedMicroPLParticipantRoles,
-  setSelectedMicroPLParticipants,
-}) => {
+export const ModeQuestion = ({ districtSelected, schoolSelected }) => {
   const [microPLDone, setMicroPLDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
@@ -65,11 +59,13 @@ export const MicroPLQuestion = ({
     <>
       <Form.Group className="mb-3" controlId="formBasicSite">
         <Form.Label>
-          <strong>Did you deliver a micro PL at this school today?</strong>
+          <strong>
+            Were coaching activities at this school in-person or virtual today?{" "}
+          </strong>
         </Form.Label>
         <Form.Control
           as="select"
-          name="CoachingDone"
+          name="modeDone"
           aria-label="Default select example"
           onChange={(e) => {
             setMicroPLDone(e.target.value);
@@ -80,59 +76,45 @@ export const MicroPLQuestion = ({
           required
         >
           <option value=""></option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
+          <option value="In-person">In-person</option>
+          <option value="Hybrid">Hybrid</option>
+          <option value="Virtual">Virtual</option>
         </Form.Control>
         <Form.Control.Feedback type="invalid">
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {microPLDone === "yes" ? (
+      {microPLDone === "In-person" || microPLDone === "Hybrid" ? (
         <>
-          <Form.Group className="mb-1" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Names of participants: </strong>
-            </Form.Label>
-            <DropdownMultiselect
-              options={coacheeList}
-              name="microPLParticipants"
-              handleOnChange={(selected) => {
-                setSelectedMicroPLParticipants(selected);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="mb-1" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Participants were:</strong>
-            </Form.Label>
-            <DropdownMultiselect
-              options={roleList}
-              name="microPLParticipantRoles"
-              handleOnChange={(selected) => {
-                console.log(selected);
-                setSelectedMicroPLParticipantRoles(selected);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="mb-1" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Topic of micro PL </strong>
-            </Form.Label>
-            <Form.Control
-              name="microPLTopic"
-              as="textarea"
-              rows={1}
-              aria-label="Default select example"
-            ></Form.Control>
-          </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCourse">
             <Form.Label>
-              <strong>How many minutes was this micro PL?</strong>
+              <strong>
+                How long was your travel/ commute to this school today?{" "}
+              </strong>
             </Form.Label>
             <Form.Control
               as="select"
               aria-label="Default select example"
-              name="microPLDuration"
+              name="schoolTravelDuration"
+              required
+            >
+              <option></option>
+              {timeOptions.map((val, index) => (
+                <option value={val}>{val}</option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicCourse">
+            <Form.Label>
+              <strong>
+                How long was your travel/ commute to your second school or your
+                final destination today?
+              </strong>
+            </Form.Label>
+            <Form.Control
+              as="select"
+              aria-label="Default select example"
+              name="finalTravelDuration"
               required
             >
               <option></option>

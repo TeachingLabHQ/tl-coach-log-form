@@ -4,7 +4,11 @@ import axios from "axios";
 import { generalActivities, timeOptions, reasons } from "../utils/utils";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
-export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
+export const ReasonQuestion = ({
+  districtSelected,
+  schoolSelected,
+  setOriginalSessions,
+}) => {
   const [microPLDone, setMicroPLDone] = useState();
   const [happenReason, setHappenReason] = useState();
   const [replacement, setReplacement] = useState();
@@ -69,7 +73,7 @@ export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
         </Form.Label>
         <Form.Control
           as="select"
-          name="CoachingDone"
+          name="reasonDone"
           aria-label="Default select example"
           onChange={(e) => {
             setMicroPLDone(e.target.value);
@@ -95,7 +99,10 @@ export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
             </Form.Label>
             <DropdownMultiselect
               options={generalActivities}
-              name="generalActivities"
+              name="reasonList"
+              handleOnChange={(selected) => {
+                setOriginalSessions(selected);
+              }}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCourse">
@@ -105,7 +112,7 @@ export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
             <Form.Control
               as="select"
               aria-label="Default select example"
-              name="microPLDuration"
+              name="reasonChoice"
               required
               onChange={(e) => {
                 setHappenReason(e.target.value);
@@ -127,7 +134,7 @@ export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
                 <Form.Control
                   as="select"
                   aria-label="Default select example"
-                  name="microPLDuration"
+                  name="reasonContent"
                   required
                 >
                   <option></option>
@@ -141,7 +148,7 @@ export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
                   <strong>Other Reason?</strong>
                 </Form.Label>
                 <Form.Control
-                  name="comment"
+                  name="reasonWriteIn"
                   as="textarea"
                   rows={2}
                   aria-label="Default select example"
@@ -156,7 +163,7 @@ export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
                 </Form.Label>
                 <Form.Control
                   as="select"
-                  name="CoachingDone"
+                  name="replacementDone"
                   aria-label="Default select example"
                   onChange={(e) => {
                     setReplacement(e.target.value);
@@ -180,7 +187,7 @@ export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
                     </strong>
                   </Form.Label>
                   <Form.Control
-                    name="comment"
+                    name="replacementActivities"
                     as="textarea"
                     rows={2}
                     aria-label="Default select example"
@@ -200,7 +207,7 @@ export const ReasonQuestion = ({ districtSelected, schoolSelected }) => {
             <Form.Control
               as="select"
               aria-label="Default select example"
-              name="microPLDuration"
+              name="noCoachingDuration"
               required
             >
               <option></option>

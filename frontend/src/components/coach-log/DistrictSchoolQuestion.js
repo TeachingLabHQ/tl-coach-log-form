@@ -45,7 +45,7 @@ export const DistrictSchoolQuestion = ({
         </Form.Label>
         <Form.Control
           as="select"
-          name="DistrictName"
+          name="districtName"
           aria-label="Default select example"
           onChange={(e) => {
             onSelectDistrict(e);

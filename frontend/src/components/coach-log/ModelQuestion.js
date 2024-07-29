@@ -4,7 +4,12 @@ import axios from "axios";
 import { coachingActivities, roleList, timeOptions } from "../utils/utils";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
-export const ModelQuestion = ({ districtSelected, schoolSelected }) => {
+export const ModelQuestion = ({
+  districtSelected,
+  schoolSelected,
+  setSelectedModelParticipants,
+  setSelectedModelParticipantRoles,
+}) => {
   const [microPLDone, setMicroPLDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
@@ -91,20 +96,33 @@ export const ModelQuestion = ({ districtSelected, schoolSelected }) => {
             <Form.Label>
               <strong>Names of participants: </strong>
             </Form.Label>
-            <DropdownMultiselect options={coacheeList} name="coachees" />
+            <DropdownMultiselect
+              options={coacheeList}
+              name="modelParticipants"
+              handleOnChange={(selected) => {
+                setSelectedModelParticipants(selected);
+              }}
+            />
           </Form.Group>
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>
               <strong>Participants were:</strong>
             </Form.Label>
-            <DropdownMultiselect options={roleList} name="coacheeRoles" />
+            <DropdownMultiselect
+              options={roleList}
+              name="modelParticipantRoles"
+              handleOnChange={(selected) => {
+                setSelectedModelParticipantRoles(selected);
+              }}
+            />
           </Form.Group>
+
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>
-              <strong>Topic of session: </strong>
+              <strong>Topic of session </strong>
             </Form.Label>
             <Form.Control
-              name="comment"
+              name="modelTopic"
               as="textarea"
               rows={1}
               aria-label="Default select example"
@@ -112,12 +130,12 @@ export const ModelQuestion = ({ districtSelected, schoolSelected }) => {
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCourse">
             <Form.Label>
-              <strong>How many minutes was this session?</strong>
+              <strong>How many minutes was this session? </strong>
             </Form.Label>
             <Form.Control
               as="select"
               aria-label="Default select example"
-              name="microPLDuration"
+              name="modelDuration"
               required
             >
               <option></option>
