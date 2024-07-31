@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { timeOptions } from "../utils/utils";
 
-export const ModeQuestion = ({ districtSelected, schoolSelected }) => {
-  const [microPLDone, setMicroPLDone] = useState();
+export const ModeQuestion = ({
+  districtSelected,
+  schoolSelected,
+  coachingMode,
+  setCoachingMode,
+}) => {
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
     let teachersBySchool = {};
@@ -44,7 +48,6 @@ export const ModeQuestion = ({ districtSelected, schoolSelected }) => {
           if (schoolSelected === schoolName) {
             const uniqueTeacherSet = new Set(teacherList);
             uniqueTeacherArray.push(...uniqueTeacherSet);
-            uniqueTeacherArray.push("N/A");
           }
         }
       }
@@ -68,7 +71,7 @@ export const ModeQuestion = ({ districtSelected, schoolSelected }) => {
           name="modeDone"
           aria-label="Default select example"
           onChange={(e) => {
-            setMicroPLDone(e.target.value);
+            setCoachingMode(e.target.value);
             if (e.target.value === "yes") {
               getTeacherInfo();
             }
@@ -84,7 +87,7 @@ export const ModeQuestion = ({ districtSelected, schoolSelected }) => {
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {microPLDone === "In-person" || microPLDone === "Hybrid" ? (
+      {coachingMode === "In-person" || coachingMode === "Hybrid" ? (
         <>
           <Form.Group className="mb-3" controlId="formBasicCourse">
             <Form.Label>

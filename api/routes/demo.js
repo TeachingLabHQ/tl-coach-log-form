@@ -34,6 +34,26 @@ router.post("/getMonday", async (req, res, next) => {
   // .then(res => console.log(JSON.stringify(res, null, 2)));
 });
 
+//get data from google shet
+router.post("/getDistrictSchool", async (req, res, next) => {
+  fetch("https://api.monday.com/v2", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization:
+        "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjIzNDI2ODE2OCwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMy0wMi0wM1QwMDozNjoyMC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.oM37gRdrLf8UnnmuZIM-QWDRoT_GtgFLLyHpvnxGUtQ",
+      "API-Version": "2024-04",
+    },
+    body: JSON.stringify({
+      query: req.body.query,
+      // 'variables' : JSON.stringify(req.body.vars)
+    }),
+  })
+    .then((res) => res.json())
+    .then((result) => res.status(200).send(result));
+  // .then(res => console.log(JSON.stringify(res, null, 2)));
+});
+
 //upload data to Monday
 router.post("/boardUpdate", async (req, res, next) => {
   fetch("https://api.monday.com/v2", {

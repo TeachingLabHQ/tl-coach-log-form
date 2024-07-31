@@ -9,8 +9,9 @@ export const ModelQuestion = ({
   schoolSelected,
   setSelectedModelParticipants,
   setSelectedModelParticipantRoles,
+  modelDone,
+  setModelDone,
 }) => {
-  const [microPLDone, setMicroPLDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
     let teachersBySchool = {};
@@ -50,7 +51,6 @@ export const ModelQuestion = ({
           if (schoolSelected === schoolName) {
             const uniqueTeacherSet = new Set(teacherList);
             uniqueTeacherArray.push(...uniqueTeacherSet);
-            uniqueTeacherArray.push("N/A");
           }
         }
       }
@@ -75,7 +75,7 @@ export const ModelQuestion = ({
           name="CoachingDone"
           aria-label="Default select example"
           onChange={(e) => {
-            setMicroPLDone(e.target.value);
+            setModelDone(e.target.value);
             if (e.target.value === "yes") {
               getTeacherInfo();
             }
@@ -90,7 +90,7 @@ export const ModelQuestion = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {microPLDone === "yes" ? (
+      {modelDone === "yes" ? (
         <>
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>

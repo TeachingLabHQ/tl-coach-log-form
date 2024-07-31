@@ -8,8 +8,9 @@ export const ReasonQuestion = ({
   districtSelected,
   schoolSelected,
   setOriginalSessions,
+  isCoachingMissed,
+  setIsCoachingMissed,
 }) => {
-  const [microPLDone, setMicroPLDone] = useState();
   const [happenReason, setHappenReason] = useState();
   const [replacement, setReplacement] = useState();
   const [coacheeList, setCoacheeList] = useState();
@@ -51,7 +52,6 @@ export const ReasonQuestion = ({
           if (schoolSelected === schoolName) {
             const uniqueTeacherSet = new Set(teacherList);
             uniqueTeacherArray.push(...uniqueTeacherSet);
-            uniqueTeacherArray.push("N/A");
           }
         }
       }
@@ -76,7 +76,7 @@ export const ReasonQuestion = ({
           name="reasonDone"
           aria-label="Default select example"
           onChange={(e) => {
-            setMicroPLDone(e.target.value);
+            setIsCoachingMissed(e.target.value);
             if (e.target.value === "yes") {
               getTeacherInfo();
             }
@@ -91,7 +91,7 @@ export const ReasonQuestion = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {microPLDone === "yes" ? (
+      {isCoachingMissed === "yes" ? (
         <>
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>

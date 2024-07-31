@@ -8,7 +8,6 @@ const getCoacheeList = (teachersBySchool, districtSelected, schoolSelected) => {
         if (schoolSelected === schoolName) {
           const uniqueTeacherSet = new Set(teacherList);
           uniqueTeacherArray.push(...uniqueTeacherSet);
-          uniqueTeacherArray.push("N/A");
         }
       }
     }
@@ -56,4 +55,31 @@ export const getTeacherInfo = (
     console.log(coachees);
     setCoacheeList(coachees);
   });
+};
+
+export const createItem = (query, vars, accessToken) => {
+  return (
+    axios
+      .post("demo/boardUpdate", {
+        apiKey: accessToken,
+        query: query,
+        vars: vars,
+      })
+      //item id
+      .then((res) => res.data.data.create_item.id)
+      .catch((err) => err)
+  );
+};
+export const createItemSub = (query, vars, accessToken) => {
+  return (
+    axios
+      .post("/demo/boardUpdate", {
+        apiKey: accessToken,
+        query: query,
+        vars: vars,
+      })
+      //item id
+      .then((res) => res)
+      .catch((err) => err)
+  );
 };

@@ -6,8 +6,9 @@ import { classroomAmount, timeOptions } from "../utils/utils";
 export const AdminWalkthroughQuestion = ({
   districtSelected,
   schoolSelected,
+  walkthroughDone,
+  setWalkthroughDone,
 }) => {
-  const [microPLDone, setMicroPLDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
     let teachersBySchool = {};
@@ -47,7 +48,6 @@ export const AdminWalkthroughQuestion = ({
           if (schoolSelected === schoolName) {
             const uniqueTeacherSet = new Set(teacherList);
             uniqueTeacherArray.push(...uniqueTeacherSet);
-            uniqueTeacherArray.push("N/A");
           }
         }
       }
@@ -71,7 +71,7 @@ export const AdminWalkthroughQuestion = ({
           name="walkthroughDone"
           aria-label="Default select example"
           onChange={(e) => {
-            setMicroPLDone(e.target.value);
+            setWalkthroughDone(e.target.value);
             if (e.target.value === "yes") {
               getTeacherInfo();
             }
@@ -86,7 +86,7 @@ export const AdminWalkthroughQuestion = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {microPLDone === "yes" ? (
+      {walkthroughDone === "yes" ? (
         <>
           <Form.Group className="mb-3" controlId="formBasicCourse">
             <Form.Label>

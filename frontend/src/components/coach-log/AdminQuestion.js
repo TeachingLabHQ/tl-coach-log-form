@@ -8,8 +8,9 @@ export const AdminQuestion = ({
   districtSelected,
   schoolSelected,
   setSelectedAdmins,
+  adminDone,
+  setAdminDone,
 }) => {
-  const [microPLDone, setMicroPLDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
     let teachersBySchool = {};
@@ -49,7 +50,6 @@ export const AdminQuestion = ({
           if (schoolSelected === schoolName) {
             const uniqueTeacherSet = new Set(teacherList);
             uniqueTeacherArray.push(...uniqueTeacherSet);
-            uniqueTeacherArray.push("N/A");
           }
         }
       }
@@ -74,7 +74,7 @@ export const AdminQuestion = ({
           name="adminDone"
           aria-label="Default select example"
           onChange={(e) => {
-            setMicroPLDone(e.target.value);
+            setAdminDone(e.target.value);
             if (e.target.value === "yes") {
               getTeacherInfo();
             }
@@ -89,7 +89,7 @@ export const AdminQuestion = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {microPLDone === "yes" ? (
+      {adminDone === "yes" ? (
         <>
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>

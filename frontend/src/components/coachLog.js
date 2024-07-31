@@ -22,6 +22,8 @@ import { AdminQuestion } from "./coach-log/AdminQuestion";
 import { ReasonQuestion } from "./coach-log/ReasonQuestion";
 import { AdminWalkthroughQuestion } from "./coach-log/AdminWalkthroughQuestion";
 import { ModeQuestion } from "./coach-log/ModeQuestion";
+import { createItem } from "./coach-log/utils";
+import { createItemSub } from "./coach-log/utils";
 
 function CoachFormPage() {
   const [team, setTeam] = useState([""]);
@@ -51,6 +53,13 @@ function CoachFormPage() {
     useState([]);
   const [selectedAdmins, setSelectedAdmins] = useState([]);
   const [originalSessions, setOriginalSessions] = useState([]);
+  const [microPLDone, setMicroPLDone] = useState();
+  const [modelDone, setModelDone] = useState();
+  const [adminDone, setAdminDone] = useState();
+  const [walkthroughDone, setWalkthroughDone] = useState();
+  const [isCoachingMissed, setIsCoachingMissed] = useState();
+  const [coachingMode, setCoachingMode] = useState();
+  const { accessToken } = useContext(AccessTokenContext);
 
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
@@ -141,23 +150,139 @@ function CoachFormPage() {
       const coachName = e.target.coachNameManual
         ? e.target.coachNameManual.value
         : e.target.coachName.value;
-
       const dateValue = new Date(e.target.date.value);
       const month = ("0" + (dateValue.getMonth() + 1)).slice(-2);
       const day = ("0" + dateValue.getDate()).slice(-2);
       const year = dateValue.getFullYear();
       const formattedDate = `${year}-${month}-${day}`;
-
       const district = e.target.districtName.value;
       const school = e.target.schoolName.value;
-      const microPLParticipants = selectedMicroPLParticipants;
-      const microPLParticipantRoles = selectedMicroPLParticipantRoles;
-      const microPLDuration = e.target.microPLDuration.value;
-      const microPLTopic = e.target.microPLTopic.value;
-      console.log("microPLParticipants", microPLParticipants);
-      console.log("microPLParticipantRoles", microPLParticipantRoles);
-      console.log("microPLDuration", microPLDuration);
-      console.log("microPLTopic", microPLTopic);
+
+      let microPLParticipants = "";
+      let microPLParticipantRoles = "";
+      let microPLDuration = "";
+      let microPLTopic = "";
+      if (microPLDone === "yes") {
+        microPLParticipants = selectedMicroPLParticipants;
+        microPLParticipantRoles = selectedMicroPLParticipantRoles;
+        microPLDuration = e.target.microPLDuration.value;
+        microPLTopic = e.target.microPLTopic.value;
+      }
+      let modelParticipants = "";
+      let modelParticipantRoles = "";
+      let modelDuration = "";
+      let modelTopic = "";
+      if (modelDone === "yes") {
+        modelParticipants = selectedModelParticipants;
+        modelParticipantRoles = selectedModelParticipantRoles;
+        modelDuration = e.target.modelDuration.value;
+        modelTopic = e.target.modelTopic.value;
+      }
+
+      let adminParticipants = "";
+      let adminDuration = "";
+      if (adminDone === "yes") {
+        adminParticipants = selectedAdmins;
+        adminDuration = e.target.adminDuration.value;
+      }
+
+      let walkthroughClassrooms = "";
+      let walkthroughDuration = "";
+      if (walkthroughDone === "yes") {
+        walkthroughClassrooms = e.target.walkthroughClassrooms.value;
+        walkthroughDuration = e.target.walkthroughDuration.value;
+      }
+
+      let originalSessionsList = "";
+      let reasonChoice = "";
+      let fullReasonContent = "";
+      let replacementActivities = "";
+      let noCoachingDuration = "";
+      if (isCoachingMissed === "yes") {
+        originalSessionsList = originalSessions;
+        reasonChoice = e.target.reasonChoice.value;
+        if (e.target.reasonContent) {
+          fullReasonContent =
+            e.target.reasonContent.value + ". " + e.target.reasonWriteIn.value;
+        }
+        if (e.target.replacementActivities) {
+          replacementActivities = e.target.replacementActivities.value;
+        }
+
+        noCoachingDuration = e.target.noCoachingDuration.value;
+      }
+
+      let schoolTravelDuration = "";
+      let finalTravelDuration = "";
+      if (coachingMode === "In-person" || coachingMode === "Hybrid") {
+        schoolTravelDuration = e.target.schoolTravelDuration.value;
+        finalTravelDuration = e.target.finalTravelDuration.value;
+      }
+      //create parent items
+      let queryParent =
+        "mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:6741344103, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }";
+      let varsParent = {
+        groupName: "topics",
+        myItemName: coachName,
+        columnVals: JSON.stringify({
+          date__1: { date: formattedDate },
+          text88__1: districtSelected,
+          text5__1: schoolSelected,
+          text4__1: microPLParticipants.toString(),
+          text3__1: microPLParticipantRoles.toString(),
+          text28__1: microPLTopic,
+          text15__1: microPLDuration,
+          text7__1: modelParticipants.toString(),
+          text29__1: modelParticipantRoles.toString(),
+          text76__1: modelTopic,
+          numbers1__1: modelDuration,
+          text9__1: adminParticipants.toString(),
+          numbers4__1: adminDuration,
+          numbers__1: walkthroughClassrooms,
+          numbers3__1: walkthroughDuration,
+          text23__1: originalSessionsList.toString(),
+          text99__1: fullReasonContent,
+          text30__1: replacementActivities,
+          text58__1: coachingMode,
+          numbers8__1: schoolTravelDuration,
+          numbers10__1: finalTravelDuration,
+        }),
+      };
+      createItem(queryParent, varsParent, accessToken).then((response) => {
+        console.log(response);
+        for (var i = 0; i < coachingLogs.length; i++) {
+          const parentID = response;
+          const coacheeName = coachingLogs[i].coacheeName;
+          const coacheeRole = coachingLogs[i].coacheeRole;
+          const coachingActivity = coachingLogs[i].coachingActivity;
+          const coachingDuration = coachingLogs[i].coachingDuration;
+          let querySub =
+            "mutation ($myItemName: String!,$parentID: ID!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }";
+          let varsSub = {
+            myItemName: coacheeName,
+            parentID: String(parentID),
+            columnVals: JSON.stringify({
+              date0: { date: formattedDate },
+              text__1: coacheeName,
+              text0__1: coacheeRole,
+              text5__1: coachingActivity,
+              numbers__1: parseFloat(coachingDuration),
+            }),
+          };
+          const myTimeout = setTimeout(setErrorCheck(false), 60000);
+          createItemSub(querySub, varsSub, accessToken).then((e) => {
+            if (
+              e.data.hasOwnProperty("errors") ||
+              (e.status < 600 && e.status > 399)
+            ) {
+              setErrorCheck(true);
+            } else {
+              setErrorCheck(false);
+            }
+            clearTimeout(myTimeout);
+          });
+        }
+      });
     }
   };
 
@@ -184,6 +309,7 @@ function CoachFormPage() {
             districtSelected={districtSelected}
             schoolSelected={schoolSelected}
             coachingLogs={coachingLogs}
+            setCoachingLogs={setCoachingLogs}
             pjTypeRef={pjTypeRef}
             handleCoachingLogsChange={handleCoachingLogsChange}
             removeProjectFields={removeProjectFields}
@@ -196,25 +322,39 @@ function CoachFormPage() {
               setSelectedMicroPLParticipantRoles
             }
             setSelectedMicroPLParticipants={setSelectedMicroPLParticipants}
+            microPLDone={microPLDone}
+            setMicroPLDone={setMicroPLDone}
           />
           <ModelQuestion
             districtSelected={districtSelected}
             schoolSelected={schoolSelected}
             setSelectedModelParticipants={setSelectedModelParticipants}
             setSelectedModelParticipantRoles={setSelectedModelParticipantRoles}
+            modelDone={modelDone}
+            setModelDone={setModelDone}
           />
           <AdminQuestion
             districtSelected={districtSelected}
             schoolSelected={schoolSelected}
             setSelectedAdmins={setSelectedAdmins}
+            adminDone={adminDone}
+            setAdminDone={setAdminDone}
           />
-          <AdminWalkthroughQuestion />
+          <AdminWalkthroughQuestion
+            walkthroughDone={walkthroughDone}
+            setWalkthroughDone={setWalkthroughDone}
+          />
           <ReasonQuestion
             districtSelected={districtSelected}
             schoolSelected={schoolSelected}
             setOriginalSessions={setOriginalSessions}
+            isCoachingMissed={isCoachingMissed}
+            setIsCoachingMissed={setIsCoachingMissed}
           />
-          <ModeQuestion />
+          <ModeQuestion
+            coachingMode={coachingMode}
+            setCoachingMode={setCoachingMode}
+          />
 
           <div className="submitButton">
             <Button

@@ -9,8 +9,9 @@ export const MicroPLQuestion = ({
   schoolSelected,
   setSelectedMicroPLParticipantRoles,
   setSelectedMicroPLParticipants,
+  microPLDone,
+  setMicroPLDone,
 }) => {
-  const [microPLDone, setMicroPLDone] = useState();
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
     let teachersBySchool = {};
@@ -50,7 +51,6 @@ export const MicroPLQuestion = ({
           if (schoolSelected === schoolName) {
             const uniqueTeacherSet = new Set(teacherList);
             uniqueTeacherArray.push(...uniqueTeacherSet);
-            uniqueTeacherArray.push("N/A");
           }
         }
       }

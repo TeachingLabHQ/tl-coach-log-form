@@ -10,6 +10,7 @@ import { getTeacherInfo } from "./utils";
 
 export const CoachingQuestion = ({
   coachingLogs,
+  setCoachingLogs,
   pjTypeRef,
   handleCoachingLogsChange,
   removeProjectFields,
@@ -40,6 +41,17 @@ export const CoachingQuestion = ({
             setCoachingDone(e.target.value);
             if (e.target.value === "yes") {
               getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
+            }
+            if (e.target.value === "no") {
+              setCoachingLogs([
+                {
+                  logId: new Date().getTime(),
+                  coacheeName: "",
+                  coacheeRole: "",
+                  coachingActivity: "",
+                  coachingDuration: 0,
+                },
+              ]);
             }
           }}
           required
