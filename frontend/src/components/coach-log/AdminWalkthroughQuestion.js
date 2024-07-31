@@ -108,7 +108,7 @@ export const AdminWalkthroughQuestion = ({
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCourse">
             <Form.Label>
-              <strong>How many minutes was this meeting?</strong>
+              <strong>How many minutes was this walkthrough?</strong>
             </Form.Label>
             <Form.Control
               as="select"
