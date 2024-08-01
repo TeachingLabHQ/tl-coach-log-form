@@ -10,26 +10,26 @@ export const DistrictSchoolQuestion = ({
   const [selectedSchool, setSelectedSchool] = useState();
   const [districtSchools, setDistrictSchools] = useState({});
   const [schoolList, setSchoolList] = useState([]);
-  const getDistrictInfoFromGoogleSheet = (e) => {
-    axios.post("/demo/getDistrictSchool").then((res) => {
-      const districtSchools = res.data;
-      console.log(districtSchools);
-      let schoolsByDistrict = {};
-      for (const district of districtSchools) {
-        for (let i = 1; i < district.length; i++) {
-          const districtName = district[0];
-          if (!schoolsByDistrict[districtName]) {
-            schoolsByDistrict[districtName] = [district[i]];
-          } else {
-            schoolsByDistrict[districtName].push(district[i]);
-          }
-        }
-      }
-      setDistrictSchools(schoolsByDistrict);
-    });
-  };
+  // const getDistrictInfoFromGoogleSheet = (e) => {
+  //   axios.post("/demo/getDistrictSchool").then((res) => {
+  //     const districtSchools = res.data;
+  //     console.log(districtSchools);
+  //     let schoolsByDistrict = {};
+  //     for (const district of districtSchools) {
+  //       for (let i = 1; i < district.length; i++) {
+  //         const districtName = district[0];
+  //         if (!schoolsByDistrict[districtName]) {
+  //           schoolsByDistrict[districtName] = [district[i]];
+  //         } else {
+  //           schoolsByDistrict[districtName].push(district[i]);
+  //         }
+  //       }
+  //     }
+  //     setDistrictSchools(schoolsByDistrict);
+  //   });
+  // };
   useEffect(() => {
-    getDistrictInfoFromGoogleSheet();
+    // getDistrictInfoFromGoogleSheet();
   }, []);
   const onSelectDistrict = (e) => {
     setSelectedDistrict(e.target.value);
