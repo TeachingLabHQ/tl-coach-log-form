@@ -61,18 +61,11 @@ function NavBar(props) {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {/* <Nav.Link as={Link} to="/">Home</Nav.Link> */}
               <Nav.Link as={Link} to="/">
-                Weekly Project Log
-              </Nav.Link>
-              <Nav.Link as={Link} to="/coachlog">
                 Coach Log
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
-          {/* <Navbar.Collapse className="justify-content-end">
-                <Nav.Link  onClick={signInWithGoogle} id="auth-text">Log in</Nav.Link>
-            </Navbar.Collapse> */}
         </Container>
       </Navbar>
     </>
