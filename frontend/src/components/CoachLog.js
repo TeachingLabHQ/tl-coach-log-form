@@ -246,6 +246,8 @@ function CoachLog() {
           numbers__1: walkthroughClassrooms,
           numbers3__1: walkthroughDuration,
           text23__1: originalSessionsList.toString(),
+          numbers82__1: noCoachingDuration,
+          text51__1: reasonChoice,
           text99__1: fullReasonContent,
           text30__1: replacementActivities,
           text58__1: coachingMode,
