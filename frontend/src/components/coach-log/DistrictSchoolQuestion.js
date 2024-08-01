@@ -26,6 +26,7 @@ export const DistrictSchoolQuestion = ({
           }
         }
       }
+      setDistrictSchools(schoolsByDistrict);
     });
   };
   useEffect(() => {

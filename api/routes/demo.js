@@ -6,11 +6,11 @@ var fetch = require("node-fetch");
 const { getDocs, collection } = require("firebase/firestore");
 const fs = require("fs").promises;
 const path = require("path");
-const process = require("process");
 const { authenticate } = require("@google-cloud/local-auth");
 const { google } = require("googleapis");
 const { version } = require("os");
 const { JWT } = require("google-auth-library");
+require("dotenv").config();
 
 //firebase-not currently using
 router.get("/info", async (req, res, next) => {
