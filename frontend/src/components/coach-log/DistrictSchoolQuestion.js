@@ -18,7 +18,6 @@ export const DistrictSchoolQuestion = ({
       for (const district of districtSchools) {
         for (let i = 1; i < district.length; i++) {
           const districtName = district[0];
-          console.log(districtName);
           if (!schoolsByDistrict[districtName]) {
             schoolsByDistrict[districtName] = [district[i]];
           } else {

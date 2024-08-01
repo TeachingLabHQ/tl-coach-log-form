@@ -41,8 +41,8 @@ function App() {
             <NavBar userStatus={isUserSignedIn} />
             <Routes>
               {/* <Route element={<Home/>} path="/"/> */}
-              <Route element={<FormPage />} path="/" />
-              <Route element={<CoachLogPage />} path="/coachlog" />
+              {/* <Route element={<FormPage />} path="/wee" /> */}
+              <Route element={<CoachLogPage />} path="/" />
             </Routes>
           </AccessTokenProvider>
         </BrowserRouter>
