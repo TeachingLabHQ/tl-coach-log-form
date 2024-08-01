@@ -43,10 +43,14 @@ router.post("/getMonday", async (req, res, next) => {
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
 //get data from google shet
 router.post("/getDistrictSchool", async (req, res, next) => {
-  console.log(process.env.GOOGLE_SERVICE_CLIENTEMAIL);
+  const keysEnvVar = process.env["GOOGLE_SERVICE_CREDENTIALS"];
+  if (!keysEnvVar) {
+    throw new Error("The $CREDS environment variable was not found!");
+  }
+  const keys = JSON.parse(keysEnvVar);
   const auth = new JWT({
-    email: process.env.GOOGLE_SERVICE_CLIENTEMAIL,
-    key: process.env.GOOGLE_SERVICE_PRIVATEKEY,
+    email: keys.client_email,
+    key: keys.private_key,
     scopes: SCOPES,
   });
   const googleSheets = google.sheets({ version: "v4", auth });
