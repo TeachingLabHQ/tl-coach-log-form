@@ -18,6 +18,5 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "react-datepicker": "^4.10.0"
-  },
-  "proxy": "http://localhost:9000"
+  }
 }
