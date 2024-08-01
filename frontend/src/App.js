@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
 import FormPage from "./components/FormPage";
-import CoachLogPage from "./components/CoachLog";
+import CoachLog from "./components/CoachLog";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AccessTokenProvider from "./contexts/accessTokenContext";
 import app from "./firebase/firebase";
@@ -42,7 +42,7 @@ function App() {
             <Routes>
               {/* <Route element={<Home/>} path="/"/> */}
               {/* <Route element={<FormPage />} path="/wee" /> */}
-              <Route element={<CoachLogPage />} path="/" />
+              <Route element={<CoachLog />} path="/" />
             </Routes>
           </AccessTokenProvider>
         </BrowserRouter>

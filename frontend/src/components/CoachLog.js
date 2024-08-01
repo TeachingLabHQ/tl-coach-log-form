@@ -25,7 +25,7 @@ import { ModeQuestion } from "./coach-log/ModeQuestion";
 import { createItem } from "./coach-log/utils";
 import { createItemSub } from "./coach-log/utils";
 
-function CoachFormPage() {
+function CoachLog() {
   const [team, setTeam] = useState([""]);
   const [coachingLogs, setCoachingLogs] = useState([
     {
@@ -390,4 +390,4 @@ function CoachFormPage() {
   );
 }
 
-export default CoachFormPage;
+export default CoachLog;
