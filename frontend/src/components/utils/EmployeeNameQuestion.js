@@ -3,8 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 export const EmployeeNameQuestion = () => {
   const [selectedCoach, setSelectedCoach] = useState();
-  const [employmentInfo, setEmploymentInfo] = useState([]);
-  const getEmployeeNames = () => {
+  const [cfInfo, setCfInfo] = useState([]);
+  const getFTEmployeeNames = () => {
     let queryEmployee =
       '{boards(ids:2227132353) {items_page (limit:200) { items { name column_values(ids:"dropdown7"){text}}}}}';
     axios
@@ -13,22 +13,34 @@ export const EmployeeNameQuestion = () => {
       })
       .then((res) => res.data.data.boards[0].items_page.items)
       .then((items) => {
-        items.map((val, index) =>
-          setEmploymentInfo((employmentInfo) =>
-            [
-              ...employmentInfo,
-              { name: val.name, department: val.column_values[0].text },
-            ].sort((a, b) => {
-              if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-              if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-              return 0;
-            })
-          )
-        );
+        const uniqueNames = new Set(items.map((val) => val.name));
+        setCfInfo((prevInfo) => {
+          return Array.from(new Set([...prevInfo, ...uniqueNames])).sort(
+            (a, b) => a.toLowerCase().localeCompare(b.toLowerCase())
+          );
+        });
+      });
+  };
+  const getCFNames = () => {
+    let queryCF =
+      "{boards(ids:2208860812) {items_page (limit:200) { items { name }}}}";
+    axios
+      .post("/demo/getMonday", {
+        query: queryCF,
+      })
+      .then((res) => res.data.data.boards[0].items_page.items)
+      .then((items) => {
+        const uniqueNames = new Set(items.map((val) => val.name));
+        setCfInfo((prevInfo) => {
+          return Array.from(new Set([...prevInfo, ...uniqueNames])).sort(
+            (a, b) => a.toLowerCase().localeCompare(b.toLowerCase())
+          );
+        });
       });
   };
   useEffect(() => {
-    getEmployeeNames();
+    getFTEmployeeNames();
+    getCFNames();
   }, []);
   return (
     <>
@@ -45,8 +57,8 @@ export const EmployeeNameQuestion = () => {
           required
         >
           <option></option>
-          {employmentInfo.map((val, idx) => (
-            <option value={val.name}>{val.name}</option>
+          {cfInfo.map((val, idx) => (
+            <option value={val}>{val}</option>
           ))}
           <option value={"missing name"}>Others: My name is not here</option>
         </Form.Control>
