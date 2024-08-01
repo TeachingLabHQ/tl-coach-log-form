@@ -40,32 +40,32 @@ router.post("/getMonday", async (req, res, next) => {
     .then((result) => res.status(200).send(result));
   // .then(res => console.log(JSON.stringify(res, null, 2)));
 });
-// const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
-// //get data from google shet
-// router.post("/getDistrictSchool", async (req, res, next) => {
-//   const keysEnvVar = process.env["GOOGLE_SERVICE_CREDENTIALS"];
-//   if (!keysEnvVar) {
-//     throw new Error("The $CREDS environment variable was not found!");
-//   }
-//   const keys = JSON.parse(keysEnvVar);
-//   const auth = new JWT({
-//     email: keys.client_email,
-//     key: keys.private_key,
-//     scopes: SCOPES,
-//   });
-//   const googleSheets = google.sheets({ version: "v4", auth });
-//   const data = await googleSheets.spreadsheets.values.get({
-//     spreadsheetId: "11jlo9UeWxZGwunhDb24hZBwAKc5b8ZKM9AYNWZaUyZY",
-//     range: "FY25 School/District Selection for Sites!A:Z",
-//     majorDimension: "COLUMNS",
-//   });
-//   const rows = data.data.values;
-//   if (!rows || rows.length === 0) {
-//     console.log("No data found.");
-//     return res.status(500);
-//   }
-//   return res.status(200).send(rows);
-// });
+const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
+//get data from google shet
+router.post("/getDistrictSchool", async (req, res, next) => {
+  const keysEnvVar = process.env["GOOGLE_SERVICE_CREDENTIALS"];
+  if (!keysEnvVar) {
+    throw new Error("The $CREDS environment variable was not found!");
+  }
+  const keys = JSON.parse(keysEnvVar);
+  const auth = new JWT({
+    email: keys.client_email,
+    key: keys.private_key,
+    scopes: SCOPES,
+  });
+  const googleSheets = google.sheets({ version: "v4", auth });
+  const data = await googleSheets.spreadsheets.values.get({
+    spreadsheetId: "11jlo9UeWxZGwunhDb24hZBwAKc5b8ZKM9AYNWZaUyZY",
+    range: "FY25 School/District Selection for Sites!A:Z",
+    majorDimension: "COLUMNS",
+  });
+  const rows = data.data.values;
+  if (!rows || rows.length === 0) {
+    console.log("No data found.");
+    return res.status(500);
+  }
+  return res.status(200).send(rows);
+});
 
 //upload data to Monday
 router.post("/boardUpdate", async (req, res, next) => {
