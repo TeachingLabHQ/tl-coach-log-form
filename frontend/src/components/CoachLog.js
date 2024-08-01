@@ -149,7 +149,11 @@ function CoachLog() {
       setSubmitCheck(true);
       const coachName = e.target.coachNameManual
         ? e.target.coachNameManual.value
-        : e.target.coachName.value;
+        : JSON.parse(e.target.coachName.value).name;
+
+      const coachMondayId = e.target.coachNameManual
+        ? ""
+        : JSON.parse(e.target.coachName.value).id;
       const dateValue = new Date(e.target.date.value);
       const month = ("0" + (dateValue.getMonth() + 1)).slice(-2);
       const day = ("0" + dateValue.getDate()).slice(-2);
@@ -226,6 +230,7 @@ function CoachLog() {
         myItemName: coachName,
         columnVals: JSON.stringify({
           date__1: { date: formattedDate },
+          people__1: coachMondayId,
           text88__1: districtSelected,
           text5__1: schoolSelected,
           text4__1: microPLParticipants.toString(),
