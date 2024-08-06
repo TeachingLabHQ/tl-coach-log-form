@@ -3,6 +3,7 @@ export const roleList = [
   "School-based coach",
   "School-based admin",
   "District/Network admin",
+  "CPS only - Teacher Team Lead",
 ];
 
 export const coachingActivities = [
