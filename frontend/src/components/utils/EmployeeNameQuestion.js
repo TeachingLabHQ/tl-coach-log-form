@@ -4,40 +4,77 @@ import { useEffect, useState } from "react";
 export const EmployeeNameQuestion = () => {
   const [selectedCoach, setSelectedCoach] = useState();
   const [cfInfo, setCfInfo] = useState([]);
-  const getMondayProfiles = () => {
-    let queryMondayProfiles = `{users  {
-      email
-      name
-    id
-    
-    }}`;
+  // const getMondayProfiles = () => {
+  //   let queryMondayProfiles = `{users  {
+  //     email
+  //     name
+  //   id
+
+  //   }}`;
+  //   axios
+  //     .post("/demo/getMonday", {
+  //       query: queryMondayProfiles,
+  //     })
+  //     .then((res) => res.data.data.users)
+  //     .then((users) => {
+  //       const uniqueUsers = Array.from(
+  //         new Set(users.map((user) => user.email))
+  //       ).map((email) => users.find((user) => user.email === email));
+  //       const newUsers = uniqueUsers.map((user) => ({
+  //         name: user.name,
+  //         email: user.email,
+  //         id: user.id,
+  //       }));
+  //       setCfInfo((prevInfo) => {
+  //         const allUsers = [...prevInfo, ...newUsers];
+  //         const uniqueAllUsers = Array.from(
+  //           new Set(allUsers.map((user) => user.email))
+  //         ).map((email) => allUsers.find((user) => user.email === email));
+  //         return uniqueAllUsers.sort((a, b) =>
+  //           a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  //         );
+  //       });
+  //     });
+  // };
+  const getFTEmployeeNames = () => {
+    let queryEmployee =
+      "{boards(ids:2227132353) {items_page (limit:200) { items { name }}}}";
     axios
       .post("/demo/getMonday", {
-        query: queryMondayProfiles,
+        query: queryEmployee,
       })
-      .then((res) => res.data.data.users)
-      .then((users) => {
-        const uniqueUsers = Array.from(
-          new Set(users.map((user) => user.email))
-        ).map((email) => users.find((user) => user.email === email));
-        const newUsers = uniqueUsers.map((user) => ({
-          name: user.name,
-          email: user.email,
-          id: user.id,
-        }));
+      .then((res) => res.data.data.boards[0].items_page.items)
+      .then((items) => {
+        const uniqueNames = new Set(items.map((val) => val.name));
         setCfInfo((prevInfo) => {
-          const allUsers = [...prevInfo, ...newUsers];
-          const uniqueAllUsers = Array.from(
-            new Set(allUsers.map((user) => user.email))
-          ).map((email) => allUsers.find((user) => user.email === email));
-          return uniqueAllUsers.sort((a, b) =>
-            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+          return Array.from(new Set([...prevInfo, ...uniqueNames])).sort(
+            (a, b) => a.toLowerCase().localeCompare(b.toLowerCase())
+          );
+        });
+      });
+  };
+  const getCFNames = () => {
+    let queryCF =
+      "{boards(ids:2208860812) {items_page (limit:200) { items { name }}}}";
+    axios
+      .post("/demo/getMonday", {
+        query: queryCF,
+      })
+      .then((res) => res.data.data.boards[0].items_page.items)
+      .then((items) => {
+        console.log(items);
+        const uniqueNames = new Set(items.map((val) => val.name));
+        setCfInfo((prevInfo) => {
+          return Array.from(new Set([...prevInfo, ...uniqueNames])).sort(
+            (a, b) => a.toLowerCase().localeCompare(b.toLowerCase())
           );
         });
       });
   };
   useEffect(() => {
-    getMondayProfiles();
+    // getMondayProfiles();
+    getFTEmployeeNames();
+    getCFNames();
     console.log(cfInfo);
   }, []);
   return (
