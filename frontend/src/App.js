@@ -40,8 +40,6 @@ function App() {
           <AccessTokenProvider>
             <NavBar userStatus={isUserSignedIn} />
             <Routes>
-              {/* <Route element={<Home/>} path="/"/> */}
-              {/* <Route element={<FormPage />} path="/wee" /> */}
               <Route element={<CoachLog />} path="/" />
             </Routes>
           </AccessTokenProvider>
