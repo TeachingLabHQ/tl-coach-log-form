@@ -39,7 +39,6 @@ export const MicroPLQuestion = ({
         }
       });
       const coachees = getCoacheeList(teachersBySchool);
-      console.log(coachees);
       setCoacheeList(coachees);
     });
   };
@@ -109,7 +108,6 @@ export const MicroPLQuestion = ({
               options={roleList}
               name="microPLParticipantRoles"
               handleOnChange={(selected) => {
-                console.log(selected);
                 setSelectedMicroPLParticipantRoles(selected);
               }}
             />

@@ -40,7 +40,6 @@ export const ReasonQuestion = ({
         }
       });
       const coachees = getCoacheeList(teachersBySchool);
-      console.log(coachees);
       setCoacheeList(coachees);
     });
   };

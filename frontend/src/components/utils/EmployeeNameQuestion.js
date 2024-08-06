@@ -38,7 +38,6 @@ export const EmployeeNameQuestion = () => {
   };
   useEffect(() => {
     getMondayProfiles();
-    console.log(cfInfo);
   }, []);
   return (
     <>

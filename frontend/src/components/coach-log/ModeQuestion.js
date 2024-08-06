@@ -36,7 +36,6 @@ export const ModeQuestion = ({
         }
       });
       const coachees = getCoacheeList(teachersBySchool);
-      console.log(coachees);
       setCoacheeList(coachees);
     });
   };

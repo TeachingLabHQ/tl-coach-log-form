@@ -33,7 +33,7 @@ function App() {
       <div className="App">
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Project Log Form</title>
+          <title>Coach Log Form</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
         <BrowserRouter>

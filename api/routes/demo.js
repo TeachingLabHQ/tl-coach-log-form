@@ -15,7 +15,6 @@ require("dotenv").config();
 //firebase-not currently using
 router.get("/info", async (req, res, next) => {
   const allDocData = [];
-  console.log(req.query.myParam);
   const docs = await getDocs(collection(db, req.query.myParam));
   docs.forEach((doc) => allDocData.push(doc.data()));
   res.json({ result: allDocData });

@@ -44,15 +44,11 @@ export const getTeacherInfo = (
         teachersBySchool[district][school].push(teacherName);
       }
     });
-    console.log(teachersBySchool);
-    console.log("districtSelected", districtSelected);
-    console.log("schoolSelected", schoolSelected);
     const coachees = getCoacheeList(
       teachersBySchool,
       districtSelected,
       schoolSelected
     );
-    console.log(coachees);
     setCoacheeList(coachees);
   });
 };

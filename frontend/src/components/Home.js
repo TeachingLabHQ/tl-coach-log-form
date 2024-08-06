@@ -30,10 +30,9 @@ function Home() {
       .catch((err) => console.log(err));
 
     setAccessToken(
-      "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NTYwODI0MSwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMi0wNi0xNFQyMDoyMTo1Ny4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.BUyi3WsoBlpPvCBms9WUKfOufKFDNz6onxBm8h_jWGo",
+      "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NTYwODI0MSwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMi0wNi0xNFQyMDoyMTo1Ny4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.BUyi3WsoBlpPvCBms9WUKfOufKFDNz6onxBm8h_jWGo"
     );
   }, []);
-  console.log(accessToken);
 
   const getAttendance = () => {
     axios
@@ -46,8 +45,8 @@ function Home() {
         data[0].column_values.map((val, index) =>
           index != 0 && index != data[0].column_values.length - 1
             ? setLessons((lessons) => [...lessons, val.title])
-            : null,
-        ),
+            : null
+        )
       )
       .catch((err) => console.log(err));
   };
@@ -62,8 +61,6 @@ function Home() {
         console.log(err);
       });
   };
-
-  console.log(lessons);
 
   return (
     <div>

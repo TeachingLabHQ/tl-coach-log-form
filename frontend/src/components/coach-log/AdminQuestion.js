@@ -38,7 +38,6 @@ export const AdminQuestion = ({
         }
       });
       const coachees = getCoacheeList(teachersBySchool);
-      console.log(coachees);
       setCoacheeList(coachees);
     });
   };

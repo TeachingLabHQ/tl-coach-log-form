@@ -40,6 +40,7 @@ function CoachLog() {
   const pjTypeRef = createRef("");
   const [validated, setValidated] = useState(false);
   const [errorCheck, setErrorCheck] = useState();
+  const [timeCheck, setTimeCheck] = useState();
   const [submitCheck, setSubmitCheck] = useState();
   const [schoolByDistrict, setSchoolByDistrict] = useState({});
   const [selectedMicroPLParticipants, setSelectedMicroPLParticipants] =
@@ -125,7 +126,6 @@ function CoachLog() {
     if (ele.coachingDuration !== "") {
       setCount(count - parseFloat(ele.coachingDuration));
     }
-    console.log(ele.logId);
     const updatedList = coachingLogs.filter(
       (object, i) => object.logId !== ele.logId
     );
@@ -166,11 +166,13 @@ function CoachLog() {
       let microPLParticipantRoles = "";
       let microPLDuration = "";
       let microPLTopic = "";
+      let totalCoachingMins = count;
       if (microPLDone === "yes") {
         microPLParticipants = selectedMicroPLParticipants;
         microPLParticipantRoles = selectedMicroPLParticipantRoles;
         microPLDuration = e.target.microPLDuration.value;
         microPLTopic = e.target.microPLTopic.value;
+        totalCoachingMins += parseFloat(microPLDuration);
       }
       let modelParticipants = "";
       let modelParticipantRoles = "";
@@ -181,6 +183,7 @@ function CoachLog() {
         modelParticipantRoles = selectedModelParticipantRoles;
         modelDuration = e.target.modelDuration.value;
         modelTopic = e.target.modelTopic.value;
+        totalCoachingMins += parseFloat(modelDuration);
       }
 
       let adminParticipants = "";
@@ -188,6 +191,7 @@ function CoachLog() {
       if (adminDone === "yes") {
         adminParticipants = selectedAdmins;
         adminDuration = e.target.adminDuration.value;
+        totalCoachingMins += parseFloat(adminDuration);
       }
 
       let walkthroughClassrooms = "";
@@ -195,6 +199,7 @@ function CoachLog() {
       if (walkthroughDone === "yes") {
         walkthroughClassrooms = e.target.walkthroughClassrooms.value;
         walkthroughDuration = e.target.walkthroughDuration.value;
+        totalCoachingMins += parseFloat(walkthroughDuration);
       }
 
       let originalSessionsList = "";
@@ -222,6 +227,14 @@ function CoachLog() {
         schoolTravelDuration = e.target.schoolTravelDuration.value;
         finalTravelDuration = e.target.finalTravelDuration.value;
       }
+      if (totalCoachingMins > 360) {
+        setTimeCheck(false);
+        return;
+      }
+      if (totalCoachingMins <= 360) {
+        setTimeCheck(true);
+      }
+
       //create parent items
       let queryParent =
         "mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:6741344103, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }";
@@ -372,20 +385,32 @@ function CoachLog() {
               Submit
             </Button>
           </div>
-          {submitCheck == true && errorCheck == undefined ? (
+          {submitCheck === true &&
+          errorCheck === undefined &&
+          timeCheck === true ? (
             <Spinner animation="border" variant="light" />
-          ) : null}
-          {submitCheck == false ? (
+          ) : (
+            <></>
+          )}
+          {timeCheck === false ? (
+            <Alert key="danger" variant="danger">
+              Please make sure your total input coaching minutes are under 360
+              minutes. Coaching Time include all minutes other than travel time.
+            </Alert>
+          ) : (
+            <></>
+          )}
+          {submitCheck === false ? (
             <Alert key="warning" variant="warning">
               Error: Please make sure all required fields (*) are filled out.
             </Alert>
           ) : null}
-          {errorCheck == false ? (
+          {errorCheck === false ? (
             <Alert key="success" variant="success">
               Your log is submitted successfully!
             </Alert>
           ) : null}
-          {errorCheck == true ? (
+          {errorCheck === true ? (
             <Alert key="danger" variant="danger">
               Something went wrong! If this happens constantly, please contact
               project management or technology team.

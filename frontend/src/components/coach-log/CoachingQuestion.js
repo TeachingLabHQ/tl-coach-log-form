@@ -70,22 +70,22 @@ export const CoachingQuestion = ({
             <Row>
               <Col className="my-1">
                 <Form.Label>
-                  <strong>Coachee*</strong>
+                  <strong>Coachee</strong>
                 </Form.Label>
               </Col>
               <Col className="my-1">
                 <Form.Label>
-                  <strong>Role*</strong>
+                  <strong>Role</strong>
                 </Form.Label>
               </Col>
               <Col className="my-1">
                 <Form.Label>
-                  <strong>Activities*</strong>
+                  <strong>Activities</strong>
                 </Form.Label>
               </Col>
               <Col className="my-1">
                 <Form.Label>
-                  <strong>Duration*</strong>
+                  <strong>Duration (mins)</strong>
                 </Form.Label>
               </Col>
               {coachingLogs.length > 1 ? (

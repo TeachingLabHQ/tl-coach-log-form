@@ -13,7 +13,6 @@ export const DistrictSchoolQuestion = ({
   const getDistrictInfoFromGoogleSheet = (e) => {
     axios.post("/demo/getDistrictSchool").then((res) => {
       const districtSchools = res.data;
-      console.log(districtSchools);
       let schoolsByDistrict = {};
       for (const district of districtSchools) {
         for (let i = 1; i < district.length; i++) {
