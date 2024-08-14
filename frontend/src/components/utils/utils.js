@@ -17,10 +17,10 @@ export const coachingActivities = [
 ];
 
 export const generalActivities = [
-  "1:1 Coaching/ Micro PL",
-  "Coaching",
-  "modeling",
-  "planning with a group of teachers",
+  "1:1 Coaching",
+  "Micro PL",
+  "Modeling",
+  "Planning with a group of teachers",
   "Walkthrough",
 ];
 
