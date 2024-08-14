@@ -14,7 +14,6 @@ export const coachingActivities = [
   "Planned for instruction",
   "Analyzed student work",
   "Held debrief",
-  "Other",
 ];
 
 export const generalActivities = [
