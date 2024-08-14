@@ -59,6 +59,7 @@ function CoachLog() {
   const [adminDone, setAdminDone] = useState();
   const [walkthroughDone, setWalkthroughDone] = useState();
   const [isCoachingMissed, setIsCoachingMissed] = useState();
+  const [isContractor, setIsContractor] = useState();
   const [coachingMode, setCoachingMode] = useState();
   const { accessToken } = useContext(AccessTokenContext);
 
@@ -223,7 +224,10 @@ function CoachLog() {
 
       let schoolTravelDuration = "";
       let finalTravelDuration = "";
-      if (coachingMode === "In-person" || coachingMode === "Hybrid") {
+      if (
+        (coachingMode === "In-person" || coachingMode === "Hybrid") &&
+        isContractor === "yes"
+      ) {
         schoolTravelDuration = e.target.schoolTravelDuration.value;
         finalTravelDuration = e.target.finalTravelDuration.value;
       }
@@ -374,6 +378,8 @@ function CoachLog() {
           <ModeQuestion
             coachingMode={coachingMode}
             setCoachingMode={setCoachingMode}
+            isContractor={isContractor}
+            setIsContractor={setIsContractor}
           />
 
           <div className="submitButton">

@@ -8,6 +8,8 @@ export const ModeQuestion = ({
   schoolSelected,
   coachingMode,
   setCoachingMode,
+  isContractor,
+  setIsContractor,
 }) => {
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
@@ -88,43 +90,70 @@ export const ModeQuestion = ({
       </Form.Group>
       {coachingMode === "In-person" || coachingMode === "Hybrid" ? (
         <>
-          <Form.Group className="mb-3" controlId="formBasicCourse">
+          <Form.Group className="mb-3" controlId="formBasicSite">
             <Form.Label>
-              <strong>
-                How long was your travel/ commute to this school today?{" "}
-              </strong>
+              <strong>Are you a 1099 contractor with Teaching Lab?</strong>
             </Form.Label>
             <Form.Control
               as="select"
+              name="isContractor"
               aria-label="Default select example"
-              name="schoolTravelDuration"
+              onChange={(e) => {
+                setIsContractor(e.target.value);
+              }}
               required
             >
-              <option></option>
-              {timeOptions.map((val, index) => (
-                <option value={val}>{val}</option>
-              ))}
+              <option value=""></option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
             </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Please choose an option.
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicCourse">
-            <Form.Label>
-              <strong>
-                How long was your travel/ commute to your second school or your
-                final destination today?
-              </strong>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              aria-label="Default select example"
-              name="finalTravelDuration"
-              required
-            >
-              <option></option>
-              {timeOptions.map((val, index) => (
-                <option value={val}>{val}</option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+          {isContractor === "yes" ? (
+            <>
+              <Form.Group className="mb-3" controlId="formBasicCourse">
+                <Form.Label>
+                  <strong>
+                    How long was your travel/ commute to this school today?{" "}
+                  </strong>
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  aria-label="Default select example"
+                  name="schoolTravelDuration"
+                  required
+                >
+                  <option></option>
+                  {timeOptions.map((val, index) => (
+                    <option value={val}>{val}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicCourse">
+                <Form.Label>
+                  <strong>
+                    How long was your travel/ commute to your second school or
+                    your final destination today?
+                  </strong>
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  aria-label="Default select example"
+                  name="finalTravelDuration"
+                  required
+                >
+                  <option></option>
+                  {timeOptions.map((val, index) => (
+                    <option value={val}>{val}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </>
+          ) : (
+            <></>
+          )}
         </>
       ) : (
         <></>
