@@ -231,6 +231,8 @@ function CoachLog() {
         schoolTravelDuration = e.target.schoolTravelDuration.value;
         finalTravelDuration = e.target.finalTravelDuration.value;
       }
+
+      let additionalClarification = e.target.additionalClarification.value;
       if (totalCoachingMins > 360) {
         setTimeCheck(false);
         return;
@@ -270,6 +272,7 @@ function CoachLog() {
           text58__1: coachingMode,
           numbers8__1: schoolTravelDuration,
           numbers10__1: finalTravelDuration,
+          long_text8__1: additionalClarification,
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
@@ -381,6 +384,19 @@ function CoachLog() {
             isContractor={isContractor}
             setIsContractor={setIsContractor}
           />
+          <Form.Group className="mb-3" controlId="formBasicCourse">
+            <Form.Label>
+              <strong>
+                Please provide any clarification on the coaching session
+              </strong>
+            </Form.Label>
+            <Form.Control
+              name="additionalClarification"
+              as="textarea"
+              rows={2}
+              aria-label="Default select example"
+            ></Form.Control>
+          </Form.Group>
 
           <div className="submitButton">
             <Button
