@@ -14,6 +14,12 @@ export const coachingActivities = [
   "Planned for instruction",
   "Analyzed student work",
   "Held debrief",
+  "Leader: Observation, feedback and coaching cycles",
+  "Leader: Use of data & continuous improvement processes",
+  "Leader: Instructional vision/professional learning plan",
+  "Leader: Equitable supports for students and teachers",
+  "Leader: Resources are allocated to support instructional vision",
+  "Leader: Teachers as leaders",
 ];
 
 export const generalActivities = [
