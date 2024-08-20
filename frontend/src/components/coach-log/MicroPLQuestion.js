@@ -139,6 +139,15 @@ export const MicroPLQuestion = ({
               ))}
             </Form.Control>
           </Form.Group>
+          <Form.Group className="mb-3" controlId="formFile">
+            <Form.Label>
+              <strong>
+                Upload participant attendance sheet, if there are more than 15
+                participants
+              </strong>
+            </Form.Label>
+            <Form.Control type="file" name="microPLFile" />
+          </Form.Group>
         </>
       ) : (
         <></>

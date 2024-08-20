@@ -79,3 +79,16 @@ export const createItemSub = (query, vars, accessToken) => {
       .catch((err) => err)
   );
 };
+
+export const uploadFile = (formData, accessToken) => {
+  return (
+    axios
+      .post("/demo/boardFileUpdate", formData, {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accessToken}`,
+      })
+      //item id
+      .then((res) => res)
+      .catch((err) => err)
+  );
+};

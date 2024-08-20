@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("./firebase");
 var fetch = require("node-fetch");
+const multer = require("multer");
+const FormData = require("form-data");
 
 const { getDocs, collection } = require("firebase/firestore");
 const fs = require("fs").promises;
@@ -85,5 +87,43 @@ router.post("/boardUpdate", async (req, res, next) => {
     .then((result) => res.status(200).send(result));
   // .then(res => console.log(JSON.stringify(res, null, 2)));
 });
+
+// Set up multer for handling multipart/form-data
+const upload = multer();
+
+//upload files to Monday
+router.post(
+  "/boardFileUpdate",
+  upload.single("file"),
+  async (req, res, next) => {
+    // Create a new FormData object to send to Monday.com
+    const formData = new FormData();
+
+    // Append the extracted parts from req.body to formData
+
+    formData.append("query", req.body.query);
+    formData.append("variables", req.body.variables);
+    formData.append("map", req.body.map);
+
+    // Append the file to formData correctly
+    formData.append("file", req.file.buffer, {
+      filename: req.file.originalname, // Original file name
+      contentType: req.file.mimetype, // MIME type of the file
+    });
+
+    fetch("https://api.monday.com/v2/file", {
+      method: "POST",
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjIzNDI2ODE2OCwidWlkIjozMTI4ODQ0NCwiaWFkIjoiMjAyMy0wMi0wM1QwMDozNjoyMC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg4NDgxOSwicmduIjoidXNlMSJ9.oM37gRdrLf8UnnmuZIM-QWDRoT_GtgFLLyHpvnxGUtQ",
+        // No need to set 'Content-Type' as fetch will handle this based on formData
+      },
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((result) => res.status(200).send(result));
+    // .then(res => console.log(JSON.stringify(res, null, 2)));
+  }
+);
 
 module.exports = router;

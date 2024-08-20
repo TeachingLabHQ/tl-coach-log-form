@@ -24,6 +24,7 @@ import { AdminWalkthroughQuestion } from "./coach-log/AdminWalkthroughQuestion";
 import { ModeQuestion } from "./coach-log/ModeQuestion";
 import { createItem } from "./coach-log/utils";
 import { createItemSub } from "./coach-log/utils";
+import { uploadFile } from "./coach-log/utils";
 
 function CoachLog() {
   const [team, setTeam] = useState([""]);
@@ -167,6 +168,7 @@ function CoachLog() {
       let microPLParticipantRoles = "";
       let microPLDuration = "";
       let microPLTopic = "";
+      let microPLFile = "";
       let totalCoachingMins = count;
       if (microPLDone === "yes") {
         microPLParticipants = selectedMicroPLParticipants;
@@ -174,6 +176,7 @@ function CoachLog() {
         microPLDuration = e.target.microPLDuration.value;
         microPLTopic = e.target.microPLTopic.value;
         totalCoachingMins += parseFloat(microPLDuration);
+        microPLFile = e.target.elements.microPLFile.files[0];
       }
       let modelParticipants = "";
       let modelParticipantRoles = "";
@@ -256,6 +259,7 @@ function CoachLog() {
           text3__1: microPLParticipantRoles.toString(),
           text28__1: microPLTopic,
           text15__1: microPLDuration,
+          files__1: microPLFile,
           text7__1: modelParticipants.toString(),
           text29__1: modelParticipantRoles.toString(),
           text76__1: modelTopic,
@@ -276,7 +280,35 @@ function CoachLog() {
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
-        console.log(response);
+        console.log("micro", microPLFile);
+        //upload file if there is any
+        if (microPLFile) {
+          const formData = new FormData();
+          formData.append(
+            "query",
+            `mutation add_file($file: File!, $itemId: ID!) { add_file_to_column(item_id: $itemId, column_id: "files__1", file: $file) { id } }`
+          );
+          formData.append(
+            "variables",
+            JSON.stringify({ itemId: String(response) })
+          );
+          formData.append("map", JSON.stringify({ file: "variables.file" }));
+          formData.append("file", microPLFile);
+          uploadFile(formData, accessToken).then((e) => {
+            console.log(e);
+            if (
+              e.data.hasOwnProperty("errors") ||
+              (e.status < 600 && e.status > 399)
+            ) {
+              setErrorCheck(true);
+              return;
+            } else {
+              setErrorCheck(false);
+            }
+          });
+        }
+
+        //upload subitems
         for (var i = 0; i < coachingLogs.length; i++) {
           const parentID = response;
           const coacheeName = coachingLogs[i].coacheeName;
