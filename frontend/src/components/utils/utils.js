@@ -14,6 +14,7 @@ export const coachingActivities = [
   "Planned for instruction",
   "Analyzed student work",
   "Held debrief",
+  "Observed recording of instruction and provided feedback",
   "Leader: Observation, feedback and coaching cycles",
   "Leader: Use of data & continuous improvement processes",
   "Leader: Instructional vision/professional learning plan",
