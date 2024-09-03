@@ -34,7 +34,6 @@ function FormPage() {
     "Learning & Research",
     "Strategy & Communications",
     "Office of the CEO",
-    ,
     "People & Culture",
     "Technology",
     "Fundraising",
@@ -558,7 +557,7 @@ function FormPage() {
 
   const toggleShowA = (ele) => {
     const updatedReminder = popup.filter((object, i) => {
-      return object.reminderId != ele.projectId;
+      return object.reminderId !== ele.projectId;
     });
     setPopup(updatedReminder);
   };

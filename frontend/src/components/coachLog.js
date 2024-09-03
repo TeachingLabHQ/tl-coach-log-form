@@ -10,7 +10,6 @@ import "../App.css";
 import DatePicker from "react-datepicker";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
-import Modal from "react-bootstrap/Modal";
 import Select from "react-select";
 
 function CoachLogPage() {
@@ -32,7 +31,6 @@ function CoachLogPage() {
     "Learning & Research",
     "Marketing & Communication",
     "Office of the CEO",
-    ,
     "People & Culture",
     "Technology",
     "Fundraising",
