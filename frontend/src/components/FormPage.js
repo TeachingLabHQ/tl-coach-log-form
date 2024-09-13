@@ -37,6 +37,7 @@ function FormPage() {
     "People & Culture",
     "Technology",
     "Fundraising",
+    "Facilitation Program",
     "Innovation Studio",
   ]);
   const [pjOptions, setPjOptions] = useState([{ "": "" }]);
@@ -293,6 +294,10 @@ function FormPage() {
         handleTypeChange();
         break;
       case "Technology":
+        setTeam([...projectTypes]);
+        handleTypeChange();
+        break;
+      case "Facilitation Program":
         setTeam([...projectTypes]);
         handleTypeChange();
         break;
