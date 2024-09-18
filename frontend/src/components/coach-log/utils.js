@@ -44,7 +44,7 @@ export const getTeacherInfo = (
         teachersBySchool[district][school].push(teacherName);
       }
     });
-    console.log("teachersBySchool", teachersBySchool);
+
     const coachees = getCoacheeList(
       teachersBySchool,
       districtSelected,

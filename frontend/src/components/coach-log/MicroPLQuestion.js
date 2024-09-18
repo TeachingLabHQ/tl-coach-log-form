@@ -15,7 +15,7 @@ export const MicroPLQuestion = ({
   const [coacheeList, setCoacheeList] = useState();
   const getTeacherInfo = (e) => {
     let teachersBySchool = {};
-    let teacherQuery = `{boards(ids:6197660733){items_page (limit:100) {items {column_values(ids:["short_text_2","coaching_partners","short_text66"]){text column{title}}}}}}`;
+    let teacherQuery = `{boards(ids:6197660733){items_page (limit:500) {items {column_values(ids:["short_text_2","coaching_partners","short_text66"]){text column{title}}}}}}`;
     axios.post("/demo/getMonday", { query: teacherQuery }).then((res) => {
       res.data.data.boards[0].items_page.items.forEach((e) => {
         const district = e.column_values.filter((v) => {
