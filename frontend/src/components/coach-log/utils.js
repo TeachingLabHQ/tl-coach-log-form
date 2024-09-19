@@ -21,9 +21,23 @@ export const getTeacherInfo = (
   schoolSelected
 ) => {
   let teachersBySchool = {};
-  let teacherQuery = `{boards(ids:6197660733){items_page (limit:500) {items {column_values(ids:["short_text_2","coaching_partners","short_text66"]){text column{title}}}}}}`;
-  axios.post("/demo/getMonday", { query: teacherQuery }).then((res) => {
-    res.data.data.boards[0].items_page.items.forEach((e) => {
+  let pageCursor = null;
+  let teacherQuery = `{boards(ids:6197660733){items_page (limit:500) {cursor items {column_values(ids:["short_text_2","coaching_partners","short_text66"]){text column{title}}}}}}`;
+  axios.post("/demo/getMonday", { query: teacherQuery }).then(async (res) => {
+    pageCursor = res.data.data.boards[0].items_page.cursor.toString();
+    let rawTeacherList = res.data.data.boards[0].items_page.items;
+    while (pageCursor) {
+      let moreTeacherQuery = `{next_items_page (limit: 500, cursor:"${pageCursor}") {cursor items {column_values(ids:["short_text_2","coaching_partners","short_text66"]){text column{title}}}}}`;
+      let moreTeacher = await axios.post("/demo/getMonday", {
+        query: moreTeacherQuery,
+      });
+      rawTeacherList = rawTeacherList.concat(
+        moreTeacher.data.data.next_items_page.items
+      );
+      pageCursor = moreTeacher.data.data.next_items_page.cursor;
+    }
+    //organize the teacher list by district and school
+    rawTeacherList.forEach((e) => {
       const district = e.column_values.filter((v) => {
         return v.column.title === "District Name";
       })[0].text;
