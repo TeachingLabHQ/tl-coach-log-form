@@ -43,9 +43,26 @@ function FormPage() {
   const [pjOptions, setPjOptions] = useState([{ "": "" }]);
   const [employmentInfo, setEmploymentInfo] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState();
-  const [pickedDate, setPickedDate] = useState(
-    new Date().setDate(new Date().getDate() - new Date().getDay() + 1)
-  );
+  const [pickedDate, setPickedDate] = useState(() => {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+  
+    // Calculate the current week's Monday
+    const currentMonday = new Date(today);
+    currentMonday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+  
+    // Calculate the next week's Monday
+    const nextMonday = new Date(currentMonday);
+    nextMonday.setDate(currentMonday.getDate() + 7);
+  
+    // If today is between Wednesday (3) and next Tuesday (2), return current Monday
+    if (dayOfWeek >= 3 || dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2) {
+      return currentMonday;
+    }
+  
+    // Otherwise, return the next Monday
+    return nextMonday;
+  });
   const [formattedDateStart, setFormattedDateStart] = useState();
   const [formattedDateEnd, setFormattedDateEnd] = useState();
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
@@ -468,6 +485,8 @@ function FormPage() {
       let totalHours = projects.reduce((a, b) => {
         return a + parseFloat(b.projectHours);
       }, 0);
+      console.log("total Hours",totalHours)
+
       //create parent items
       let queryParent =
         "mutation ($myItemName: String!, $columnVals: JSON!, $groupName: String! ) { create_item (board_id:4284585496, group_id: $groupName, item_name:$myItemName, column_values:$columnVals) { id } }";
