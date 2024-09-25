@@ -57,7 +57,7 @@ router.post("/getDistrictSchool", async (req, res, next) => {
   const googleSheets = google.sheets({ version: "v4", auth });
   const data = await googleSheets.spreadsheets.values.get({
     spreadsheetId: "11jlo9UeWxZGwunhDb24hZBwAKc5b8ZKM9AYNWZaUyZY",
-    range: "FY25 School/District Selection for Sites!A:Z",
+    range: "FY25 School/District Selection for Sites",
     majorDimension: "COLUMNS",
   });
   const rows = data.data.values;
