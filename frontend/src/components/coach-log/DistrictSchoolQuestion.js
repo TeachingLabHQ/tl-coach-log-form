@@ -15,12 +15,17 @@ export const DistrictSchoolQuestion = ({
       const districtSchools = res.data;
       let schoolsByDistrict = {};
       for (const district of districtSchools) {
-        for (let i = 1; i < district.length; i++) {
-          const districtName = district[0];
-          if (!schoolsByDistrict[districtName]) {
-            schoolsByDistrict[districtName] = [district[i]];
-          } else {
-            schoolsByDistrict[districtName].push(district[i]);
+        const districtName = district[0];
+        //use N/A as an option if no schools are added
+        if (district.length === 1) {
+          schoolsByDistrict[districtName] = ["N/A"];
+        } else {
+          for (let i = 1; i < district.length; i++) {
+            if (!schoolsByDistrict[districtName]) {
+              schoolsByDistrict[districtName] = [district[i]];
+            } else {
+              schoolsByDistrict[districtName].push(district[i]);
+            }
           }
         }
       }
