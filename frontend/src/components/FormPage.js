@@ -52,16 +52,15 @@ function FormPage() {
     currentMonday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
   
     // Calculate the next week's Monday
-    const nextMonday = new Date(currentMonday);
-    nextMonday.setDate(currentMonday.getDate() + 7);
+    const lastMonday = new Date(currentMonday);
+    lastMonday.setDate(currentMonday.getDate() - 7);
   
     // If today is between Wednesday (3) and next Tuesday (2), return current Monday
-    if (dayOfWeek >= 3 || dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2) {
+    if (dayOfWeek >= 3) {
       return currentMonday;
     }
-  
-    // Otherwise, return the next Monday
-    return nextMonday;
+    // Otherwise, return the last Monday
+    return lastMonday;
   });
   const [formattedDateStart, setFormattedDateStart] = useState();
   const [formattedDateEnd, setFormattedDateEnd] = useState();
