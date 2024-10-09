@@ -1,19 +1,17 @@
 /* eslint-disable no-sparse-arrays */
 /* eslint-disable default-case */
-import React, { useState, useContext, useEffect, createRef } from "react";
-import { AccessTokenContext } from "../contexts/accessTokenContext";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import axios from "axios";
-import Col from "react-bootstrap/esm/Col";
-import Row from "react-bootstrap/Row";
-import "../App.css";
-import DatePicker from "react-datepicker";
+import React, { createRef, useContext, useEffect, useState } from "react";
 import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/esm/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
+import DatePicker from "react-datepicker";
 import Select from "react-select";
-import Modals from "./Modals";
-import { Divider } from "@chakra-ui/react";
+import "../App.css";
+import { AccessTokenContext } from "../contexts/accessTokenContext";
 
 function FormPage() {
   const [team, setTeam] = useState([""]);
@@ -55,8 +53,8 @@ function FormPage() {
     const lastMonday = new Date(currentMonday);
     lastMonday.setDate(currentMonday.getDate() - 7);
   
-    // If today is between Wednesday (3) and next Tuesday (2), return current Monday
-    if (dayOfWeek >= 3) {
+    // If today is between Thursday and next Sunday, return current Monday
+    if (dayOfWeek >= 4 || dayOfWeek === 0) {
       return currentMonday;
     }
     // Otherwise, return the last Monday
