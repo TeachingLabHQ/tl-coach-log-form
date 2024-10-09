@@ -27,7 +27,6 @@ function FormPage() {
     },
   ]);
   const [options, setOptions] = useState([
-    "Operations",
     "Program",
     "Business Development",
     "Finance",
@@ -35,7 +34,8 @@ function FormPage() {
     "Strategy & Communications",
     "Office of the CEO",
     "People & Culture",
-    "Technology",
+    "Shared Operations",
+    "Operations&Technology",
     "Fundraising",
     "Facilitation Program",
     "Innovation Studio",
@@ -269,7 +269,7 @@ function FormPage() {
     var teamVal = "";
     e.target != undefined ? (teamVal = e.target.value) : (teamVal = e);
     switch (teamVal) {
-      case "Operations":
+      case "Operations&Technology":
         setTeam([...projectTypes]);
         handleTypeChange();
         break;
@@ -298,7 +298,7 @@ function FormPage() {
         handleTypeChange();
         break;
       case "Innovation Studio":
-        setTeam([projectTypes[1]]);
+        setTeam([...projectTypes]);
         handleTypeChange();
         break;
       case "Learning & Research":
@@ -309,7 +309,7 @@ function FormPage() {
         setTeam([...projectTypes]);
         handleTypeChange();
         break;
-      case "Technology":
+      case "Shared Operations":
         setTeam([...projectTypes]);
         handleTypeChange();
         break;
