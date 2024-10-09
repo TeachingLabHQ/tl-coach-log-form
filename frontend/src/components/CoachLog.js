@@ -1,33 +1,27 @@
 /* eslint-disable no-sparse-arrays */
 /* eslint-disable default-case */
-import React, { useState, useContext, useEffect, createRef } from "react";
-import { AccessTokenContext } from "../contexts/accessTokenContext";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import axios from "axios";
-import Col from "react-bootstrap/esm/Col";
-import Row from "react-bootstrap/Row";
-import "../App.css";
-import DatePicker from "react-datepicker";
+import React, { createRef, useContext, useEffect, useState } from "react";
 import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import { Divider } from "@chakra-ui/react";
+import "../App.css";
+import { AccessTokenContext } from "../contexts/accessTokenContext";
+import { AdminQuestion } from "./coach-log/AdminQuestion";
+import { AdminWalkthroughQuestion } from "./coach-log/AdminWalkthroughQuestion";
 import { CoachingQuestion } from "./coach-log/CoachingQuestion";
-import { EmployeeNameQuestion } from "./utils/EmployeeNameQuestion";
-import { DateQuestion } from "./utils/DateQuestion";
 import { DistrictSchoolQuestion } from "./coach-log/DistrictSchoolQuestion";
 import { MicroPLQuestion } from "./coach-log/MicroPLQuestion";
 import { ModelQuestion } from "./coach-log/ModelQuestion";
-import { AdminQuestion } from "./coach-log/AdminQuestion";
-import { ReasonQuestion } from "./coach-log/ReasonQuestion";
-import { AdminWalkthroughQuestion } from "./coach-log/AdminWalkthroughQuestion";
 import { ModeQuestion } from "./coach-log/ModeQuestion";
-import { createItem } from "./coach-log/utils";
-import { createItemSub } from "./coach-log/utils";
-import { uploadFile } from "./coach-log/utils";
+import { ReasonQuestion } from "./coach-log/ReasonQuestion";
+import { createItem, createItemSub, uploadFile } from "./coach-log/utils";
+import { DateQuestion } from "./utils/DateQuestion";
+import { EmployeeNameQuestion } from "./utils/EmployeeNameQuestion";
+import { NYCQuestion } from "./coach-log/nyc/NYCQuestions";
 
 function CoachLog() {
-  const [team, setTeam] = useState([""]);
   const [coachingLogs, setCoachingLogs] = useState([
     {
       logId: new Date().getTime(),
@@ -63,6 +57,18 @@ function CoachLog() {
   const [isContractor, setIsContractor] = useState();
   const [coachingMode, setCoachingMode] = useState();
   const { accessToken } = useContext(AccessTokenContext);
+  const [NYCDone, setNYCDone] = useState("");
+  const [nycGradeLevels, setNycGradeLevels] = useState([]);
+  const [teachersSupportedNumber, setTeachersSupportedNumber] = useState(0);
+  const [teachersSupportedType, setTeachersSupportedType] = useState("");
+  const [solvesImplementationIndicator, setSolvesImplementationIndicator] =
+    useState(""); // assuming it's a string
+  const [solvesPrimaryStrategy, setSolvesPrimaryStrategy] = useState("");
+  const [solvesSpecificStrategy, setSolvesSpecificStrategy] = useState("");
+  const [supportCycle, setSupportCycle] = useState("");
+  const [implementationIndicator, setImplementationIndicator] = useState("");
+  const [strategiesUsed, setStrategiesUsed] = useState([]);
+  const [workFocus, setWorkFocus] = useState("");
 
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
@@ -206,6 +212,46 @@ function CoachLog() {
         totalCoachingMins += parseFloat(walkthroughDuration);
       }
 
+      //NYC related values
+      let ImplementationIndicatorReads = "";
+      let strategiesUsedReads = "";
+      let workFocusReads = "";
+      let implementationIndicatorSolves = "";
+      let primaryStrategySolves = "";
+      let specificStrategySolves = "";
+      let supportCycleSolves = "";
+      let nycGradeLevelsGeneral = "";
+      let teachersSupportedNumberGeneral = "";
+      let teachersSupportedTypeGeneral = "";
+
+      if (NYCDone && NYCDone !== "no") {
+        nycGradeLevelsGeneral = nycGradeLevels.toString();
+        teachersSupportedNumberGeneral = teachersSupportedNumber;
+        teachersSupportedTypeGeneral = teachersSupportedType.toString();
+        if (NYCDone === "NYC Reads") {
+          ImplementationIndicatorReads = implementationIndicator;
+          workFocusReads = workFocus;
+          strategiesUsedReads = strategiesUsed.toString();
+        } else {
+          implementationIndicatorSolves = solvesImplementationIndicator;
+          primaryStrategySolves = solvesPrimaryStrategy;
+          specificStrategySolves = solvesSpecificStrategy;
+          supportCycleSolves = supportCycle;
+        }
+      }
+      console.log({
+        ImplementationIndicatorReads,
+        strategiesUsedReads,
+        workFocusReads,
+        implementationIndicatorSolves,
+        primaryStrategySolves,
+        specificStrategySolves,
+        supportCycleSolves,
+        nycGradeLevelsGeneral,
+        teachersSupportedNumberGeneral,
+        teachersSupportedTypeGeneral,
+      });
+
       let originalSessionsList = "";
       let reasonChoice = "";
       let fullReasonContent = "";
@@ -277,6 +323,16 @@ function CoachLog() {
           numbers8__1: schoolTravelDuration,
           numbers10__1: finalTravelDuration,
           long_text8__1: additionalClarification,
+          text281__1: nycGradeLevelsGeneral,
+          text87__1: teachersSupportedNumberGeneral,
+          text43__1: teachersSupportedTypeGeneral,
+          text0__1: ImplementationIndicatorReads,
+          text34__1: workFocusReads,
+          text56__1: strategiesUsedReads,
+          text431__1: implementationIndicatorSolves,
+          text89__1: supportCycleSolves,
+          text83__1: primaryStrategySolves,
+          text16__1: specificStrategySolves,
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
@@ -409,6 +465,22 @@ function CoachLog() {
             setOriginalSessions={setOriginalSessions}
             isCoachingMissed={isCoachingMissed}
             setIsCoachingMissed={setIsCoachingMissed}
+          />
+          <NYCQuestion
+            NYCDone={NYCDone}
+            setNYCDone={setNYCDone}
+            setNycGradeLevels={setNycGradeLevels}
+            setTeachersSupportedNumber={setTeachersSupportedNumber}
+            setTeachersSupportedType={setTeachersSupportedType}
+            setSolvesImplementationIndicator={setSolvesImplementationIndicator}
+            solvesImplementationIndicator={solvesImplementationIndicator}
+            setSolvesPrimaryStrategy={setSolvesPrimaryStrategy}
+            solvesPrimaryStrategy={solvesPrimaryStrategy}
+            setSolvesSpecificStrategy={setSolvesSpecificStrategy}
+            setSupportCycle={setSupportCycle}
+            setImplementationIndicator={setImplementationIndicator}
+            setStrategiesUsed={setStrategiesUsed}
+            setWorkFocus={setWorkFocus}
           />
           <ModeQuestion
             coachingMode={coachingMode}
