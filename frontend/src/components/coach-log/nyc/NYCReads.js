@@ -72,7 +72,11 @@ export const NYCReads = ({
           options={strategiesUsed}
           name="strategiesUsed"
           handleOnChange={(selected) => {
-            setStrategiesUsed(selected);
+            if (selected.length > 3) {
+              alert("You can only select up to 3 strategies.");
+              return; // Do not update state if more than 3 are selected
+            }
+            setStrategiesUsed(selected); // Update state if within limit
           }}
         />
       </Form.Group>
