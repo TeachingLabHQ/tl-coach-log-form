@@ -123,8 +123,7 @@ export const NYCGradeLevel = [
 ];
 export const supportedTeachers = [
   "Special Education Teachers",
-  "English as New Language Teachers",
-  "English Language Learner Teachers",
+  " English as New Language or English Language Learner Teachers",
   "None of the above",
 ];
 
