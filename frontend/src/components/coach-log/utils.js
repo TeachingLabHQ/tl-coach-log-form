@@ -107,3 +107,91 @@ export const uploadFile = (formData, accessToken) => {
       .catch((err) => err)
   );
 };
+export const NYCGradeLevel = [
+  "Kindergarten",
+  "1st Grade",
+  "2nd Grade",
+  "3rd Grade",
+  "4th Grade",
+  "5th Grade",
+  "6th Grade",
+  "7th Grade",
+  "8th Grade",
+  "Algebra I",
+  "Geometry",
+  "Algebra II",
+];
+export const supportedTeachers = [
+  "Special Education Teachers",
+  "English as New Language Teachers",
+  "English Language Learner Teachers",
+  "None of the above",
+];
+
+export const focusOfWork = [
+  "1a. Use of instructional materials",
+  "1b. Use of research informed instructional practices",
+  "2c. Student engagement",
+  "2d. Student engagement - K-2 Foundational Skills",
+  "2e. Student engagement - K-5 Literacy",
+  "3f. Monitoring student learning",
+  "4g. Bilingual instructional practices",
+];
+
+export const strategiesUsed = [
+  "Preparing to Teach - Unpacking curriculum components",
+  "Preparing to Teach - Unit/module unpacking",
+  "Preparing to Teach - Lesson & unit planning/ preparation/internalization",
+  "Preparing to Teach - Collaborative planning & prep for lesson study",
+  "Preparing to Teach - Professional learning session",
+  "In-Class Support - Side-by-Side coaching",
+  "Continuous Improvement - Identifying high-leverage next steps",
+  "Continuous Improvement - Student work reflection",
+  "Continuous Improvement - Student data analysis",
+  "Continuous Improvement - Lesson study reflection",
+];
+
+export const supportCycles = {
+  "First year of Implementation": [
+    "Doing the Math: Lesson Planning",
+    "Understanding the Mathematical Progression: Unit Planning",
+    "Making the Math Accessible Part 1: Instructional Routines",
+    "Synthesizing the Math: Synthesis",
+  ],
+  "Experienced with Implementation": [
+    "Synthesizing the Math: Synthesis",
+    "Making the Math Accessible Part 2: Scaffolding",
+    "Sustaining the Math: Sustain Teacher-Led Collaboration",
+  ],
+};
+
+export const primaryStrategyUsed = [
+  "Preparing to Teach",
+  "In-class support",
+  "Professional Learning",
+  "Sustaining Teacher-Led Collaboration",
+];
+
+export const solvesSpecificStrategyOptions = {
+  "Preparing to Teach": [
+    "Reviewing student data",
+    "Identifying or unpacking key student understandings",
+    "Identifying essential learning activities",
+    "Identifying resources that provide access for all students",
+    "Engage in doing the math together",
+  ],
+  "In-class support": [
+    "Modeling full lesson",
+    "Modeling partial lesson",
+    "Co-facilitation of lesson",
+    "Observation of teacher-facilitated lesson",
+  ],
+  "Professional Learning": ["Professional Learning"],
+  "Sustaining Teacher-Led Collaboration": [
+    "Identifying protocols for use in teacher team meetings",
+    "Supporting teacher teams to refine and reflect on these protocols",
+    "Provisioning support to one or more teachers in the facilitating of the protocols",
+    "Supporting the teacher team to reflect on the process",
+    "Working with school administration to ensure school systems and structures support regular teacher teamwork",
+  ],
+};
