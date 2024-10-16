@@ -26,7 +26,7 @@ function FormPage() {
   ]);
   const [options, setOptions] = useState([
     "Program",
-    "Business Development",
+    "Strategic Growth & Marketing",
     "Finance",
     "Learning & Research",
     "Strategy & Communications",
@@ -34,8 +34,7 @@ function FormPage() {
     "People & Culture",
     "Shared Operations",
     "Operations&Technology",
-    "Fundraising",
-    "Facilitation Program",
+    "Facilitation",
     "Innovation Studio",
   ]);
   const [pjOptions, setPjOptions] = useState([{ "": "" }]);
@@ -283,11 +282,7 @@ function FormPage() {
         setTeam([projectTypes[0]]);
         handleTypeChange();
         break;
-      case "Fundraising":
-        setTeam([projectTypes[0]]);
-        handleTypeChange();
-        break;
-      case "Business Development":
+      case "Strategic Growth & Marketing":
         setTeam([projectTypes[1]]);
         handleTypeChange();
         break;
@@ -311,7 +306,7 @@ function FormPage() {
         setTeam([...projectTypes]);
         handleTypeChange();
         break;
-      case "Facilitation Program":
+      case "Facilitation":
         setTeam([...projectTypes]);
         handleTypeChange();
         break;
