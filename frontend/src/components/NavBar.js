@@ -1,19 +1,17 @@
+import {
+  getAuth,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithRedirect,
+  signOut,
+} from "firebase/auth";
+import $ from "jquery";
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import {
-  getAuth,
-  signInWithPopup,
-  signInWithRedirect,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
 import app from "../firebase/firebase";
-import $ from "jquery";
 
 function NavBar(props) {
   const authentication = getAuth(app);
