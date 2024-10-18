@@ -1,23 +1,15 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import Home from "./components/Home";
-import FormPage from "./components/FormPage";
-import CoachLog from "./components/CoachLog";
+import { ChakraProvider } from "@chakra-ui/react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import AccessTokenProvider from "./contexts/accessTokenContext";
-import app from "./firebase/firebase";
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Helmet } from "react-helmet";
-import { ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import CoachLog from "./components/CoachLog";
+import NavBar from "./components/NavBar";
+import AccessTokenProvider from "./contexts/accessTokenContext";
+import app from "./firebase/firebase";
 
 function App() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);

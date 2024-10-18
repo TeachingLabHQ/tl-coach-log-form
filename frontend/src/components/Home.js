@@ -1,17 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
-import { AccessTokenContext } from "../contexts/accessTokenContext";
 import axios from "axios";
-import ListGroup from "react-bootstrap/ListGroup";
-import "../App.css";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import {
-  getAuth,
-  signInWithPopup,
-  signInWithRedirect,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
+import "../App.css";
+import { AccessTokenContext } from "../contexts/accessTokenContext";
 import app from "../firebase/firebase";
 
 function Home() {
