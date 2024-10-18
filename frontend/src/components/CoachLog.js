@@ -466,8 +466,8 @@ function CoachLog() {
             isCoachingMissed={isCoachingMissed}
             setIsCoachingMissed={setIsCoachingMissed}
           />
-          {/* disable NYC question temperoarily */}
-          {/* <NYCQuestion
+
+          <NYCQuestion
             NYCDone={NYCDone}
             setNYCDone={setNYCDone}
             setNycGradeLevels={setNycGradeLevels}
@@ -482,7 +482,7 @@ function CoachLog() {
             setImplementationIndicator={setImplementationIndicator}
             setStrategiesUsed={setStrategiesUsed}
             setWorkFocus={setWorkFocus}
-          /> */}
+          />
           <ModeQuestion
             coachingMode={coachingMode}
             setCoachingMode={setCoachingMode}
