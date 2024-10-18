@@ -1,11 +1,15 @@
 {
   "dependencies": {
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "firebase": "^9.19.1",
-    "react": "^18.1.0"
+    "framer-motion": "^10.15.1",
+    "react": "^18.1.0",
+    "react-multiselect-dropdown-bootstrap": "^1.1.0"
   },
   "scripts": {
     "start": "node api/bin/www",
     "heroku-postbuild": "cd api && npm install && cd ../frontend && npm install && npm run build"
   }
-  
 }
