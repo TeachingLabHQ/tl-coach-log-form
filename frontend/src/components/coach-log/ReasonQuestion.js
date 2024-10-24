@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { generalActivities, timeOptions, reasons } from "../utils/utils";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { getTeacherInfo } from "./utils";
 
 export const ReasonQuestion = ({
   districtSelected,
@@ -10,9 +11,14 @@ export const ReasonQuestion = ({
   setOriginalSessions,
   isCoachingMissed,
   setIsCoachingMissed,
+  setSelectedCancellationParticipants,
 }) => {
   const [happenReason, setHappenReason] = useState();
   const [replacement, setReplacement] = useState();
+  const [coacheeList, setCoacheeList] = useState();
+  useEffect(() => {
+    getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
+  }, [districtSelected, schoolSelected]);
 
   return (
     <>
@@ -42,6 +48,18 @@ export const ReasonQuestion = ({
       </Form.Group>
       {isCoachingMissed === "yes" ? (
         <>
+          <Form.Group className="mb-1" controlId="formBasicSite">
+            <Form.Label>
+              <strong>Names of participants: </strong>
+            </Form.Label>
+            <DropdownMultiselect
+              options={coacheeList}
+              name="cancellationParticipants"
+              handleOnChange={(selected) => {
+                setSelectedCancellationParticipants(selected);
+              }}
+            />
+          </Form.Group>
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>
               <strong>What was supposed to happen? </strong>
