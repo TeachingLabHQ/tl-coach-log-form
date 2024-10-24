@@ -40,6 +40,10 @@ function CoachLog() {
   const [schoolByDistrict, setSchoolByDistrict] = useState({});
   const [selectedMicroPLParticipants, setSelectedMicroPLParticipants] =
     useState([]);
+  const [
+    selectedCancellationParticipants,
+    setSelectedCancellationParticipants,
+  ] = useState([]);
   const [selectedMicroPLParticipantRoles, setSelectedMicroPLParticipantRoles] =
     useState([]);
   const [selectedModelParticipants, setSelectedModelParticipants] = useState(
@@ -177,8 +181,8 @@ function CoachLog() {
       let microPLFile = "";
       let totalCoachingMins = count;
       if (microPLDone === "yes") {
-        microPLParticipants = selectedMicroPLParticipants;
-        microPLParticipantRoles = selectedMicroPLParticipantRoles;
+        microPLParticipants = selectedMicroPLParticipants.toString();
+        microPLParticipantRoles = selectedMicroPLParticipantRoles.toString();
         microPLDuration = e.target.microPLDuration.value;
         microPLTopic = e.target.microPLTopic.value;
         totalCoachingMins += parseFloat(microPLDuration);
@@ -189,8 +193,8 @@ function CoachLog() {
       let modelDuration = "";
       let modelTopic = "";
       if (modelDone === "yes") {
-        modelParticipants = selectedModelParticipants;
-        modelParticipantRoles = selectedModelParticipantRoles;
+        modelParticipants = selectedModelParticipants.toString();
+        modelParticipantRoles = selectedModelParticipantRoles.toString();
         modelDuration = e.target.modelDuration.value;
         modelTopic = e.target.modelTopic.value;
         totalCoachingMins += parseFloat(modelDuration);
@@ -199,7 +203,7 @@ function CoachLog() {
       let adminParticipants = "";
       let adminDuration = "";
       if (adminDone === "yes") {
-        adminParticipants = selectedAdmins;
+        adminParticipants = selectedAdmins.toString();
         adminDuration = e.target.adminDuration.value;
         totalCoachingMins += parseFloat(adminDuration);
       }
@@ -257,8 +261,10 @@ function CoachLog() {
       let fullReasonContent = "";
       let replacementActivities = "";
       let noCoachingDuration = "";
+      let cancellationParticipants = "";
       if (isCoachingMissed === "yes") {
-        originalSessionsList = originalSessions;
+        cancellationParticipants = selectedCancellationParticipants.toString();
+        originalSessionsList = originalSessions.toString();
         reasonChoice = e.target.reasonChoice.value;
         if (e.target.reasonContent) {
           fullReasonContent =
@@ -301,20 +307,21 @@ function CoachLog() {
           people__1: coachMondayId,
           text88__1: districtSelected,
           text5__1: schoolSelected,
-          text4__1: microPLParticipants.toString(),
-          text3__1: microPLParticipantRoles.toString(),
+          text4__1: microPLParticipants,
+          text3__1: microPLParticipantRoles,
           text28__1: microPLTopic,
           text15__1: microPLDuration,
           files__1: microPLFile,
-          text7__1: modelParticipants.toString(),
-          text29__1: modelParticipantRoles.toString(),
+          text7__1: modelParticipants,
+          text29__1: modelParticipantRoles,
           text76__1: modelTopic,
           numbers1__1: modelDuration,
-          text9__1: adminParticipants.toString(),
+          text9__1: adminParticipants,
           numbers4__1: adminDuration,
           numbers__1: walkthroughClassrooms,
           numbers3__1: walkthroughDuration,
-          text23__1: originalSessionsList.toString(),
+          text59__1: cancellationParticipants,
+          text23__1: originalSessionsList,
           numbers82__1: noCoachingDuration,
           text51__1: reasonChoice,
           text99__1: fullReasonContent,
@@ -465,6 +472,9 @@ function CoachLog() {
             setOriginalSessions={setOriginalSessions}
             isCoachingMissed={isCoachingMissed}
             setIsCoachingMissed={setIsCoachingMissed}
+            setSelectedCancellationParticipants={
+              setSelectedCancellationParticipants
+            }
           />
 
           <NYCQuestion
