@@ -567,8 +567,8 @@ function CoachLog() {
                 <strong>Why can't I see the names of my coachees?</strong>{" "}
                 <br /> - Ensure that the coachee information has been uploaded
                 to the SY24-25 Coaching Participant Roster Monday board. <br />{" "}
-                - Please note that it may take up to 10 seconds for the names to
-                appear.
+                - Please note that it may take up to around 15 seconds for the
+                names to appear.
               </p>
             </div>
           </div>
