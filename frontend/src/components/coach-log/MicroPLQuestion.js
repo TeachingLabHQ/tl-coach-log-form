@@ -1,22 +1,22 @@
-import Form from "react-bootstrap/Form";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { roleList, timeOptions } from "../utils/utils";
+import Form from "react-bootstrap/Form";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import { getTeacherInfo } from "./utils";
+import { roleList, timeOptions } from "../utils/utils";
 
 export const MicroPLQuestion = ({
-  districtSelected,
-  schoolSelected,
+  coacheeList,
   setSelectedMicroPLParticipantRoles,
   setSelectedMicroPLParticipants,
   microPLDone,
   setMicroPLDone,
 }) => {
-  const [coacheeList, setCoacheeList] = useState();
+  // Use a unique key for DropdownMultiselect to force re-render
+  const [dropdownKey, setDropdownKey] = useState(0);
+
   useEffect(() => {
-    getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-  }, [districtSelected, schoolSelected]);
+    // Whenever coacheeList changes, update the key to force re-render
+    setDropdownKey((prevKey) => prevKey + 1);
+  }, [coacheeList]);
   return (
     <>
       <Form.Group className="mb-3" controlId="formBasicSite">
@@ -29,9 +29,6 @@ export const MicroPLQuestion = ({
           aria-label="Default select example"
           onChange={(e) => {
             setMicroPLDone(e.target.value);
-            if (e.target.value === "yes") {
-              getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-            }
           }}
           required
         >
@@ -50,6 +47,7 @@ export const MicroPLQuestion = ({
               <strong>Names of participants: </strong>
             </Form.Label>
             <DropdownMultiselect
+              key={dropdownKey} // Force re-render by using a dynamic key
               options={coacheeList}
               name="microPLParticipants"
               handleOnChange={(selected) => {

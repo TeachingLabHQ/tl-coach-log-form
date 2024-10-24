@@ -1,12 +1,9 @@
-import Form from "react-bootstrap/Form";
-import Col from "react-bootstrap/esm/Col";
-import Row from "react-bootstrap/Row";
-import Select from "react-select";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import Col from "react-bootstrap/esm/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 import { coachingActivities, roleList, timeOptions } from "../utils/utils";
-import { getTeacherInfo } from "./utils";
 
 export const CoachingQuestion = ({
   coachingLogs,
@@ -15,18 +12,9 @@ export const CoachingQuestion = ({
   handleCoachingLogsChange,
   removeProjectFields,
   addProjectFields,
-  districtSelected,
-  schoolSelected,
+  coacheeList,
 }) => {
   const [coachingDone, setCoachingDone] = useState();
-  const [coacheeList, setCoacheeList] = useState();
-
-  useEffect(() => {
-    if (districtSelected && schoolSelected) {
-      getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-    }
-    //teacher list should update when a new school is selected
-  }, [schoolSelected, districtSelected]);
   return (
     <>
       <Form.Group className="mb-5" controlId="formBasicSite">
@@ -39,9 +27,6 @@ export const CoachingQuestion = ({
           aria-label="Default select example"
           onChange={(e) => {
             setCoachingDone(e.target.value);
-            if (e.target.value === "yes") {
-              getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-            }
             if (e.target.value === "no") {
               setCoachingLogs([
                 {
