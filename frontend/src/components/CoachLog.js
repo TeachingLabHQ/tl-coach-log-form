@@ -556,7 +556,7 @@ function CoachLog() {
                   textAlign: "center",
                 }}
               >
-                FAQ:
+                FAQ
               </p>
               <p
                 style={{
