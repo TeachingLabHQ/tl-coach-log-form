@@ -546,6 +546,33 @@ function CoachLog() {
             </Alert>
           ) : null}
         </Form>
+        <div className="notificationAisle">
+          <div className="quoteContainer">
+            <div>
+              <p
+                style={{
+                  fontSize: "23px",
+                  fontWeight: "800",
+                  textAlign: "center",
+                }}
+              >
+                FAQ:
+              </p>
+              <p
+                style={{
+                  fontSize: "19px",
+                  fontWeight: "500",
+                }}
+              >
+                <strong>Why can't I see the names of my coachees?</strong>{" "}
+                <br /> - Ensure that the coachee information has been uploaded
+                to the SY24-25 Coaching Participant Roster Monday board. <br />{" "}
+                - Please note that it may take up to 10 seconds for the names to
+                appear.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
