@@ -1,22 +1,21 @@
-import Form from "react-bootstrap/Form";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { coachingActivities, roleList, timeOptions } from "../utils/utils";
+import Form from "react-bootstrap/Form";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import { getTeacherInfo } from "./utils";
+import { timeOptions } from "../utils/utils";
 
 export const AdminQuestion = ({
-  districtSelected,
-  schoolSelected,
+  coacheeList,
   setSelectedAdmins,
   adminDone,
   setAdminDone,
 }) => {
-  const [coacheeList, setCoacheeList] = useState();
+  // Use a unique key for DropdownMultiselect to force re-render
+  const [dropdownKey, setDropdownKey] = useState(0);
+
   useEffect(() => {
-    getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-    //teacher list should update when a new school is selected
-  }, [districtSelected, schoolSelected]);
+    // Whenever coacheeList changes, update the key to force re-render
+    setDropdownKey((prevKey) => prevKey + 1);
+  }, [coacheeList]);
   return (
     <>
       <Form.Group className="mb-3" controlId="formBasicSite">
@@ -32,9 +31,6 @@ export const AdminQuestion = ({
           aria-label="Default select example"
           onChange={(e) => {
             setAdminDone(e.target.value);
-            if (e.target.value === "yes") {
-              getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-            }
           }}
           required
         >
@@ -53,6 +49,7 @@ export const AdminQuestion = ({
               <strong>Names of admins: </strong>
             </Form.Label>
             <DropdownMultiselect
+              key={dropdownKey} // Force re-render by using a dynamic key
               options={coacheeList}
               name="adminNames"
               handleOnChange={(selected) => {
