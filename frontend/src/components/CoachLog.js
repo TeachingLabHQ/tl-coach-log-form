@@ -468,7 +468,7 @@ function CoachLog() {
               setSelectedCancellationParticipants
             }
           />
-
+          {/* 
           <NYCQuestion
             NYCDone={NYCDone}
             setNYCDone={setNYCDone}
@@ -484,7 +484,7 @@ function CoachLog() {
             setImplementationIndicator={setImplementationIndicator}
             setStrategiesUsed={setStrategiesUsed}
             setWorkFocus={setWorkFocus}
-          />
+          /> */}
           <ModeQuestion
             coachingMode={coachingMode}
             setCoachingMode={setCoachingMode}
