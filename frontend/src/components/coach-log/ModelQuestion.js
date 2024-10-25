@@ -6,18 +6,19 @@ import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { getTeacherInfo } from "./utils";
 
 export const ModelQuestion = ({
-  districtSelected,
-  schoolSelected,
+  coacheeList,
   setSelectedModelParticipants,
   setSelectedModelParticipantRoles,
   modelDone,
   setModelDone,
 }) => {
-  const [coacheeList, setCoacheeList] = useState();
+  // Use a unique key for DropdownMultiselect to force re-render
+  const [dropdownKey, setDropdownKey] = useState(0);
 
   useEffect(() => {
-    getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-  }, [districtSelected, schoolSelected]);
+    // Whenever coacheeList changes, update the key to force re-render
+    setDropdownKey((prevKey) => prevKey + 1);
+  }, [coacheeList]);
   return (
     <>
       <Form.Group className="mb-3" controlId="formBasicSite">
@@ -33,9 +34,6 @@ export const ModelQuestion = ({
           aria-label="Default select example"
           onChange={(e) => {
             setModelDone(e.target.value);
-            if (e.target.value === "yes") {
-              getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-            }
           }}
           required
         >
@@ -54,6 +52,7 @@ export const ModelQuestion = ({
               <strong>Names of participants: </strong>
             </Form.Label>
             <DropdownMultiselect
+              key={dropdownKey} // Force re-render by using a dynamic key
               options={coacheeList}
               name="modelParticipants"
               handleOnChange={(selected) => {

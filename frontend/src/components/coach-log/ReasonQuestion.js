@@ -1,13 +1,10 @@
-import Form from "react-bootstrap/Form";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { generalActivities, timeOptions, reasons } from "../utils/utils";
+import Form from "react-bootstrap/Form";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import { getTeacherInfo } from "./utils";
+import { generalActivities, reasons, timeOptions } from "../utils/utils";
 
 export const ReasonQuestion = ({
-  districtSelected,
-  schoolSelected,
+  coacheeList,
   setOriginalSessions,
   isCoachingMissed,
   setIsCoachingMissed,
@@ -15,10 +12,13 @@ export const ReasonQuestion = ({
 }) => {
   const [happenReason, setHappenReason] = useState();
   const [replacement, setReplacement] = useState();
-  const [coacheeList, setCoacheeList] = useState();
+  // Use a unique key for DropdownMultiselect to force re-render
+  const [dropdownKey, setDropdownKey] = useState(0);
+
   useEffect(() => {
-    getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
-  }, [districtSelected, schoolSelected]);
+    // Whenever coacheeList changes, update the key to force re-render
+    setDropdownKey((prevKey) => prevKey + 1);
+  }, [coacheeList]);
 
   return (
     <>
@@ -53,6 +53,7 @@ export const ReasonQuestion = ({
               <strong>Names of participants: </strong>
             </Form.Label>
             <DropdownMultiselect
+              key={dropdownKey} // Force re-render by using a dynamic key
               options={coacheeList}
               name="cancellationParticipants"
               handleOnChange={(selected) => {

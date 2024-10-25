@@ -20,6 +20,7 @@ import { createItem, createItemSub, uploadFile } from "./coach-log/utils";
 import { DateQuestion } from "./utils/DateQuestion";
 import { EmployeeNameQuestion } from "./utils/EmployeeNameQuestion";
 import { NYCQuestion } from "./coach-log/nyc/NYCQuestions";
+import { getTeacherInfo } from "./coach-log/utils";
 
 function CoachLog() {
   const [coachingLogs, setCoachingLogs] = useState([
@@ -97,6 +98,17 @@ function CoachLog() {
       setSchoolByDistrict(schoolsByDistrict);
     });
   };
+
+  //get coachee list
+  const [districtSelected, setDistrictSelected] = useState();
+  const [schoolSelected, setSchoolSelected] = useState();
+  const [coacheeList, setCoacheeList] = useState([]);
+  useEffect(() => {
+    if (districtSelected && schoolSelected) {
+      getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
+    }
+    //teacher list should update when a new school is selected
+  }, [schoolSelected, districtSelected]);
 
   //store coach logs in an array
   const handleCoachingLogsChange = (i, e) => {
@@ -243,18 +255,6 @@ function CoachLog() {
           supportCycleSolves = supportCycle;
         }
       }
-      console.log({
-        ImplementationIndicatorReads,
-        strategiesUsedReads,
-        workFocusReads,
-        implementationIndicatorSolves,
-        primaryStrategySolves,
-        specificStrategySolves,
-        supportCycleSolves,
-        nycGradeLevelsGeneral,
-        teachersSupportedNumberGeneral,
-        teachersSupportedTypeGeneral,
-      });
 
       let originalSessionsList = "";
       let reasonChoice = "";
@@ -408,9 +408,6 @@ function CoachLog() {
     }
   };
 
-  const [districtSelected, setDistrictSelected] = useState();
-  const [schoolSelected, setSchoolSelected] = useState();
-
   return (
     <div className="formAll">
       <div className="formSection">
@@ -428,8 +425,7 @@ function CoachLog() {
             setSchoolSelected={setSchoolSelected}
           />
           <CoachingQuestion
-            districtSelected={districtSelected}
-            schoolSelected={schoolSelected}
+            coacheeList={coacheeList}
             coachingLogs={coachingLogs}
             setCoachingLogs={setCoachingLogs}
             pjTypeRef={pjTypeRef}
@@ -438,8 +434,7 @@ function CoachLog() {
             addProjectFields={addProjectFields}
           />
           <MicroPLQuestion
-            districtSelected={districtSelected}
-            schoolSelected={schoolSelected}
+            coacheeList={coacheeList}
             setSelectedMicroPLParticipantRoles={
               setSelectedMicroPLParticipantRoles
             }
@@ -448,16 +443,14 @@ function CoachLog() {
             setMicroPLDone={setMicroPLDone}
           />
           <ModelQuestion
-            districtSelected={districtSelected}
-            schoolSelected={schoolSelected}
+            coacheeList={coacheeList}
             setSelectedModelParticipants={setSelectedModelParticipants}
             setSelectedModelParticipantRoles={setSelectedModelParticipantRoles}
             modelDone={modelDone}
             setModelDone={setModelDone}
           />
           <AdminQuestion
-            districtSelected={districtSelected}
-            schoolSelected={schoolSelected}
+            coacheeList={coacheeList}
             setSelectedAdmins={setSelectedAdmins}
             adminDone={adminDone}
             setAdminDone={setAdminDone}
@@ -467,8 +460,7 @@ function CoachLog() {
             setWalkthroughDone={setWalkthroughDone}
           />
           <ReasonQuestion
-            districtSelected={districtSelected}
-            schoolSelected={schoolSelected}
+            coacheeList={coacheeList}
             setOriginalSessions={setOriginalSessions}
             isCoachingMissed={isCoachingMissed}
             setIsCoachingMissed={setIsCoachingMissed}
@@ -554,6 +546,33 @@ function CoachLog() {
             </Alert>
           ) : null}
         </Form>
+        <div className="notificationAisle">
+          <div className="quoteContainer">
+            <div>
+              <p
+                style={{
+                  fontSize: "23px",
+                  fontWeight: "800",
+                  textAlign: "center",
+                }}
+              >
+                FAQ
+              </p>
+              <p
+                style={{
+                  fontSize: "19px",
+                  fontWeight: "500",
+                }}
+              >
+                <strong>Why can't I see the names of my coachees?</strong>{" "}
+                <br /> - Ensure that the coachee information has been uploaded
+                to the SY24-25 Coaching Participant Roster Monday board. <br />{" "}
+                - Please note that it may take up to around 15 seconds for the
+                names to appear.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
