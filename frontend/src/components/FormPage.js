@@ -477,7 +477,6 @@ function FormPage() {
       let totalHours = projects.reduce((a, b) => {
         return a + parseFloat(b.projectHours);
       }, 0);
-      console.log("total Hours",totalHours)
 
       //create parent items
       let queryParent =
@@ -497,78 +496,83 @@ function FormPage() {
           notes: comment,
         }),
       };
-
-      // create subitems on Monday
-      createItem(queryParent, varsParent).then((response) => {
-        for (var i = 0; i < projects.length; i++) {
-          const parentID = response;
-          const projectName = projects[i].projectName;
-          const projectGenre = projects[i].projectType;
-          const projectRole = projects[i].projectRole;
-          const projectHours = projects[i].projectHours;
-          let querySub =
-            "mutation ($myItemName: String!,$parentID: ID!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }";
-          let varsSub = {
-            myItemName: personName,
-            parentID: String(parentID),
-            columnVals: JSON.stringify({
-              date: { date: formattedDate },
-              project_role: projectRole,
-              //project type
-              project_type: projectGenre,
-              //project name
-              name6: projectName,
-              //project hours
-              numbers: parseFloat(projectHours),
-            }),
-          };
-          const myTimeout = setTimeout(setErrorCheck(false), 60000);
-          createItemSub(querySub, varsSub).then((e) => {
-            console.log(e);
-            if (
-              e.data.hasOwnProperty("errors") ||
-              (e.status < 600 && e.status > 399)
-            ) {
-              setErrorCheck(true);
-            } else {
-              setErrorCheck(false);
-            }
-            clearTimeout(myTimeout);
-            console.log(e);
-          });
-        }
-      });
+      createItems(queryParent, varsParent, personName, formattedDate);
     }
   };
 
-  //push parent item data to Monday
-  const createItem = (query, vars) => {
-    return (
-      axios
-        .post("demo/boardUpdate", {
-          apiKey: accessToken,
-          query: query,
-          vars: vars,
-        })
-        //item id
-        .then((res) => res.data.data.create_item.id)
-        .catch((err) => err)
-    );
+  const createItems = async (queryParent, varsParent, personName, formattedDate) => {
+    try {
+      const parentID = await createItem(queryParent, varsParent);
+      const querySub =
+      "mutation ($myItemName: String!,$parentID: ID!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }";
+
+      for (const project of projects) {
+        const { projectName, projectType, projectRole, projectHours } = project;
+        const varsSub = {
+          myItemName: personName,
+          parentID: String(parentID),
+          columnVals: JSON.stringify({
+            date: { date: formattedDate },
+            project_role: projectRole,
+            project_type: projectType,
+            name6: projectName,
+            numbers: parseFloat(projectHours),
+          }),
+        };
+        try {
+          const result = await createItemSub(querySub, varsSub);
+          handleResponse(result);
+        } catch (error) {
+          console.error("Error creating subitem:", error);
+          handleResponse(error);  // Handle the error response here as well
+        }
+      }
+    } catch (error) {
+      console.error("Error creating parent item or subitems:", error);
+      handleResponse(error);  // Handle the error response for the parent item
+    }
+  };
+  
+  const handleResponse = (response) => {
+    if (response instanceof Error) {
+      console.error("Error detected:", response);
+      setErrorCheck(true);
+    } else if (
+      response.data && (response.data.hasOwnProperty("errors") ||
+      (response.status < 600 && response.status > 399))
+    ) {
+      setErrorCheck(true);
+    } else {
+      setErrorCheck(false);
+    }
   };
 
-  //push subitem data to Monday
-  const createItemSub = (query, vars) => {
-    return (
-      axios
-        .post("/demo/boardUpdate", {
-          apiKey: accessToken,
-          query: query,
-          vars: vars,
-        })
-        //item id
-        .then((res) => res)
-        .catch((err) => err)
-    );
+  const createItem = async (query, vars) => {
+    try {
+      const response = await axios.post("demo/boardUpdate", {
+        apiKey: accessToken,
+        query: query,
+        vars: vars,
+      });
+      return response.data.data.create_item.id;
+    } catch (err) {
+      console.error("Error creating parent item:", err);
+      throw err;
+    }
+  };
+  
+  const createItemSub = async (query, vars) => {
+    try {
+      const response = await axios.post("/demo/boardUpdate", {
+        apiKey: accessToken,
+        query: query,
+        vars: vars,
+      });
+      return response;
+    } catch (err) {
+      console.error("Error creating subitem:", err);
+      throw err;
+    }
   };
 
   const toggleShowA = (ele) => {
