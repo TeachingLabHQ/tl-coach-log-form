@@ -469,10 +469,6 @@ function FormPage() {
 
       const teamName = e.target.date.value;
       const capacity = e.target.capacity.value;
-      const extraHours =
-        e.target.additionalHours == undefined
-          ? 0
-          : e.target.additionalHours.value;
       const comment = e.target.comment.value;
       let totalHours = projects.reduce((a, b) => {
         return a + parseFloat(b.projectHours);
@@ -490,8 +486,6 @@ function FormPage() {
           status1: { label: capacity },
           //total hours
           numbers8: totalHours,
-          //additional hours
-          numbers85: extraHours,
           //comment
           notes: comment,
         }),
@@ -838,24 +832,6 @@ function FormPage() {
             <Button variant="secondary" onClick={() => addProjectFields()}>
               + Add Row
             </Button>
-          </Form.Group>
-
-          <Form.Group className="mb-5" controlId="formCapacity">
-            <Form.Label>
-              <strong>
-                Do you feel you have the capacity to take on a new project?
-              </strong>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              name="capacity"
-              aria-label="Default select example"
-              onChange={(e) => handleCapacity(e)}
-            >
-              <option></option>
-              <option>Yes</option>
-              <option>No</option>
-            </Form.Control>
           </Form.Group>
 
           {capCheck ? (
