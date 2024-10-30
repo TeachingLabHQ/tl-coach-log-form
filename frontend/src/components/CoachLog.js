@@ -239,6 +239,7 @@ function CoachLog() {
       let nycGradeLevelsGeneral = "";
       let teachersSupportedNumberGeneral = "";
       let teachersSupportedTypeGeneral = "";
+      let NYCCoachType = "";
 
       if (NYCDone && NYCDone !== "no") {
         nycGradeLevelsGeneral = nycGradeLevels.toString();
@@ -248,11 +249,13 @@ function CoachLog() {
           ImplementationIndicatorReads = implementationIndicator;
           workFocusReads = workFocus;
           strategiesUsedReads = strategiesUsed.toString();
+          NYCCoachType = NYCDone;
         } else {
           implementationIndicatorSolves = solvesImplementationIndicator;
           primaryStrategySolves = solvesPrimaryStrategy;
           specificStrategySolves = solvesSpecificStrategy;
           supportCycleSolves = supportCycle;
+          NYCCoachType = NYCDone;
         }
       }
 
@@ -330,6 +333,7 @@ function CoachLog() {
           numbers8__1: schoolTravelDuration,
           numbers10__1: finalTravelDuration,
           long_text8__1: additionalClarification,
+          text13__1: NYCCoachType,
           text281__1: nycGradeLevelsGeneral,
           text87__1: teachersSupportedNumberGeneral,
           text43__1: teachersSupportedTypeGeneral,
