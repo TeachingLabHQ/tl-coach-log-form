@@ -466,9 +466,7 @@ function FormPage() {
       const day = ("0" + dateValue.getDate()).slice(-2);
       const year = dateValue.getFullYear();
       const formattedDate = `${year}-${month}-${day}`;
-
       const teamName = e.target.date.value;
-      const capacity = e.target.capacity.value;
       const comment = e.target.comment.value;
       let totalHours = projects.reduce((a, b) => {
         return a + parseFloat(b.projectHours);
@@ -482,8 +480,6 @@ function FormPage() {
         myItemName: personName,
         columnVals: JSON.stringify({
           date4: { date: formattedDate },
-          // capacity
-          status1: { label: capacity },
           //total hours
           numbers8: totalHours,
           //comment
