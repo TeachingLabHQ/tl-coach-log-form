@@ -492,11 +492,13 @@ function FormPage() {
 
   const createItems = async (queryParent, varsParent, personName, formattedDate) => {
     try {
+      // Step 1: Create a parent item
       const parentID = await createItem(queryParent, varsParent);
       const querySub =
       "mutation ($myItemName: String!,$parentID: ID!, $columnVals: JSON! ) { create_subitem (parent_item_id:$parentID, item_name:$myItemName, column_values:$columnVals) { id } }";
 
-      for (const project of projects) {
+      // Step 2: Create an array of promises for subitem creation
+      const subitemPromises = projects.map((project) => {
         const { projectName, projectType, projectRole, projectHours } = project;
         const varsSub = {
           myItemName: personName,
@@ -509,31 +511,37 @@ function FormPage() {
             numbers: parseFloat(projectHours),
           }),
         };
-        try {
-          const result = await createItemSub(querySub, varsSub);
-          handleResponse(result);
-        } catch (error) {
-          console.error("Error creating subitem:", error);
-          handleResponse(error);  // Handle the error response here as well
-        }
-      }
+        
+        // Return the promise for each subitem creation
+        return createItemSub(querySub, varsSub)
+          .then((result) => {
+            // You can log each result here if needed
+            console.log(`Subitem created for project: ${projectName}`);
+            return result;
+          })
+          .catch((error) => {
+            console.error("Error creating subitem:", error);
+            throw error;  // Rethrow to allow Promise.all to catch it
+          });
+      });
+
+      // Step 3: Wait for all subitems to be created before returning success msg
+      await Promise.all(subitemPromises);
+      handleResponse({ success: true, message: "All items and subitems created successfully." });
+
     } catch (error) {
       console.error("Error creating parent item or subitems:", error);
-      handleResponse(error);  // Handle the error response for the parent item
+      handleResponse({ success: false, error });  // Handle the error response for the parent item
     }
   };
   
   const handleResponse = (response) => {
-    if (response instanceof Error) {
-      console.error("Error detected:", response);
-      setErrorCheck(true);
-    } else if (
-      response.data && (response.data.hasOwnProperty("errors") ||
-      (response.status < 600 && response.status > 399))
-    ) {
-      setErrorCheck(true);
+    if (response.success) {
+      console.log(response.message); // Log the success message
+      setErrorCheck(false); // No error detected
     } else {
-      setErrorCheck(false);
+      console.error("Error detected:", response.error);
+      setErrorCheck(true); // Error detected
     }
   };
 
@@ -880,20 +888,20 @@ function FormPage() {
             </Button>
           </div>
 
-          {submitCheck == true && errorCheck == undefined ? (
+          {submitCheck === true && errorCheck === undefined ? (
             <Spinner animation="border" variant="light" />
           ) : null}
-          {submitCheck == false ? (
+          {submitCheck === false ? (
             <Alert key="warning" variant="warning">
               Error: Please make sure all required fields (*) are filled out.
             </Alert>
           ) : null}
-          {errorCheck == false ? (
+          {errorCheck === false ? (
             <Alert key="success" variant="success">
               Your log is submitted successfully!
             </Alert>
           ) : null}
-          {errorCheck == true ? (
+          {errorCheck === true ? (
             <Alert key="danger" variant="danger">
               Something went wrong! If this happens constantly, please contact
               project management or technology team.
