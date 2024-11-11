@@ -4,17 +4,33 @@ import {
   solvesSpecificStrategyOptions,
   supportCycles,
 } from "../utils";
+import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 export const NYCSolves = ({
+  NYCGradeLevel,
   setSolvesImplementationIndicator,
   solvesImplementationIndicator,
   setSolvesPrimaryStrategy,
   solvesPrimaryStrategy,
   setSolvesSpecificStrategy,
   setSupportCycle,
+  setNycGradeLevels,
 }) => {
   return (
     <>
+      <Form.Group className="mb-1" controlId="formBasicSite">
+        <Form.Label>
+          <strong>Select all the grade-levels you supported today</strong>
+        </Form.Label>
+        <DropdownMultiselect
+          options={NYCGradeLevel}
+          name="NYCGradeLevels"
+          handleOnChange={(selected) => {
+            setNycGradeLevels(selected);
+          }}
+          required
+        />
+      </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicSite">
         <Form.Label>
           <strong>Please select the School Implementation Experience:</strong>

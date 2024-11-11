@@ -16,9 +16,11 @@ export const NYCQuestion = ({
   solvesPrimaryStrategy,
   setSolvesSpecificStrategy,
   setSupportCycle,
-  setImplementationIndicator,
-  setStrategiesUsed,
-  setWorkFocus,
+  setReadsImplementationIndicatorsList,
+  setReadsStrategiesUsedList,
+  setReadsWorkFocusList,
+  readsStrategiesUsedList,
+  setNycTouchpoint,
 }) => {
   return (
     <>
@@ -47,18 +49,31 @@ export const NYCQuestion = ({
 
       {NYCDone && NYCDone !== "no" ? (
         <>
-          <Form.Group className="mb-1" controlId="formBasicSite">
+          <Form.Group className="mb-3" controlId="formBasicSite">
             <Form.Label>
-              <strong>Select all the grade-levels you supported today</strong>
+              <strong>What type of touchpoint are you recording?</strong>
             </Form.Label>
-            <DropdownMultiselect
-              options={NYCGradeLevel}
-              name="NYCGradeLevels"
-              handleOnChange={(selected) => {
-                setNycGradeLevels(selected);
+            <Form.Control
+              as="select"
+              name="NYCtouchpoint"
+              aria-label="Default select example"
+              onChange={(e) => {
+                setNycTouchpoint(e.target.value);
               }}
               required
-            />
+            >
+              <option value=""></option>
+              <option value="Single school teacher support">
+                Single school teacher support
+              </option>
+              <option value="Multi-school professional learning">
+                Multi-school professional learning
+              </option>
+              <option value="Leader support only">Leader support only</option>
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Please choose an option.
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>
@@ -93,9 +108,14 @@ export const NYCQuestion = ({
           </Form.Group>
           {NYCDone === "NYC Reads" ? (
             <NYCReads
-              setImplementationIndicator={setImplementationIndicator}
-              setStrategiesUsed={setStrategiesUsed}
-              setWorkFocus={setWorkFocus}
+              setReadsImplementationIndicatorsList={
+                setReadsImplementationIndicatorsList
+              }
+              setReadsStrategiesUsedList={setReadsStrategiesUsedList}
+              setReadsWorkFocusList={setReadsWorkFocusList}
+              NYCGradeLevel={NYCGradeLevel}
+              setNycGradeLevels={setNycGradeLevels}
+              readsStrategiesUsedList={readsStrategiesUsedList}
             />
           ) : (
             <NYCSolves
@@ -107,6 +127,8 @@ export const NYCQuestion = ({
               solvesPrimaryStrategy={solvesPrimaryStrategy}
               setSolvesSpecificStrategy={setSolvesSpecificStrategy}
               setSupportCycle={setSupportCycle}
+              NYCGradeLevel={NYCGradeLevel}
+              setNycGradeLevels={setNycGradeLevels}
             />
           )}
         </>

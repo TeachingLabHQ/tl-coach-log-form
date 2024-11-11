@@ -71,9 +71,13 @@ function CoachLog() {
   const [solvesPrimaryStrategy, setSolvesPrimaryStrategy] = useState("");
   const [solvesSpecificStrategy, setSolvesSpecificStrategy] = useState("");
   const [supportCycle, setSupportCycle] = useState("");
-  const [implementationIndicator, setImplementationIndicator] = useState("");
-  const [strategiesUsed, setStrategiesUsed] = useState([]);
-  const [workFocus, setWorkFocus] = useState("");
+  const [
+    readsImplementationIndicatorsList,
+    setReadsImplementationIndicatorsList,
+  ] = useState([]);
+  const [readsStrategiesUsedList, setReadsStrategiesUsedList] = useState([]);
+  const [readsWorkFocusList, setReadsWorkFocusList] = useState([]);
+  const [nycTouchpoint, setNycTouchpoint] = useState();
 
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
@@ -240,15 +244,18 @@ function CoachLog() {
       let teachersSupportedNumberGeneral = "";
       let teachersSupportedTypeGeneral = "";
       let NYCCoachType = "";
+      let NYCTouchpoint = "";
 
       if (NYCDone && NYCDone !== "no") {
         nycGradeLevelsGeneral = nycGradeLevels.toString();
         teachersSupportedNumberGeneral = teachersSupportedNumber;
         teachersSupportedTypeGeneral = teachersSupportedType.toString();
+        NYCTouchpoint = nycTouchpoint;
         if (NYCDone === "NYC Reads") {
-          ImplementationIndicatorReads = implementationIndicator;
-          workFocusReads = workFocus;
-          strategiesUsedReads = strategiesUsed.toString();
+          ImplementationIndicatorReads =
+            readsImplementationIndicatorsList.toString();
+          workFocusReads = readsWorkFocusList.toString();
+          strategiesUsedReads = readsStrategiesUsedList.toString();
           NYCCoachType = NYCDone;
         } else {
           implementationIndicatorSolves = solvesImplementationIndicator;
@@ -334,7 +341,7 @@ function CoachLog() {
           numbers10__1: finalTravelDuration,
           long_text8__1: additionalClarification,
           text13__1: NYCCoachType,
-          text281__1: nycGradeLevelsGeneral,
+          text85__1: NYCTouchpoint,
           text87__1: teachersSupportedNumberGeneral,
           text43__1: teachersSupportedTypeGeneral,
           text0__1: ImplementationIndicatorReads,
@@ -472,7 +479,6 @@ function CoachLog() {
               setSelectedCancellationParticipants
             }
           />
-
           <NYCQuestion
             NYCDone={NYCDone}
             setNYCDone={setNYCDone}
@@ -485,9 +491,13 @@ function CoachLog() {
             solvesPrimaryStrategy={solvesPrimaryStrategy}
             setSolvesSpecificStrategy={setSolvesSpecificStrategy}
             setSupportCycle={setSupportCycle}
-            setImplementationIndicator={setImplementationIndicator}
-            setStrategiesUsed={setStrategiesUsed}
-            setWorkFocus={setWorkFocus}
+            setReadsImplementationIndicatorsList={
+              setReadsImplementationIndicatorsList
+            }
+            setReadsStrategiesUsedList={setReadsStrategiesUsedList}
+            setReadsWorkFocusList={setReadsWorkFocusList}
+            readsStrategiesUsedList={readsStrategiesUsedList}
+            setNycTouchpoint={setNycTouchpoint}
           />
           <ModeQuestion
             coachingMode={coachingMode}
