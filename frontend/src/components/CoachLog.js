@@ -265,7 +265,7 @@ function CoachLog() {
           NYCCoachType = NYCDone;
           NYCReadsAdmin = nycReadsAdmin;
           NYCReadsSupportPrimaryFocus = readsPrimaryFocus;
-          NYCReadsSupportedLeaders = nycReadsAdminsSupportedType;
+          NYCReadsSupportedLeaders = nycReadsAdminsSupportedType.toString();
         } else {
           implementationIndicatorSolves = solvesImplementationIndicator;
           primaryStrategySolves = solvesPrimaryStrategy;

@@ -87,6 +87,7 @@ export const NYCReadsSubQuestions = ({
         </Form.Label>
         <DropdownMultiselect
           options={strategiesUsed}
+          required
           name={"strategiesUsed" + readsGradeLevel}
           handleOnChange={(selected) => {
             console.log(readsGradeLevel);
