@@ -6,6 +6,7 @@ import { NYCSolves } from "./NYCSolves";
 
 export const NYCQuestion = ({
   NYCDone,
+  nycReadsAdmin,
   setNYCDone,
   setNycGradeLevels,
   setTeachersSupportedNumber,
@@ -21,6 +22,9 @@ export const NYCQuestion = ({
   setReadsWorkFocusList,
   readsStrategiesUsedList,
   setNycTouchpoint,
+  setNycReadsAdmin,
+  setNycReadsAdminsSupportedType,
+  setReadsPrimaryFocus,
 }) => {
   return (
     <>
@@ -116,6 +120,10 @@ export const NYCQuestion = ({
               NYCGradeLevel={NYCGradeLevel}
               setNycGradeLevels={setNycGradeLevels}
               readsStrategiesUsedList={readsStrategiesUsedList}
+              setNycReadsAdmin={setNycReadsAdmin}
+              nycReadsAdmin={nycReadsAdmin}
+              setNycReadsAdminsSupportedType={setNycReadsAdminsSupportedType}
+              setReadsPrimaryFocus={setReadsPrimaryFocus}
             />
           ) : (
             <NYCSolves
