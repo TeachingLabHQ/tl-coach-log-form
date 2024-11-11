@@ -5,32 +5,49 @@ import {
   supportCycles,
 } from "../utils";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { NYCSolvesGradeLevel } from "../utils";
+import { NYCSolvesSubQuestions } from "./NYCSolvesSubQuestions";
+import { useEffect } from "react";
 
 export const NYCSolves = ({
-  NYCGradeLevel,
   setSolvesImplementationIndicator,
   solvesImplementationIndicator,
-  setSolvesPrimaryStrategy,
-  solvesPrimaryStrategy,
-  setSolvesSpecificStrategy,
   setSupportCycle,
-  setNycGradeLevels,
+  setSolvesGradeLevels,
+  solvesGradeLevels,
+  setSolvesPrimaryStrategyList,
+  solvesPrimaryStrategyList,
+  setSolvesSpecificStrategyList,
 }) => {
+  useEffect(() => {
+    // Filter each list directly by only keeping items that start with one of the selected grade levels
+    const filterListsByGradeLevels = (setter) => {
+      setter((prevList) =>
+        prevList.filter((item) =>
+          solvesGradeLevels.some((level) => item.startsWith(`(${level})`))
+        )
+      );
+    };
+    // Filter the solvesPrimaryStrategyList object by grade levels
+    const filterObjectByGradeLevels = (setter) => {
+      setter((prevList) => {
+        return Object.keys(prevList)
+          .filter((key) => solvesGradeLevels.includes(key))
+          .reduce((acc, key) => {
+            acc[key] = prevList[key];
+            return acc;
+          }, {});
+      });
+    };
+    filterListsByGradeLevels(setSolvesSpecificStrategyList);
+    filterObjectByGradeLevels(setSolvesPrimaryStrategyList);
+  }, [
+    setSolvesPrimaryStrategyList,
+    setSolvesSpecificStrategyList,
+    solvesGradeLevels,
+  ]);
   return (
     <>
-      <Form.Group className="mb-1" controlId="formBasicSite">
-        <Form.Label>
-          <strong>Select all the grade-levels you supported today</strong>
-        </Form.Label>
-        <DropdownMultiselect
-          options={NYCGradeLevel}
-          name="NYCGradeLevels"
-          handleOnChange={(selected) => {
-            setNycGradeLevels(selected);
-          }}
-          required
-        />
-      </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicSite">
         <Form.Label>
           <strong>Please select the School Implementation Experience:</strong>
@@ -82,62 +99,28 @@ export const NYCSolves = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBasicSite">
+      <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
-          <strong>
-            Select the Primary Strategy used to support teachers in this visit:{" "}
-          </strong>
+          <strong>Select all the grade-levels you supported today</strong>
         </Form.Label>
-        <Form.Control
-          as="select"
-          name="implementationIndicator"
-          aria-label="Default select example"
-          required
-          onChange={(e) => {
-            setSolvesPrimaryStrategy(e.target.value);
+        <DropdownMultiselect
+          options={NYCSolvesGradeLevel}
+          name="NYCSolvesGradeLevels"
+          handleOnChange={(selected) => {
+            setSolvesGradeLevels(selected);
           }}
-        >
-          <option value=""></option>
-          {primaryStrategyUsed.map((s) => (
-            <option value={s} key={s}>
-              {s}
-            </option>
-          ))}
-        </Form.Control>
-        <Form.Control.Feedback type="invalid">
-          Please choose an option.
-        </Form.Control.Feedback>
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBasicSite">
-        <Form.Label>
-          <strong>
-            Please select the Specific Strategy used to support teachers in this
-            visit:{" "}
-          </strong>
-        </Form.Label>
-        <Form.Control
-          as="select"
-          name="solvesSpecificStrategy"
-          aria-label="Default select example"
           required
-          onChange={(e) => {
-            setSolvesSpecificStrategy(e.target.value);
-          }}
-        >
-          <option value=""></option>
-          {solvesPrimaryStrategy &&
-            solvesSpecificStrategyOptions[solvesPrimaryStrategy].map((ss) => (
-              <option value={ss} key={ss}>
-                {ss}
-              </option>
-            ))}
-        </Form.Control>
-        <Form.Control.Feedback type="invalid">
-          Please choose an option.
-        </Form.Control.Feedback>
+        />
       </Form.Group>
+      {solvesGradeLevels.map((g) => (
+        <NYCSolvesSubQuestions
+          key={g}
+          solvesGradeLevel={g}
+          setSolvesPrimaryStrategyList={setSolvesPrimaryStrategyList}
+          solvesPrimaryStrategyList={solvesPrimaryStrategyList}
+          setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
+        />
+      ))}
     </>
   );
 };

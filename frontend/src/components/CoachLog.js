@@ -63,7 +63,8 @@ function CoachLog() {
   const [coachingMode, setCoachingMode] = useState();
   const { accessToken } = useContext(AccessTokenContext);
   const [NYCDone, setNYCDone] = useState("");
-  const [nycGradeLevels, setNycGradeLevels] = useState([]);
+  const [readsGradeLevels, setReadsGradeLevels] = useState([]);
+  const [solvesGradeLevels, setSolvesGradeLevels] = useState([]);
   const [teachersSupportedNumber, setTeachersSupportedNumber] = useState(0);
   const [teachersSupportedType, setTeachersSupportedType] = useState("");
   const [solvesImplementationIndicator, setSolvesImplementationIndicator] =
@@ -81,6 +82,12 @@ function CoachLog() {
   const [nycReadsAdmin, setNycReadsAdmin] = useState();
   const [nycReadsAdminsSupportedType, setNycReadsAdminsSupportedType] =
     useState([]);
+  const [solvesPrimaryStrategyList, setSolvesPrimaryStrategyList] = useState(
+    []
+  );
+  const [solvesSpecificStrategyList, setSolvesSpecificStrategyList] = useState(
+    []
+  );
   const [readsPrimaryFocus, setReadsPrimaryFocus] = useState();
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
@@ -240,10 +247,11 @@ function CoachLog() {
       let strategiesUsedReads = "";
       let workFocusReads = "";
       let implementationIndicatorSolves = "";
-      let primaryStrategySolves = "";
-      let specificStrategySolves = "";
+      let primaryStrategySolvesList = "";
+      let specificStrategySolvesList = "";
       let supportCycleSolves = "";
-      let nycGradeLevelsGeneral = "";
+      let readsGradeLevelsNYC = "";
+      let solvesGradeLevelsNYC = "";
       let teachersSupportedNumberGeneral = "";
       let teachersSupportedTypeGeneral = "";
       let NYCCoachType = "";
@@ -253,11 +261,11 @@ function CoachLog() {
       let NYCReadsSupportPrimaryFocus = "";
 
       if (NYCDone && NYCDone !== "no") {
-        nycGradeLevelsGeneral = nycGradeLevels.toString();
         teachersSupportedNumberGeneral = teachersSupportedNumber;
         teachersSupportedTypeGeneral = teachersSupportedType.toString();
         NYCTouchpoint = nycTouchpoint;
         if (NYCDone === "NYC Reads") {
+          readsGradeLevelsNYC = readsGradeLevels.toString();
           ImplementationIndicatorReads =
             readsImplementationIndicatorsList.toString();
           workFocusReads = readsWorkFocusList.toString();
@@ -267,9 +275,12 @@ function CoachLog() {
           NYCReadsSupportPrimaryFocus = readsPrimaryFocus;
           NYCReadsSupportedLeaders = nycReadsAdminsSupportedType.toString();
         } else {
+          solvesGradeLevelsNYC = solvesGradeLevels.toString();
           implementationIndicatorSolves = solvesImplementationIndicator;
-          primaryStrategySolves = solvesPrimaryStrategy;
-          specificStrategySolves = solvesSpecificStrategy;
+          primaryStrategySolvesList = Object.values(solvesPrimaryStrategyList)
+            .flat()
+            .toString();
+          specificStrategySolvesList = solvesSpecificStrategyList.toString();
           supportCycleSolves = supportCycle;
           NYCCoachType = NYCDone;
         }
@@ -358,11 +369,13 @@ function CoachLog() {
           text56__1: strategiesUsedReads,
           text431__1: implementationIndicatorSolves,
           text89__1: supportCycleSolves,
-          text83__1: primaryStrategySolves,
-          text16__1: specificStrategySolves,
+          text83__1: primaryStrategySolvesList,
+          text16__1: specificStrategySolvesList,
           text01__1: NYCReadsAdmin,
           text285__1: NYCReadsSupportedLeaders,
           text61__1: NYCReadsSupportPrimaryFocus,
+          text80__1: solvesGradeLevelsNYC,
+          text33__1: readsGradeLevelsNYC,
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
@@ -494,7 +507,6 @@ function CoachLog() {
           <NYCQuestion
             NYCDone={NYCDone}
             setNYCDone={setNYCDone}
-            setNycGradeLevels={setNycGradeLevels}
             setTeachersSupportedNumber={setTeachersSupportedNumber}
             setTeachersSupportedType={setTeachersSupportedType}
             setSolvesImplementationIndicator={setSolvesImplementationIndicator}
@@ -514,6 +526,13 @@ function CoachLog() {
             setNycReadsAdmin={setNycReadsAdmin}
             setNycReadsAdminsSupportedType={setNycReadsAdminsSupportedType}
             setReadsPrimaryFocus={setReadsPrimaryFocus}
+            setSolvesGradeLevels={setSolvesGradeLevels}
+            solvesGradeLevels={solvesGradeLevels}
+            setSolvesPrimaryStrategyList={setSolvesPrimaryStrategyList}
+            solvesPrimaryStrategyList={solvesPrimaryStrategyList}
+            setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
+            readsGradeLevels={readsGradeLevels}
+            setReadsGradeLevels={setReadsGradeLevels}
           />
           <ModeQuestion
             coachingMode={coachingMode}

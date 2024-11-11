@@ -16,8 +16,9 @@ export const NYCReads = ({
   nycReadsAdmin,
   setNycReadsAdminsSupportedType,
   setReadsPrimaryFocus,
+  readsGradeLevels,
+  setReadsGradeLevels,
 }) => {
-  const [readsGradeLevels, setReadsGradeLevels] = useState([]);
   useEffect(() => {
     // Filter each list directly by only keeping items that start with one of the selected grade levels
     const filterListsByGradeLevels = (setter) => {

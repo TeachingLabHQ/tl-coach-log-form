@@ -117,6 +117,17 @@ export const NYCGradeLevel = [
   "6th Grade",
   "7th Grade",
   "8th Grade",
+];
+export const NYCSolvesGradeLevel = [
+  "Kindergarten",
+  "1st Grade",
+  "2nd Grade",
+  "3rd Grade",
+  "4th Grade",
+  "5th Grade",
+  "6th Grade",
+  "7th Grade",
+  "8th Grade",
   "Algebra I",
   "Geometry",
   "Algebra II",

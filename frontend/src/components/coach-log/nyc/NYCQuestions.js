@@ -8,14 +8,10 @@ export const NYCQuestion = ({
   NYCDone,
   nycReadsAdmin,
   setNYCDone,
-  setNycGradeLevels,
   setTeachersSupportedNumber,
   setTeachersSupportedType,
   setSolvesImplementationIndicator,
   solvesImplementationIndicator,
-  setSolvesPrimaryStrategy,
-  solvesPrimaryStrategy,
-  setSolvesSpecificStrategy,
   setSupportCycle,
   setReadsImplementationIndicatorsList,
   setReadsStrategiesUsedList,
@@ -25,6 +21,13 @@ export const NYCQuestion = ({
   setNycReadsAdmin,
   setNycReadsAdminsSupportedType,
   setReadsPrimaryFocus,
+  setSolvesGradeLevels,
+  solvesGradeLevels,
+  setSolvesPrimaryStrategyList,
+  solvesPrimaryStrategyList,
+  setSolvesSpecificStrategyList,
+  readsGradeLevels,
+  setReadsGradeLevels,
 }) => {
   return (
     <>
@@ -118,12 +121,13 @@ export const NYCQuestion = ({
               setReadsStrategiesUsedList={setReadsStrategiesUsedList}
               setReadsWorkFocusList={setReadsWorkFocusList}
               NYCGradeLevel={NYCGradeLevel}
-              setNycGradeLevels={setNycGradeLevels}
               readsStrategiesUsedList={readsStrategiesUsedList}
               setNycReadsAdmin={setNycReadsAdmin}
               nycReadsAdmin={nycReadsAdmin}
               setNycReadsAdminsSupportedType={setNycReadsAdminsSupportedType}
               setReadsPrimaryFocus={setReadsPrimaryFocus}
+              readsGradeLevels={readsGradeLevels}
+              setReadsGradeLevels={setReadsGradeLevels}
             />
           ) : (
             <NYCSolves
@@ -131,12 +135,12 @@ export const NYCQuestion = ({
                 setSolvesImplementationIndicator
               }
               solvesImplementationIndicator={solvesImplementationIndicator}
-              setSolvesPrimaryStrategy={setSolvesPrimaryStrategy}
-              solvesPrimaryStrategy={solvesPrimaryStrategy}
-              setSolvesSpecificStrategy={setSolvesSpecificStrategy}
               setSupportCycle={setSupportCycle}
-              NYCGradeLevel={NYCGradeLevel}
-              setNycGradeLevels={setNycGradeLevels}
+              setSolvesGradeLevels={setSolvesGradeLevels}
+              solvesGradeLevels={solvesGradeLevels}
+              setSolvesPrimaryStrategyList={setSolvesPrimaryStrategyList}
+              solvesPrimaryStrategyList={solvesPrimaryStrategyList}
+              setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
             />
           )}
         </>
