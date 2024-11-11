@@ -28,6 +28,11 @@ export const NYCQuestion = ({
   setSolvesSpecificStrategyList,
   readsGradeLevels,
   setReadsGradeLevels,
+  setNycSolvesAdmin,
+  nycSolvesAdmin,
+  setSolvesIntervisitation,
+  setSolvesLeaderCycle,
+  setSolvesAdminPrimaryStrategy,
 }) => {
   return (
     <>
@@ -141,6 +146,11 @@ export const NYCQuestion = ({
               setSolvesPrimaryStrategyList={setSolvesPrimaryStrategyList}
               solvesPrimaryStrategyList={solvesPrimaryStrategyList}
               setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
+              setNycSolvesAdmin={setNycSolvesAdmin}
+              nycSolvesAdmin={nycSolvesAdmin}
+              setSolvesIntervisitation={setSolvesIntervisitation}
+              setSolvesLeaderCycle={setSolvesLeaderCycle}
+              setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
             />
           )}
         </>

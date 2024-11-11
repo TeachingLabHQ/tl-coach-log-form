@@ -89,6 +89,11 @@ function CoachLog() {
     []
   );
   const [readsPrimaryFocus, setReadsPrimaryFocus] = useState();
+  const [nycSolvesAdmin, setNycSolvesAdmin] = useState();
+  const [solvesIntervisitation, setSolvesIntervisitation] = useState();
+  const [solvesLeaderCycle, setSolvesLeaderCycle] = useState();
+  const [solvesAdminPrimaryStrategy, setSolvesAdminPrimaryStrategy] =
+    useState();
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
     getMondayInfo();
@@ -376,6 +381,10 @@ function CoachLog() {
           text61__1: NYCReadsSupportPrimaryFocus,
           text80__1: solvesGradeLevelsNYC,
           text33__1: readsGradeLevelsNYC,
+          text07__1: nycSolvesAdmin,
+          text290__1: solvesIntervisitation,
+          text018__1: solvesLeaderCycle,
+          text48__1: solvesAdminPrimaryStrategy,
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
@@ -533,6 +542,11 @@ function CoachLog() {
             setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
             readsGradeLevels={readsGradeLevels}
             setReadsGradeLevels={setReadsGradeLevels}
+            setNycSolvesAdmin={setNycSolvesAdmin}
+            nycSolvesAdmin={nycSolvesAdmin}
+            setSolvesIntervisitation={setSolvesIntervisitation}
+            setSolvesLeaderCycle={setSolvesLeaderCycle}
+            setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
           />
           <ModeQuestion
             coachingMode={coachingMode}

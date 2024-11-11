@@ -18,6 +18,11 @@ export const NYCSolves = ({
   setSolvesPrimaryStrategyList,
   solvesPrimaryStrategyList,
   setSolvesSpecificStrategyList,
+  setNycSolvesAdmin,
+  nycSolvesAdmin,
+  setSolvesIntervisitation,
+  setSolvesLeaderCycle,
+  setSolvesAdminPrimaryStrategy,
 }) => {
   useEffect(() => {
     // Filter each list directly by only keeping items that start with one of the selected grade levels
@@ -121,6 +126,119 @@ export const NYCSolves = ({
           setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
         />
       ))}
+      <Form.Group className="mb-3" controlId="formBasicSite">
+        <Form.Label>
+          <strong>
+            Did you meet with the school administrators and/or school-based
+            coach today?
+          </strong>
+        </Form.Label>
+        <Form.Control
+          as="select"
+          name="NYCSolvesAdmin"
+          aria-label="Default select example"
+          onChange={(e) => {
+            setNycSolvesAdmin(e.target.value);
+          }}
+          required
+        >
+          <option value=""></option>
+          <option value="Yes - debriefed teacher support only">
+            Yes - debriefed teacher support only
+          </option>
+          <option value="Yes - provided leader specific support">
+            Yes - provided leader specific support
+          </option>
+          <option value="no">No</option>
+        </Form.Control>
+        <Form.Control.Feedback type="invalid">
+          Please choose an option.
+        </Form.Control.Feedback>
+      </Form.Group>
+      {nycSolvesAdmin === "Yes - provided leader specific support" ? (
+        <>
+          <Form.Group className="mb-3" controlId="formBasicSite">
+            <Form.Label>
+              <strong>Was this an intervisitation support visit?</strong>
+            </Form.Label>
+            <Form.Control
+              as="select"
+              name="intervisitation"
+              aria-label="Default select example"
+              required
+              onChange={(e) => {
+                setSolvesIntervisitation(e.target.value);
+              }}
+            >
+              <option value=""></option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Please choose an option.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicSite">
+            <Form.Label>
+              <strong>Select the cycle for leaders in this visit.</strong>
+            </Form.Label>
+            <Form.Control
+              as="select"
+              name="leaderCycle"
+              aria-label="Default select example"
+              required
+              onChange={(e) => {
+                setSolvesLeaderCycle(e.target.value);
+              }}
+            >
+              <option value=""></option>
+              <option value="Sustaining the Math: Systems & Structures">
+                Sustaining the Math: Systems & Structures
+              </option>
+              <option value="Supporting the Math: Feedback and Observations">
+                Supporting the Math: Feedback and Observations
+              </option>
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Please choose an option.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicSite">
+            <Form.Label>
+              <strong>
+                Select the primary strategy used to support leaders in this
+                visit.
+              </strong>
+            </Form.Label>
+            <Form.Control
+              as="select"
+              name="adminPrimaryStrategy"
+              aria-label="Default select example"
+              required
+              onChange={(e) => {
+                setSolvesAdminPrimaryStrategy(e.target.value);
+              }}
+            >
+              <option value=""></option>
+              <option value="Develop/revise/refine mathematics instructional priority">
+                Develop/revise/refine mathematics instructional priority
+              </option>
+              <option value="Review takeaways from job-embedded support sessions">
+                Review takeaways from job-embedded support sessions
+              </option>
+              <option value="Walkthroughs">Walkthroughs</option>
+              <option value="Leadership skills for implementation work">
+                Leadership skills for implementation work
+              </option>
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Please choose an option.
+            </Form.Control.Feedback>
+          </Form.Group>
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
