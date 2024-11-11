@@ -78,7 +78,10 @@ function CoachLog() {
   const [readsStrategiesUsedList, setReadsStrategiesUsedList] = useState([]);
   const [readsWorkFocusList, setReadsWorkFocusList] = useState([]);
   const [nycTouchpoint, setNycTouchpoint] = useState();
-
+  const [nycReadsAdmin, setNycReadsAdmin] = useState();
+  const [nycReadsAdminsSupportedType, setNycReadsAdminsSupportedType] =
+    useState([]);
+  const [readsPrimaryFocus, setReadsPrimaryFocus] = useState();
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
     getMondayInfo();
@@ -245,6 +248,9 @@ function CoachLog() {
       let teachersSupportedTypeGeneral = "";
       let NYCCoachType = "";
       let NYCTouchpoint = "";
+      let NYCReadsAdmin = "";
+      let NYCReadsSupportedLeaders = "";
+      let NYCReadsSupportPrimaryFocus = "";
 
       if (NYCDone && NYCDone !== "no") {
         nycGradeLevelsGeneral = nycGradeLevels.toString();
@@ -257,6 +263,9 @@ function CoachLog() {
           workFocusReads = readsWorkFocusList.toString();
           strategiesUsedReads = readsStrategiesUsedList.toString();
           NYCCoachType = NYCDone;
+          NYCReadsAdmin = nycReadsAdmin;
+          NYCReadsSupportPrimaryFocus = readsPrimaryFocus;
+          NYCReadsSupportedLeaders = nycReadsAdminsSupportedType;
         } else {
           implementationIndicatorSolves = solvesImplementationIndicator;
           primaryStrategySolves = solvesPrimaryStrategy;
@@ -351,6 +360,9 @@ function CoachLog() {
           text89__1: supportCycleSolves,
           text83__1: primaryStrategySolves,
           text16__1: specificStrategySolves,
+          text01__1: NYCReadsAdmin,
+          text285__1: NYCReadsSupportedLeaders,
+          text61__1: NYCReadsSupportPrimaryFocus,
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
@@ -498,6 +510,10 @@ function CoachLog() {
             setReadsWorkFocusList={setReadsWorkFocusList}
             readsStrategiesUsedList={readsStrategiesUsedList}
             setNycTouchpoint={setNycTouchpoint}
+            nycReadsAdmin={nycReadsAdmin}
+            setNycReadsAdmin={setNycReadsAdmin}
+            setNycReadsAdminsSupportedType={setNycReadsAdminsSupportedType}
+            setReadsPrimaryFocus={setReadsPrimaryFocus}
           />
           <ModeQuestion
             coachingMode={coachingMode}

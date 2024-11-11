@@ -194,3 +194,21 @@ export const solvesSpecificStrategyOptions = {
     "Working with school administration to ensure school systems and structures support regular teacher teamwork",
   ],
 };
+
+export const nycSchoolLeaders = [
+  "Principal",
+  "Assistant principal",
+  "School-based coach",
+  "District-based staff",
+  "Other",
+];
+
+export const nycReadsPrimaryFocus = [
+  "Leadership team collaboration",
+  "Year-long implementation plans",
+  "Programming & use of school time",
+  "Curriculum-based instruction capacity building",
+  "Capacity building on job-embedded supports",
+  "Shared learning walks",
+  "Developing teacher teams",
+];

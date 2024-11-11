@@ -3,13 +3,19 @@ import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { focusOfWork, strategiesUsed } from "../utils";
 import React, { useState, useEffect } from "react";
 import { NYCReadsSubQuestions } from "./NYCReadsSubQuestions";
+import { nycSchoolLeaders } from "../utils";
+import { nycReadsPrimaryFocus } from "../utils";
 
 export const NYCReads = ({
   NYCGradeLevel,
   setReadsImplementationIndicatorsList,
   setReadsStrategiesUsedList,
   setReadsWorkFocusList,
+  setNycReadsAdmin,
   readsStrategiesUsedList,
+  nycReadsAdmin,
+  setNycReadsAdminsSupportedType,
+  setReadsPrimaryFocus,
 }) => {
   const [readsGradeLevels, setReadsGradeLevels] = useState([]);
   useEffect(() => {
@@ -58,6 +64,84 @@ export const NYCReads = ({
           readsStrategiesUsedList={readsStrategiesUsedList}
         />
       ))}
+      <Form.Group className="mb-3" controlId="formBasicSite">
+        <Form.Label>
+          <strong>
+            Did you meet with the school administrators and/or school-based
+            coach today?
+          </strong>
+        </Form.Label>
+        <Form.Control
+          as="select"
+          name="NYCAdmin"
+          aria-label="Default select example"
+          onChange={(e) => {
+            setNycReadsAdmin(e.target.value);
+          }}
+          required
+        >
+          <option value=""></option>
+          <option value="Yes - debriefed teacher support only">
+            Yes - debriefed teacher support only
+          </option>
+          <option value="Yes - provided leader specific support">
+            Yes - provided leader specific support
+          </option>
+          <option value="no">No</option>
+        </Form.Control>
+        <Form.Control.Feedback type="invalid">
+          Please choose an option.
+        </Form.Control.Feedback>
+      </Form.Group>
+      {nycReadsAdmin === "Yes - provided leader specific support" ? (
+        <>
+          <Form.Group className="mb-1" controlId="formBasicSite">
+            <Form.Label>
+              <strong>
+                Which school leaders did you support directly today? Select all
+                that apply.
+              </strong>
+            </Form.Label>
+            <DropdownMultiselect
+              options={nycSchoolLeaders}
+              name="nycSchoolLeaders"
+              handleOnChange={(selected) => {
+                setNycReadsAdminsSupportedType(selected);
+              }}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formBasicSite">
+            <Form.Label>
+              <strong>
+                Select the primary focus of the support provided to leaders in
+                this school:
+              </strong>
+            </Form.Label>
+            <Form.Control
+              as="select"
+              name="readsPrimaryFocus"
+              aria-label="Default select example"
+              required
+              onChange={(e) => {
+                setReadsPrimaryFocus(e.target.value);
+              }}
+            >
+              <option value=""></option>
+              {nycReadsPrimaryFocus.map((s) => (
+                <option value={s} key={s}>
+                  {s}
+                </option>
+              ))}
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Please choose an option.
+            </Form.Control.Feedback>
+          </Form.Group>
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
