@@ -71,9 +71,13 @@ function CoachLog() {
   const [solvesPrimaryStrategy, setSolvesPrimaryStrategy] = useState("");
   const [solvesSpecificStrategy, setSolvesSpecificStrategy] = useState("");
   const [supportCycle, setSupportCycle] = useState("");
-  const [implementationIndicator, setImplementationIndicator] = useState("");
+  const [
+    readsImplementationIndicatorsList,
+    setReadsImplementationIndicatorsList,
+  ] = useState([]);
+  const [readsStrategiesUsedList, setReadsStrategiesUsedList] = useState([]);
+  const [readsWorkFocusList, setReadsWorkFocusList] = useState([]);
   const [strategiesUsed, setStrategiesUsed] = useState([]);
-  const [workFocus, setWorkFocus] = useState("");
 
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
@@ -246,9 +250,11 @@ function CoachLog() {
         teachersSupportedNumberGeneral = teachersSupportedNumber;
         teachersSupportedTypeGeneral = teachersSupportedType.toString();
         if (NYCDone === "NYC Reads") {
-          ImplementationIndicatorReads = implementationIndicator;
-          workFocusReads = workFocus;
-          strategiesUsedReads = strategiesUsed.toString();
+          ImplementationIndicatorReads =
+            readsImplementationIndicatorsList.toString();
+          workFocusReads = readsWorkFocusList.toString();
+
+          strategiesUsedReads = readsStrategiesUsedList.toString();
           NYCCoachType = NYCDone;
         } else {
           implementationIndicatorSolves = solvesImplementationIndicator;
@@ -472,7 +478,6 @@ function CoachLog() {
               setSelectedCancellationParticipants
             }
           />
-          {/* 
           <NYCQuestion
             NYCDone={NYCDone}
             setNYCDone={setNYCDone}
@@ -485,10 +490,13 @@ function CoachLog() {
             solvesPrimaryStrategy={solvesPrimaryStrategy}
             setSolvesSpecificStrategy={setSolvesSpecificStrategy}
             setSupportCycle={setSupportCycle}
-            setImplementationIndicator={setImplementationIndicator}
-            setStrategiesUsed={setStrategiesUsed}
-            setWorkFocus={setWorkFocus}
-          /> */}
+            setReadsImplementationIndicatorsList={
+              setReadsImplementationIndicatorsList
+            }
+            setReadsStrategiesUsedList={setReadsStrategiesUsedList}
+            setReadsWorkFocusList={setReadsWorkFocusList}
+            readsStrategiesUsedList={readsStrategiesUsedList}
+          />
           <ModeQuestion
             coachingMode={coachingMode}
             setCoachingMode={setCoachingMode}

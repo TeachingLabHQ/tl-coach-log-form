@@ -16,9 +16,10 @@ export const NYCQuestion = ({
   solvesPrimaryStrategy,
   setSolvesSpecificStrategy,
   setSupportCycle,
-  setImplementationIndicator,
-  setStrategiesUsed,
-  setWorkFocus,
+  setReadsImplementationIndicatorsList,
+  setReadsStrategiesUsedList,
+  setReadsWorkFocusList,
+  readsStrategiesUsedList,
 }) => {
   return (
     <>
@@ -47,19 +48,6 @@ export const NYCQuestion = ({
 
       {NYCDone && NYCDone !== "no" ? (
         <>
-          <Form.Group className="mb-1" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Select all the grade-levels you supported today</strong>
-            </Form.Label>
-            <DropdownMultiselect
-              options={NYCGradeLevel}
-              name="NYCGradeLevels"
-              handleOnChange={(selected) => {
-                setNycGradeLevels(selected);
-              }}
-              required
-            />
-          </Form.Group>
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>
               <strong>
@@ -93,9 +81,14 @@ export const NYCQuestion = ({
           </Form.Group>
           {NYCDone === "NYC Reads" ? (
             <NYCReads
-              setImplementationIndicator={setImplementationIndicator}
-              setStrategiesUsed={setStrategiesUsed}
-              setWorkFocus={setWorkFocus}
+              setReadsImplementationIndicatorsList={
+                setReadsImplementationIndicatorsList
+              }
+              setReadsStrategiesUsedList={setReadsStrategiesUsedList}
+              setReadsWorkFocusList={setReadsWorkFocusList}
+              NYCGradeLevel={NYCGradeLevel}
+              setNycGradeLevels={setNycGradeLevels}
+              readsStrategiesUsedList={readsStrategiesUsedList}
             />
           ) : (
             <NYCSolves
@@ -107,6 +100,8 @@ export const NYCQuestion = ({
               solvesPrimaryStrategy={solvesPrimaryStrategy}
               setSolvesSpecificStrategy={setSolvesSpecificStrategy}
               setSupportCycle={setSupportCycle}
+              NYCGradeLevel={NYCGradeLevel}
+              setNycGradeLevels={setNycGradeLevels}
             />
           )}
         </>
