@@ -23,6 +23,7 @@ export const NYCSolves = ({
   setSolvesIntervisitation,
   setSolvesLeaderCycle,
   setSolvesAdminPrimaryStrategy,
+  setSolvesTouchpoint,
 }) => {
   useEffect(() => {
     // Filter each list directly by only keeping items that start with one of the selected grade levels
@@ -53,6 +54,29 @@ export const NYCSolves = ({
   ]);
   return (
     <>
+      <Form.Group className="mb-3" controlId="formBasicSite">
+        <Form.Label>
+          <strong>What type of touchpoint are you recording?</strong>
+        </Form.Label>
+        <Form.Control
+          as="select"
+          name="Solvestouchpoint"
+          aria-label="Default select example"
+          onChange={(e) => {
+            setSolvesTouchpoint(e.target.value);
+          }}
+          required
+        >
+          <option value=""></option>
+          <option value="Teacher OR teacher & leader support">
+            Teacher OR teacher & leader support
+          </option>
+          <option value="Leader support only">Leader support only</option>
+        </Form.Control>
+        <Form.Control.Feedback type="invalid">
+          Please choose an option.
+        </Form.Control.Feedback>
+      </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicSite">
         <Form.Label>
           <strong>Please select the School Implementation Experience:</strong>

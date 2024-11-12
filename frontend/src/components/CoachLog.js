@@ -79,6 +79,7 @@ function CoachLog() {
   const [readsStrategiesUsedList, setReadsStrategiesUsedList] = useState([]);
   const [readsWorkFocusList, setReadsWorkFocusList] = useState([]);
   const [nycTouchpoint, setNycTouchpoint] = useState();
+  const [solvesTouchpoint, setSolvesTouchpoint] = useState();
   const [nycReadsAdmin, setNycReadsAdmin] = useState();
   const [nycReadsAdminsSupportedType, setNycReadsAdminsSupportedType] =
     useState([]);
@@ -264,12 +265,16 @@ function CoachLog() {
       let NYCReadsAdmin = "";
       let NYCReadsSupportedLeaders = "";
       let NYCReadsSupportPrimaryFocus = "";
+      let NYCSolvesMeetWithAdmin = nycSolvesAdmin;
+      let NYCSolvesIntervisitation = solvesIntervisitation;
+      let NYCSolvesLeaderCycle = solvesLeaderCycle;
+      let NYCSolvesAdminPrimaryStrategy = solvesAdminPrimaryStrategy;
 
       if (NYCDone && NYCDone !== "no") {
         teachersSupportedNumberGeneral = teachersSupportedNumber;
         teachersSupportedTypeGeneral = teachersSupportedType.toString();
-        NYCTouchpoint = nycTouchpoint;
         if (NYCDone === "NYC Reads") {
+          NYCTouchpoint = nycTouchpoint;
           readsGradeLevelsNYC = readsGradeLevels.toString();
           ImplementationIndicatorReads =
             readsImplementationIndicatorsList.toString();
@@ -280,6 +285,7 @@ function CoachLog() {
           NYCReadsSupportPrimaryFocus = readsPrimaryFocus;
           NYCReadsSupportedLeaders = nycReadsAdminsSupportedType.toString();
         } else {
+          NYCTouchpoint = solvesTouchpoint;
           solvesGradeLevelsNYC = solvesGradeLevels.toString();
           implementationIndicatorSolves = solvesImplementationIndicator;
           primaryStrategySolvesList = Object.values(solvesPrimaryStrategyList)
@@ -381,10 +387,10 @@ function CoachLog() {
           text61__1: NYCReadsSupportPrimaryFocus,
           text80__1: solvesGradeLevelsNYC,
           text33__1: readsGradeLevelsNYC,
-          text07__1: nycSolvesAdmin,
-          text290__1: solvesIntervisitation,
-          text018__1: solvesLeaderCycle,
-          text48__1: solvesAdminPrimaryStrategy,
+          text07__1: NYCSolvesMeetWithAdmin,
+          text290__1: NYCSolvesIntervisitation,
+          text018__1: NYCSolvesLeaderCycle,
+          text48__1: NYCSolvesAdminPrimaryStrategy,
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
@@ -547,6 +553,7 @@ function CoachLog() {
             setSolvesIntervisitation={setSolvesIntervisitation}
             setSolvesLeaderCycle={setSolvesLeaderCycle}
             setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
+            setSolvesTouchpoint={setSolvesTouchpoint}
           />
           <ModeQuestion
             coachingMode={coachingMode}
