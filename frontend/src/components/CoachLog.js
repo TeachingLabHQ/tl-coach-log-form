@@ -265,10 +265,10 @@ function CoachLog() {
       let NYCReadsAdmin = "";
       let NYCReadsSupportedLeaders = "";
       let NYCReadsSupportPrimaryFocus = "";
-      let NYCSolvesMeetWithAdmin = nycSolvesAdmin;
-      let NYCSolvesIntervisitation = solvesIntervisitation;
-      let NYCSolvesLeaderCycle = solvesLeaderCycle;
-      let NYCSolvesAdminPrimaryStrategy = solvesAdminPrimaryStrategy;
+      let NYCSolvesMeetWithAdmin = "";
+      let NYCSolvesIntervisitation = "";
+      let NYCSolvesLeaderCycle = "";
+      let NYCSolvesAdminPrimaryStrategy = "";
 
       if (NYCDone && NYCDone !== "no") {
         teachersSupportedNumberGeneral = teachersSupportedNumber;
@@ -294,6 +294,10 @@ function CoachLog() {
           specificStrategySolvesList = solvesSpecificStrategyList.toString();
           supportCycleSolves = supportCycle;
           NYCCoachType = NYCDone;
+          NYCSolvesMeetWithAdmin = nycSolvesAdmin;
+          NYCSolvesIntervisitation = solvesIntervisitation;
+          NYCSolvesLeaderCycle = solvesLeaderCycle;
+          NYCSolvesAdminPrimaryStrategy = solvesAdminPrimaryStrategy;
         }
       }
 
