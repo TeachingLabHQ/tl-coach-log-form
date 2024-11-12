@@ -6,19 +6,34 @@ import { NYCSolves } from "./NYCSolves";
 
 export const NYCQuestion = ({
   NYCDone,
+  nycReadsAdmin,
   setNYCDone,
-  setNycGradeLevels,
   setTeachersSupportedNumber,
   setTeachersSupportedType,
   setSolvesImplementationIndicator,
   solvesImplementationIndicator,
-  setSolvesPrimaryStrategy,
-  solvesPrimaryStrategy,
-  setSolvesSpecificStrategy,
   setSupportCycle,
-  setImplementationIndicator,
-  setStrategiesUsed,
-  setWorkFocus,
+  setReadsImplementationIndicatorsList,
+  setReadsStrategiesUsedList,
+  setReadsWorkFocusList,
+  readsStrategiesUsedList,
+  setNycTouchpoint,
+  setNycReadsAdmin,
+  setNycReadsAdminsSupportedType,
+  setReadsPrimaryFocus,
+  setSolvesGradeLevels,
+  solvesGradeLevels,
+  setSolvesPrimaryStrategyList,
+  solvesPrimaryStrategyList,
+  setSolvesSpecificStrategyList,
+  readsGradeLevels,
+  setReadsGradeLevels,
+  setNycSolvesAdmin,
+  nycSolvesAdmin,
+  setSolvesIntervisitation,
+  setSolvesLeaderCycle,
+  setSolvesAdminPrimaryStrategy,
+  setSolvesTouchpoint,
 }) => {
   return (
     <>
@@ -47,19 +62,6 @@ export const NYCQuestion = ({
 
       {NYCDone && NYCDone !== "no" ? (
         <>
-          <Form.Group className="mb-1" controlId="formBasicSite">
-            <Form.Label>
-              <strong>Select all the grade-levels you supported today</strong>
-            </Form.Label>
-            <DropdownMultiselect
-              options={NYCGradeLevel}
-              name="NYCGradeLevels"
-              handleOnChange={(selected) => {
-                setNycGradeLevels(selected);
-              }}
-              required
-            />
-          </Form.Group>
           <Form.Group className="mb-1" controlId="formBasicSite">
             <Form.Label>
               <strong>
@@ -93,9 +95,20 @@ export const NYCQuestion = ({
           </Form.Group>
           {NYCDone === "NYC Reads" ? (
             <NYCReads
-              setImplementationIndicator={setImplementationIndicator}
-              setStrategiesUsed={setStrategiesUsed}
-              setWorkFocus={setWorkFocus}
+              setReadsImplementationIndicatorsList={
+                setReadsImplementationIndicatorsList
+              }
+              setReadsStrategiesUsedList={setReadsStrategiesUsedList}
+              setReadsWorkFocusList={setReadsWorkFocusList}
+              NYCGradeLevel={NYCGradeLevel}
+              readsStrategiesUsedList={readsStrategiesUsedList}
+              setNycReadsAdmin={setNycReadsAdmin}
+              nycReadsAdmin={nycReadsAdmin}
+              setNycReadsAdminsSupportedType={setNycReadsAdminsSupportedType}
+              setReadsPrimaryFocus={setReadsPrimaryFocus}
+              readsGradeLevels={readsGradeLevels}
+              setReadsGradeLevels={setReadsGradeLevels}
+              setNycTouchpoint={setNycTouchpoint}
             />
           ) : (
             <NYCSolves
@@ -103,10 +116,18 @@ export const NYCQuestion = ({
                 setSolvesImplementationIndicator
               }
               solvesImplementationIndicator={solvesImplementationIndicator}
-              setSolvesPrimaryStrategy={setSolvesPrimaryStrategy}
-              solvesPrimaryStrategy={solvesPrimaryStrategy}
-              setSolvesSpecificStrategy={setSolvesSpecificStrategy}
               setSupportCycle={setSupportCycle}
+              setSolvesGradeLevels={setSolvesGradeLevels}
+              solvesGradeLevels={solvesGradeLevels}
+              setSolvesPrimaryStrategyList={setSolvesPrimaryStrategyList}
+              solvesPrimaryStrategyList={solvesPrimaryStrategyList}
+              setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
+              setNycSolvesAdmin={setNycSolvesAdmin}
+              nycSolvesAdmin={nycSolvesAdmin}
+              setSolvesIntervisitation={setSolvesIntervisitation}
+              setSolvesLeaderCycle={setSolvesLeaderCycle}
+              setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
+              setSolvesTouchpoint={setSolvesTouchpoint}
             />
           )}
         </>

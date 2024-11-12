@@ -117,6 +117,17 @@ export const NYCGradeLevel = [
   "6th Grade",
   "7th Grade",
   "8th Grade",
+];
+export const NYCSolvesGradeLevel = [
+  "Kindergarten",
+  "1st Grade",
+  "2nd Grade",
+  "3rd Grade",
+  "4th Grade",
+  "5th Grade",
+  "6th Grade",
+  "7th Grade",
+  "8th Grade",
   "Algebra I",
   "Geometry",
   "Algebra II",
@@ -194,3 +205,21 @@ export const solvesSpecificStrategyOptions = {
     "Working with school administration to ensure school systems and structures support regular teacher teamwork",
   ],
 };
+
+export const nycSchoolLeaders = [
+  "Principal",
+  "Assistant principal",
+  "School-based coach",
+  "District-based staff",
+  "Other",
+];
+
+export const nycReadsPrimaryFocus = [
+  "Leadership team collaboration",
+  "Year-long implementation plans",
+  "Programming & use of school time",
+  "Curriculum-based instruction capacity building",
+  "Capacity building on job-embedded supports",
+  "Shared learning walks",
+  "Developing teacher teams",
+];

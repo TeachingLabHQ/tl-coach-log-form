@@ -63,7 +63,8 @@ function CoachLog() {
   const [coachingMode, setCoachingMode] = useState();
   const { accessToken } = useContext(AccessTokenContext);
   const [NYCDone, setNYCDone] = useState("");
-  const [nycGradeLevels, setNycGradeLevels] = useState([]);
+  const [readsGradeLevels, setReadsGradeLevels] = useState([]);
+  const [solvesGradeLevels, setSolvesGradeLevels] = useState([]);
   const [teachersSupportedNumber, setTeachersSupportedNumber] = useState(0);
   const [teachersSupportedType, setTeachersSupportedType] = useState("");
   const [solvesImplementationIndicator, setSolvesImplementationIndicator] =
@@ -71,10 +72,29 @@ function CoachLog() {
   const [solvesPrimaryStrategy, setSolvesPrimaryStrategy] = useState("");
   const [solvesSpecificStrategy, setSolvesSpecificStrategy] = useState("");
   const [supportCycle, setSupportCycle] = useState("");
-  const [implementationIndicator, setImplementationIndicator] = useState("");
-  const [strategiesUsed, setStrategiesUsed] = useState([]);
-  const [workFocus, setWorkFocus] = useState("");
-
+  const [
+    readsImplementationIndicatorsList,
+    setReadsImplementationIndicatorsList,
+  ] = useState([]);
+  const [readsStrategiesUsedList, setReadsStrategiesUsedList] = useState([]);
+  const [readsWorkFocusList, setReadsWorkFocusList] = useState([]);
+  const [nycTouchpoint, setNycTouchpoint] = useState();
+  const [solvesTouchpoint, setSolvesTouchpoint] = useState();
+  const [nycReadsAdmin, setNycReadsAdmin] = useState();
+  const [nycReadsAdminsSupportedType, setNycReadsAdminsSupportedType] =
+    useState([]);
+  const [solvesPrimaryStrategyList, setSolvesPrimaryStrategyList] = useState(
+    []
+  );
+  const [solvesSpecificStrategyList, setSolvesSpecificStrategyList] = useState(
+    []
+  );
+  const [readsPrimaryFocus, setReadsPrimaryFocus] = useState();
+  const [nycSolvesAdmin, setNycSolvesAdmin] = useState();
+  const [solvesIntervisitation, setSolvesIntervisitation] = useState();
+  const [solvesLeaderCycle, setSolvesLeaderCycle] = useState();
+  const [solvesAdminPrimaryStrategy, setSolvesAdminPrimaryStrategy] =
+    useState();
   //get information from Monday and format the current date when the page loads
   useEffect(() => {
     getMondayInfo();
@@ -233,29 +253,51 @@ function CoachLog() {
       let strategiesUsedReads = "";
       let workFocusReads = "";
       let implementationIndicatorSolves = "";
-      let primaryStrategySolves = "";
-      let specificStrategySolves = "";
+      let primaryStrategySolvesList = "";
+      let specificStrategySolvesList = "";
       let supportCycleSolves = "";
-      let nycGradeLevelsGeneral = "";
+      let readsGradeLevelsNYC = "";
+      let solvesGradeLevelsNYC = "";
       let teachersSupportedNumberGeneral = "";
       let teachersSupportedTypeGeneral = "";
       let NYCCoachType = "";
+      let NYCTouchpoint = "";
+      let NYCReadsAdmin = "";
+      let NYCReadsSupportedLeaders = "";
+      let NYCReadsSupportPrimaryFocus = "";
+      let NYCSolvesMeetWithAdmin = "";
+      let NYCSolvesIntervisitation = "";
+      let NYCSolvesLeaderCycle = "";
+      let NYCSolvesAdminPrimaryStrategy = "";
 
       if (NYCDone && NYCDone !== "no") {
-        nycGradeLevelsGeneral = nycGradeLevels.toString();
         teachersSupportedNumberGeneral = teachersSupportedNumber;
         teachersSupportedTypeGeneral = teachersSupportedType.toString();
         if (NYCDone === "NYC Reads") {
-          ImplementationIndicatorReads = implementationIndicator;
-          workFocusReads = workFocus;
-          strategiesUsedReads = strategiesUsed.toString();
+          NYCTouchpoint = nycTouchpoint;
+          readsGradeLevelsNYC = readsGradeLevels.toString();
+          ImplementationIndicatorReads =
+            readsImplementationIndicatorsList.toString();
+          workFocusReads = readsWorkFocusList.toString();
+          strategiesUsedReads = readsStrategiesUsedList.toString();
           NYCCoachType = NYCDone;
+          NYCReadsAdmin = nycReadsAdmin;
+          NYCReadsSupportPrimaryFocus = readsPrimaryFocus;
+          NYCReadsSupportedLeaders = nycReadsAdminsSupportedType.toString();
         } else {
+          NYCTouchpoint = solvesTouchpoint;
+          solvesGradeLevelsNYC = solvesGradeLevels.toString();
           implementationIndicatorSolves = solvesImplementationIndicator;
-          primaryStrategySolves = solvesPrimaryStrategy;
-          specificStrategySolves = solvesSpecificStrategy;
+          primaryStrategySolvesList = Object.values(solvesPrimaryStrategyList)
+            .flat()
+            .toString();
+          specificStrategySolvesList = solvesSpecificStrategyList.toString();
           supportCycleSolves = supportCycle;
           NYCCoachType = NYCDone;
+          NYCSolvesMeetWithAdmin = nycSolvesAdmin;
+          NYCSolvesIntervisitation = solvesIntervisitation;
+          NYCSolvesLeaderCycle = solvesLeaderCycle;
+          NYCSolvesAdminPrimaryStrategy = solvesAdminPrimaryStrategy;
         }
       }
 
@@ -334,7 +376,7 @@ function CoachLog() {
           numbers10__1: finalTravelDuration,
           long_text8__1: additionalClarification,
           text13__1: NYCCoachType,
-          text281__1: nycGradeLevelsGeneral,
+          text85__1: NYCTouchpoint,
           text87__1: teachersSupportedNumberGeneral,
           text43__1: teachersSupportedTypeGeneral,
           text0__1: ImplementationIndicatorReads,
@@ -342,8 +384,17 @@ function CoachLog() {
           text56__1: strategiesUsedReads,
           text431__1: implementationIndicatorSolves,
           text89__1: supportCycleSolves,
-          text83__1: primaryStrategySolves,
-          text16__1: specificStrategySolves,
+          text83__1: primaryStrategySolvesList,
+          text16__1: specificStrategySolvesList,
+          text01__1: NYCReadsAdmin,
+          text285__1: NYCReadsSupportedLeaders,
+          text61__1: NYCReadsSupportPrimaryFocus,
+          text80__1: solvesGradeLevelsNYC,
+          text33__1: readsGradeLevelsNYC,
+          text07__1: NYCSolvesMeetWithAdmin,
+          text290__1: NYCSolvesIntervisitation,
+          text018__1: NYCSolvesLeaderCycle,
+          text48__1: NYCSolvesAdminPrimaryStrategy,
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
@@ -472,11 +523,9 @@ function CoachLog() {
               setSelectedCancellationParticipants
             }
           />
-          {/* 
           <NYCQuestion
             NYCDone={NYCDone}
             setNYCDone={setNYCDone}
-            setNycGradeLevels={setNycGradeLevels}
             setTeachersSupportedNumber={setTeachersSupportedNumber}
             setTeachersSupportedType={setTeachersSupportedType}
             setSolvesImplementationIndicator={setSolvesImplementationIndicator}
@@ -485,10 +534,31 @@ function CoachLog() {
             solvesPrimaryStrategy={solvesPrimaryStrategy}
             setSolvesSpecificStrategy={setSolvesSpecificStrategy}
             setSupportCycle={setSupportCycle}
-            setImplementationIndicator={setImplementationIndicator}
-            setStrategiesUsed={setStrategiesUsed}
-            setWorkFocus={setWorkFocus}
-          /> */}
+            setReadsImplementationIndicatorsList={
+              setReadsImplementationIndicatorsList
+            }
+            setReadsStrategiesUsedList={setReadsStrategiesUsedList}
+            setReadsWorkFocusList={setReadsWorkFocusList}
+            readsStrategiesUsedList={readsStrategiesUsedList}
+            setNycTouchpoint={setNycTouchpoint}
+            nycReadsAdmin={nycReadsAdmin}
+            setNycReadsAdmin={setNycReadsAdmin}
+            setNycReadsAdminsSupportedType={setNycReadsAdminsSupportedType}
+            setReadsPrimaryFocus={setReadsPrimaryFocus}
+            setSolvesGradeLevels={setSolvesGradeLevels}
+            solvesGradeLevels={solvesGradeLevels}
+            setSolvesPrimaryStrategyList={setSolvesPrimaryStrategyList}
+            solvesPrimaryStrategyList={solvesPrimaryStrategyList}
+            setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
+            readsGradeLevels={readsGradeLevels}
+            setReadsGradeLevels={setReadsGradeLevels}
+            setNycSolvesAdmin={setNycSolvesAdmin}
+            nycSolvesAdmin={nycSolvesAdmin}
+            setSolvesIntervisitation={setSolvesIntervisitation}
+            setSolvesLeaderCycle={setSolvesLeaderCycle}
+            setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
+            setSolvesTouchpoint={setSolvesTouchpoint}
+          />
           <ModeQuestion
             coachingMode={coachingMode}
             setCoachingMode={setCoachingMode}
