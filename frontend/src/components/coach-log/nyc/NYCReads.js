@@ -69,7 +69,9 @@ export const NYCReads = ({
       </Form.Group>
       <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
-          <strong>Select all the grade-levels you supported today</strong>
+          <strong>
+            (Required) Select all the grade-levels you supported today*
+          </strong>
         </Form.Label>
         <DropdownMultiselect
           options={NYCGradeLevel}
@@ -79,6 +81,9 @@ export const NYCReads = ({
           }}
           required
         />
+        <Form.Control.Feedback type="invalid">
+          Please choose an option.
+        </Form.Control.Feedback>
       </Form.Group>
       {readsGradeLevels.map((g) => (
         <NYCReadsSubQuestions

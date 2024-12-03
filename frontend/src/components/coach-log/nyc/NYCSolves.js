@@ -130,7 +130,9 @@ export const NYCSolves = ({
       </Form.Group>
       <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
-          <strong>Select all the grade-levels you supported today</strong>
+          <strong>
+            (Required) Select all the grade-levels you supported today*
+          </strong>
         </Form.Label>
         <DropdownMultiselect
           options={NYCSolvesGradeLevel}

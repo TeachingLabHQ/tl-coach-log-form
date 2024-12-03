@@ -182,7 +182,28 @@ function CoachLog() {
     setSubmitCheck();
     const form = e.currentTarget;
     //form validation
-    if (form.checkValidity() === false) {
+
+    const allGradeLevelsPresent = readsGradeLevels.every((gradeLevel) =>
+      readsStrategiesUsedList.some((item) => item.includes(gradeLevel))
+    );
+
+    const nycReadsGradeLevelValidity =
+      NYCDone === "NYC Reads"
+        ? readsGradeLevels.toString() !== "" && allGradeLevelsPresent
+          ? true
+          : false
+        : true;
+    const nycSolvesGradeLevelValidity =
+      NYCDone === "NYC Solves"
+        ? solvesGradeLevels.toString() !== ""
+          ? true
+          : false
+        : true;
+    if (
+      form.checkValidity() === false ||
+      nycReadsGradeLevelValidity === false ||
+      nycSolvesGradeLevelValidity === false
+    ) {
       e.preventDefault();
       e.stopPropagation();
       setValidated(true);
