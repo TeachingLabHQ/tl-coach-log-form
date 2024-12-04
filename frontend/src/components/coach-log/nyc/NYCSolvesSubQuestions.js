@@ -68,8 +68,8 @@ export const NYCSolvesSubQuestions = ({
           <option value=""></option>
           {solvesPrimaryStrategyList[solvesGradeLevel] &&
             solvesSpecificStrategyOptions[
-              solvesPrimaryStrategyList[solvesGradeLevel].split(")")[1]
-            ].map((ss) => (
+              solvesPrimaryStrategyList[solvesGradeLevel]?.split(")")[1]
+            ]?.map((ss) => (
               <option value={ss} key={ss}>
                 {ss}
               </option>
