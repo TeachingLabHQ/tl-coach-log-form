@@ -81,8 +81,8 @@ export const NYCReadsSubQuestions = ({
       <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
           <strong>
-            [{readsGradeLevel}] Please select 1-3 strategies you used to support
-            teachers today.(Select Up to 3)
+            [{readsGradeLevel}] (Required) Please select 1-3 strategies you used
+            to support teachers today.(Select Up to 3)*
           </strong>
         </Form.Label>
         <DropdownMultiselect
@@ -90,7 +90,6 @@ export const NYCReadsSubQuestions = ({
           required
           name={"strategiesUsed" + readsGradeLevel}
           handleOnChange={(selected) => {
-            console.log(readsGradeLevel);
             if (selected.length > 3) {
               alert("You can only select up to 3 strategies.");
               return; // Do not update state if more than 3 are selected
@@ -98,12 +97,20 @@ export const NYCReadsSubQuestions = ({
             const selectedStrategies = `(${readsGradeLevel}) ${selected.join(
               ", "
             )}`;
-            setReadsStrategiesUsedList((prevList) => [
-              ...prevList.filter(
-                (item) => !item.startsWith(`(${readsGradeLevel})`)
-              ),
-              selectedStrategies,
-            ]);
+            if (selected.length === 0) {
+              setReadsStrategiesUsedList((prevList) => [
+                ...prevList.filter(
+                  (item) => !item.startsWith(`(${readsGradeLevel})`)
+                ),
+              ]);
+            } else {
+              setReadsStrategiesUsedList((prevList) => [
+                ...prevList.filter(
+                  (item) => !item.startsWith(`(${readsGradeLevel})`)
+                ),
+                selectedStrategies,
+              ]);
+            }
           }}
         />
       </Form.Group>

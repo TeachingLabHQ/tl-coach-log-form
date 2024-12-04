@@ -68,31 +68,29 @@ export const getTeacherInfo = (
   });
 };
 
-export const createItem = (query, vars, accessToken) => {
-  return (
-    axios
-      .post("demo/boardUpdate", {
-        apiKey: accessToken,
-        query: query,
-        vars: vars,
-      })
-      //item id
-      .then((res) => res.data.data.create_item.id)
-      .catch((err) => err)
-  );
+export const createItem = async (query, vars, accessToken) => {
+  try {
+    const response = await axios.post("demo/boardUpdate", {
+      apiKey: accessToken,
+      query: query,
+      vars: vars,
+    });
+    return response.data.data.create_item.id; // Extract and return the item id
+  } catch (error) {
+    return error; // Handle and return the error if the request fails
+  }
 };
-export const createItemSub = (query, vars, accessToken) => {
-  return (
-    axios
-      .post("/demo/boardUpdate", {
-        apiKey: accessToken,
-        query: query,
-        vars: vars,
-      })
-      //item id
-      .then((res) => res)
-      .catch((err) => err)
-  );
+export const createItemSub = async (query, vars, accessToken) => {
+  try {
+    const response = await axios.post("/demo/boardUpdate", {
+      apiKey: accessToken,
+      query: query,
+      vars: vars,
+    });
+    return response; // Return the entire response object
+  } catch (error) {
+    return error; // Handle and return the error if the request fails
+  }
 };
 
 export const uploadFile = (formData, accessToken) => {
