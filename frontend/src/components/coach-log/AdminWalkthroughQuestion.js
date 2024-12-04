@@ -56,19 +56,18 @@ export const AdminWalkthroughQuestion = ({
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCourse">
             <Form.Label>
-              <strong>How many minutes was this walkthrough?</strong>
+              <strong>
+                How many minutes was this walkthrough? (360 mins max)
+              </strong>
             </Form.Label>
             <Form.Control
-              as="select"
-              aria-label="Default select example"
+              type="number"
               name="walkthroughDuration"
-              required
-            >
-              <option></option>
-              {timeOptions.map((val, index) => (
-                <option value={val}>{val}</option>
-              ))}
-            </Form.Control>
+              min="0"
+              max="360"
+              step="1"
+              placeholder="Enter time in minutes"
+            />
           </Form.Group>
         </>
       ) : (

@@ -626,7 +626,8 @@ function CoachLog() {
           )}
           {submitCheck === false ? (
             <Alert key="warning" variant="warning">
-              Error: Please make sure all required fields (*) are filled out.
+              Error: Please make sure all required fields (*) are filled out
+              correctly.
             </Alert>
           ) : null}
           {errorCheck === false ? (
