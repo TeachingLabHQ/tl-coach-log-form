@@ -15,6 +15,7 @@ export const NYCReads = ({
   readsStrategiesUsedList,
   nycReadsAdmin,
   setNycReadsAdminsSupportedType,
+  nycReadsAdminsSupportedType,
   setReadsPrimaryFocus,
   readsGradeLevels,
   setReadsGradeLevels,
@@ -70,7 +71,7 @@ export const NYCReads = ({
       <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
           <strong>
-            (Required) Select all the grade-levels you supported today*
+            Select all the grade-levels you supported today (Required)*
           </strong>
         </Form.Label>
         <DropdownMultiselect
@@ -81,7 +82,10 @@ export const NYCReads = ({
           }}
           required
         />
-        <Form.Control.Feedback type="invalid">
+        <Form.Control.Feedback
+          type="invalid"
+          style={{ display: readsGradeLevels.length !== 0 ? "none" : "block" }}
+        >
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
@@ -142,6 +146,15 @@ export const NYCReads = ({
                 setNycReadsAdminsSupportedType(selected);
               }}
             />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{
+                display:
+                  nycReadsAdminsSupportedType.length !== 0 ? "none" : "block",
+              }}
+            >
+              Please choose an option.
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicSite">

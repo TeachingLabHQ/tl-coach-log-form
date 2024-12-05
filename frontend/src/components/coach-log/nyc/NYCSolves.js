@@ -131,7 +131,7 @@ export const NYCSolves = ({
       <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
           <strong>
-            (Required) Select all the grade-levels you supported today*
+            Select all the grade-levels you supported today (Required)*
           </strong>
         </Form.Label>
         <DropdownMultiselect
@@ -142,6 +142,12 @@ export const NYCSolves = ({
           }}
           required
         />
+        <Form.Control.Feedback
+          type="invalid"
+          style={{ display: solvesGradeLevels.length !== 0 ? "none" : "block" }}
+        >
+          Please choose an option.
+        </Form.Control.Feedback>
       </Form.Group>
       {solvesGradeLevels.map((g) => (
         <NYCSolvesSubQuestions

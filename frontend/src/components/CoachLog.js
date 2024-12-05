@@ -186,16 +186,26 @@ function CoachLog() {
     const allGradeLevelsPresent = readsGradeLevels.every((gradeLevel) =>
       readsStrategiesUsedList.some((item) => item.includes(gradeLevel))
     );
+    const readsTeacherSupport =
+      nycReadsAdmin === "Yes - provided leader specific support"
+        ? nycReadsAdminsSupportedType.length !== 0
+          ? true
+          : false
+        : true;
 
     const nycReadsGradeLevelValidity =
       NYCDone === "NYC Reads"
-        ? readsGradeLevels.toString() !== "" && allGradeLevelsPresent
+        ? readsGradeLevels.toString() !== "" &&
+          allGradeLevelsPresent &&
+          teachersSupportedType.toString() !== "" &&
+          readsTeacherSupport
           ? true
           : false
         : true;
     const nycSolvesGradeLevelValidity =
       NYCDone === "NYC Solves"
-        ? solvesGradeLevels.toString() !== ""
+        ? solvesGradeLevels.toString() !== "" &&
+          teachersSupportedType.toString() !== ""
           ? true
           : false
         : true;
@@ -281,7 +291,7 @@ function CoachLog() {
       let solvesGradeLevelsNYC = "";
       let teachersSupportedNumberGeneral = "";
       let teachersSupportedTypeGeneral = "";
-      let NYCCoachType = "";
+      let NYCCoachType = "no";
       let NYCTouchpoint = "";
       let NYCReadsAdmin = "";
       let NYCReadsSupportedLeaders = "";
@@ -549,6 +559,7 @@ function CoachLog() {
             setNYCDone={setNYCDone}
             setTeachersSupportedNumber={setTeachersSupportedNumber}
             setTeachersSupportedType={setTeachersSupportedType}
+            teachersSupportedType={teachersSupportedType}
             setSolvesImplementationIndicator={setSolvesImplementationIndicator}
             solvesImplementationIndicator={solvesImplementationIndicator}
             setSolvesPrimaryStrategy={setSolvesPrimaryStrategy}
@@ -579,6 +590,7 @@ function CoachLog() {
             setSolvesLeaderCycle={setSolvesLeaderCycle}
             setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
             setSolvesTouchpoint={setSolvesTouchpoint}
+            nycReadsAdminsSupportedType={nycReadsAdminsSupportedType}
           />
           <ModeQuestion
             coachingMode={coachingMode}

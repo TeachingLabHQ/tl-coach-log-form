@@ -10,6 +10,7 @@ export const NYCQuestion = ({
   setNYCDone,
   setTeachersSupportedNumber,
   setTeachersSupportedType,
+  teachersSupportedType,
   setSolvesImplementationIndicator,
   solvesImplementationIndicator,
   setSupportCycle,
@@ -34,7 +35,31 @@ export const NYCQuestion = ({
   setSolvesLeaderCycle,
   setSolvesAdminPrimaryStrategy,
   setSolvesTouchpoint,
+  nycReadsAdminsSupportedType,
 }) => {
+  function resetReadsStates() {
+    setReadsImplementationIndicatorsList([]);
+    setReadsStrategiesUsedList([]);
+    setReadsWorkFocusList([]);
+    setNycReadsAdmin();
+    setNycReadsAdminsSupportedType([]);
+    setReadsPrimaryFocus();
+    setReadsGradeLevels([]);
+    setNycTouchpoint();
+  }
+  function resetSolvesStates() {
+    setSolvesImplementationIndicator("");
+    setSupportCycle("");
+    setSolvesGradeLevels([]);
+    setSolvesPrimaryStrategyList([]);
+    setSolvesSpecificStrategyList([]);
+    setNycSolvesAdmin();
+    setSolvesIntervisitation();
+    setSolvesLeaderCycle();
+    setSolvesAdminPrimaryStrategy();
+    setSolvesTouchpoint();
+  }
+
   return (
     <>
       <Form.Group className="mb-3" controlId="formBasicSite">
@@ -47,6 +72,11 @@ export const NYCQuestion = ({
           aria-label="Default select example"
           onChange={(e) => {
             setNYCDone(e.target.value);
+            if (e.target.value === "NYC Reads") {
+              resetReadsStates();
+            } else if (e.target.value === "NYC Solves") {
+              resetSolvesStates();
+            }
           }}
           required
         >
@@ -83,6 +113,7 @@ export const NYCQuestion = ({
             <Form.Label>
               <strong>
                 Did you support any of the following teachers during this visit?
+                (Required)*
               </strong>
             </Form.Label>
             <DropdownMultiselect
@@ -92,6 +123,14 @@ export const NYCQuestion = ({
                 setTeachersSupportedType(selected);
               }}
             />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{
+                display: teachersSupportedType.length !== 0 ? "none" : "block",
+              }}
+            >
+              Please choose an option.
+            </Form.Control.Feedback>
           </Form.Group>
           {NYCDone === "NYC Reads" ? (
             <NYCReads
@@ -109,6 +148,7 @@ export const NYCQuestion = ({
               readsGradeLevels={readsGradeLevels}
               setReadsGradeLevels={setReadsGradeLevels}
               setNycTouchpoint={setNycTouchpoint}
+              nycReadsAdminsSupportedType={nycReadsAdminsSupportedType}
             />
           ) : (
             <NYCSolves
