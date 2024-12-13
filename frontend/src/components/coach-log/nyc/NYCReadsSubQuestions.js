@@ -81,8 +81,8 @@ export const NYCReadsSubQuestions = ({
       <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
           <strong>
-            [{readsGradeLevel}] (Required) Please select 1-3 strategies you used
-            to support teachers today.(Select Up to 3)*
+            [{readsGradeLevel}] Please select 1-3 strategies you used to support
+            teachers today.(Select Up to 3) (Required)*
           </strong>
         </Form.Label>
         <DropdownMultiselect
@@ -113,6 +113,18 @@ export const NYCReadsSubQuestions = ({
             }
           }}
         />
+        <Form.Control.Feedback
+          type="invalid"
+          style={{
+            display: readsStrategiesUsedList.some((s) =>
+              s.includes(readsGradeLevel)
+            )
+              ? "none"
+              : "block",
+          }}
+        >
+          Please choose an option.
+        </Form.Control.Feedback>
       </Form.Group>
     </>
   );

@@ -20,6 +20,7 @@ export const NYCSolves = ({
   setSolvesSpecificStrategyList,
   setNycSolvesAdmin,
   nycSolvesAdmin,
+  solvesIntervisitation,
   setSolvesIntervisitation,
   setSolvesLeaderCycle,
   setSolvesAdminPrimaryStrategy,
@@ -131,7 +132,7 @@ export const NYCSolves = ({
       <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
           <strong>
-            (Required) Select all the grade-levels you supported today*
+            Select all the grade-levels you supported today (Required)*
           </strong>
         </Form.Label>
         <DropdownMultiselect
@@ -142,6 +143,12 @@ export const NYCSolves = ({
           }}
           required
         />
+        <Form.Control.Feedback
+          type="invalid"
+          style={{ display: solvesGradeLevels.length !== 0 ? "none" : "block" }}
+        >
+          Please choose an option.
+        </Form.Control.Feedback>
       </Form.Group>
       {solvesGradeLevels.map((g) => (
         <NYCSolvesSubQuestions
@@ -204,6 +211,37 @@ export const NYCSolves = ({
               Please choose an option.
             </Form.Control.Feedback>
           </Form.Group>
+          {solvesIntervisitation === "yes" && (
+            <Form.Group className="mb-3" controlId="formBasicSite">
+              <Form.Label>
+                <strong>
+                  List all school DBNs with all leader representation at this
+                  visit (You have already recorded the school where
+                  intervisitation was hosted. Please reference{" "}
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1sOt3dv2_sKBSnUyped8nzs5xuCz94dAtFxgc53by76s/edit?gid=553789429#gid=553789429"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    LINK TO SCHOOL LIST for DBNS
+                  </a>
+                  )
+                </strong>
+              </Form.Label>
+              <Form.Control
+                name="DBN"
+                as="textarea"
+                rows={1}
+                aria-label="Default select example"
+                required
+              ></Form.Control>
+              <Form.Control.Feedback type="invalid">
+                Please specify DBNs.
+              </Form.Control.Feedback>
+            </Form.Group>
+          )}
+
           <Form.Group className="mb-3" controlId="formBasicSite">
             <Form.Label>
               <strong>Select the cycle for leaders in this visit.</strong>

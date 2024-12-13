@@ -186,16 +186,26 @@ function CoachLog() {
     const allGradeLevelsPresent = readsGradeLevels.every((gradeLevel) =>
       readsStrategiesUsedList.some((item) => item.includes(gradeLevel))
     );
+    const readsTeacherSupport =
+      nycReadsAdmin === "Yes - provided leader specific support"
+        ? nycReadsAdminsSupportedType.length !== 0
+          ? true
+          : false
+        : true;
 
     const nycReadsGradeLevelValidity =
       NYCDone === "NYC Reads"
-        ? readsGradeLevels.toString() !== "" && allGradeLevelsPresent
+        ? readsGradeLevels.toString() !== "" &&
+          allGradeLevelsPresent &&
+          teachersSupportedType.toString() !== "" &&
+          readsTeacherSupport
           ? true
           : false
         : true;
     const nycSolvesGradeLevelValidity =
       NYCDone === "NYC Solves"
-        ? solvesGradeLevels.toString() !== ""
+        ? solvesGradeLevels.toString() !== "" &&
+          teachersSupportedType.toString() !== ""
           ? true
           : false
         : true;
@@ -281,13 +291,14 @@ function CoachLog() {
       let solvesGradeLevelsNYC = "";
       let teachersSupportedNumberGeneral = "";
       let teachersSupportedTypeGeneral = "";
-      let NYCCoachType = "";
+      let NYCCoachType = "no";
       let NYCTouchpoint = "";
       let NYCReadsAdmin = "";
       let NYCReadsSupportedLeaders = "";
       let NYCReadsSupportPrimaryFocus = "";
       let NYCSolvesMeetWithAdmin = "";
       let NYCSolvesIntervisitation = "";
+      let NYCSolvesDBN = "";
       let NYCSolvesLeaderCycle = "";
       let NYCSolvesAdminPrimaryStrategy = "";
 
@@ -317,6 +328,7 @@ function CoachLog() {
           NYCCoachType = NYCDone;
           NYCSolvesMeetWithAdmin = nycSolvesAdmin;
           NYCSolvesIntervisitation = solvesIntervisitation;
+          NYCSolvesDBN = e.target.DBN.value;
           NYCSolvesLeaderCycle = solvesLeaderCycle;
           NYCSolvesAdminPrimaryStrategy = solvesAdminPrimaryStrategy;
         }
@@ -414,6 +426,7 @@ function CoachLog() {
           text33__1: readsGradeLevelsNYC,
           text07__1: NYCSolvesMeetWithAdmin,
           text290__1: NYCSolvesIntervisitation,
+          text_Mjj6jM8n: NYCSolvesDBN,
           text018__1: NYCSolvesLeaderCycle,
           text48__1: NYCSolvesAdminPrimaryStrategy,
         }),
@@ -549,6 +562,7 @@ function CoachLog() {
             setNYCDone={setNYCDone}
             setTeachersSupportedNumber={setTeachersSupportedNumber}
             setTeachersSupportedType={setTeachersSupportedType}
+            teachersSupportedType={teachersSupportedType}
             setSolvesImplementationIndicator={setSolvesImplementationIndicator}
             solvesImplementationIndicator={solvesImplementationIndicator}
             setSolvesPrimaryStrategy={setSolvesPrimaryStrategy}
@@ -579,6 +593,8 @@ function CoachLog() {
             setSolvesLeaderCycle={setSolvesLeaderCycle}
             setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
             setSolvesTouchpoint={setSolvesTouchpoint}
+            nycReadsAdminsSupportedType={nycReadsAdminsSupportedType}
+            solvesIntervisitation={solvesIntervisitation}
           />
           <ModeQuestion
             coachingMode={coachingMode}
