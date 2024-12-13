@@ -217,8 +217,16 @@ export const NYCSolves = ({
                 <strong>
                   List all school DBNs with all leader representation at this
                   visit (You have already recorded the school where
-                  intervisitation was hosted. Please reference LINK TO SCHOOL
-                  LIST for DBNS)
+                  intervisitation was hosted. Please reference{" "}
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1sOt3dv2_sKBSnUyped8nzs5xuCz94dAtFxgc53by76s/edit?gid=553789429#gid=553789429"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    LINK TO SCHOOL LIST for DBNS
+                  </a>
+                  )
                 </strong>
               </Form.Label>
               <Form.Control
