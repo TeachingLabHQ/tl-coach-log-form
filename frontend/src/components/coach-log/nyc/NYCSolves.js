@@ -20,6 +20,7 @@ export const NYCSolves = ({
   setSolvesSpecificStrategyList,
   setNycSolvesAdmin,
   nycSolvesAdmin,
+  solvesIntervisitation,
   setSolvesIntervisitation,
   setSolvesLeaderCycle,
   setSolvesAdminPrimaryStrategy,
@@ -210,6 +211,29 @@ export const NYCSolves = ({
               Please choose an option.
             </Form.Control.Feedback>
           </Form.Group>
+          {solvesIntervisitation === "yes" && (
+            <Form.Group className="mb-3" controlId="formBasicSite">
+              <Form.Label>
+                <strong>
+                  List all school DBNs with all leader representation at this
+                  visit (You have already recorded the school where
+                  intervisitation was hosted. Please reference LINK TO SCHOOL
+                  LIST for DBNS)
+                </strong>
+              </Form.Label>
+              <Form.Control
+                name="DBN"
+                as="textarea"
+                rows={1}
+                aria-label="Default select example"
+                required
+              ></Form.Control>
+              <Form.Control.Feedback type="invalid">
+                Please specify DBNs.
+              </Form.Control.Feedback>
+            </Form.Group>
+          )}
+
           <Form.Group className="mb-3" controlId="formBasicSite">
             <Form.Label>
               <strong>Select the cycle for leaders in this visit.</strong>

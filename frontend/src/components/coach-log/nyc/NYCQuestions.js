@@ -36,6 +36,7 @@ export const NYCQuestion = ({
   setSolvesAdminPrimaryStrategy,
   setSolvesTouchpoint,
   nycReadsAdminsSupportedType,
+  solvesIntervisitation,
 }) => {
   function resetReadsStates() {
     setReadsImplementationIndicatorsList([]);
@@ -164,6 +165,7 @@ export const NYCQuestion = ({
               setSolvesSpecificStrategyList={setSolvesSpecificStrategyList}
               setNycSolvesAdmin={setNycSolvesAdmin}
               nycSolvesAdmin={nycSolvesAdmin}
+              solvesIntervisitation={solvesIntervisitation}
               setSolvesIntervisitation={setSolvesIntervisitation}
               setSolvesLeaderCycle={setSolvesLeaderCycle}
               setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
