@@ -172,6 +172,20 @@ export const NYCQuestion = ({
               setSolvesTouchpoint={setSolvesTouchpoint}
             />
           )}
+          <Form.Group className="mb-3" controlId="formBasicCourse">
+            <Form.Label>
+              <strong>
+                Optional: You may use this space to capture any additional notes
+                regarding this coaching visit for your own reference.
+              </strong>
+            </Form.Label>
+            <Form.Control
+              name="coachingAdditionalWriteIn"
+              as="textarea"
+              rows={2}
+              aria-label="Default select example"
+            ></Form.Control>
+          </Form.Group>
         </>
       ) : (
         <></>
