@@ -132,7 +132,8 @@ export const NYCSolvesGradeLevel = [
 ];
 export const supportedTeachers = [
   "Special Education Teachers",
-  " English as New Language or English Language Learner Teachers",
+  "English as New Language or English Language Learner Teachers",
+  "Bilingual/Dual Language Teachers",
   "None of the above",
 ];
 

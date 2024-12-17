@@ -301,10 +301,12 @@ function CoachLog() {
       let NYCSolvesDBN = "";
       let NYCSolvesLeaderCycle = "";
       let NYCSolvesAdminPrimaryStrategy = "";
+      let NYCAdditionalComments = "";
 
       if (NYCDone && NYCDone !== "no") {
         teachersSupportedNumberGeneral = teachersSupportedNumber;
         teachersSupportedTypeGeneral = teachersSupportedType.toString();
+        NYCAdditionalComments = e.target.coachingAdditionalWriteIn?.value;
         if (NYCDone === "NYC Reads") {
           NYCTouchpoint = nycTouchpoint;
           readsGradeLevelsNYC = readsGradeLevels.toString();
@@ -328,7 +330,7 @@ function CoachLog() {
           NYCCoachType = NYCDone;
           NYCSolvesMeetWithAdmin = nycSolvesAdmin;
           NYCSolvesIntervisitation = solvesIntervisitation;
-          NYCSolvesDBN = e.target.DBN.value;
+          NYCSolvesDBN = e.target.DBN?.value;
           NYCSolvesLeaderCycle = solvesLeaderCycle;
           NYCSolvesAdminPrimaryStrategy = solvesAdminPrimaryStrategy;
         }
@@ -429,6 +431,7 @@ function CoachLog() {
           text_Mjj6jM8n: NYCSolvesDBN,
           text018__1: NYCSolvesLeaderCycle,
           text48__1: NYCSolvesAdminPrimaryStrategy,
+          long_text_mkkab976: NYCAdditionalComments,
         }),
       };
       createItem(queryParent, varsParent, accessToken).then((response) => {
