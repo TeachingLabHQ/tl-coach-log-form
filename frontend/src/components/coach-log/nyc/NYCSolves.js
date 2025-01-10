@@ -1,13 +1,10 @@
 import Form from "react-bootstrap/Form";
-import {
-  primaryStrategyUsed,
-  solvesSpecificStrategyOptions,
-  supportCycles,
-} from "../utils";
+import { supportCycles } from "../utils";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { NYCSolvesGradeLevel } from "../utils";
 import { NYCSolvesSubQuestions } from "./NYCSolvesSubQuestions";
 import { useEffect } from "react";
+import { TouchpointDurationQuestion } from "./utils";
 
 export const NYCSolves = ({
   setSolvesImplementationIndicator,
@@ -25,6 +22,8 @@ export const NYCSolves = ({
   setSolvesLeaderCycle,
   setSolvesAdminPrimaryStrategy,
   setSolvesTouchpoint,
+  setNycTouchpointDuration,
+  nycTouchpoint,
 }) => {
   useEffect(() => {
     // Filter each list directly by only keeping items that start with one of the selected grade levels
@@ -78,6 +77,11 @@ export const NYCSolves = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
+      {nycTouchpoint && (
+        <TouchpointDurationQuestion
+          setTouchpointDuration={setNycTouchpointDuration}
+        />
+      )}
       <Form.Group className="mb-3" controlId="formBasicSite">
         <Form.Label>
           <strong>Please select the School Implementation Experience:</strong>

@@ -37,6 +37,8 @@ export const NYCQuestion = ({
   setSolvesTouchpoint,
   nycReadsAdminsSupportedType,
   solvesIntervisitation,
+  setNycTouchpointDuration,
+  nycTouchpoint,
 }) => {
   function resetReadsStates() {
     setReadsImplementationIndicatorsList([]);
@@ -150,6 +152,8 @@ export const NYCQuestion = ({
               setReadsGradeLevels={setReadsGradeLevels}
               setNycTouchpoint={setNycTouchpoint}
               nycReadsAdminsSupportedType={nycReadsAdminsSupportedType}
+              setNycTouchpointDuration={setNycTouchpointDuration}
+              nycTouchpoint={nycTouchpoint}
             />
           ) : (
             <NYCSolves
@@ -170,6 +174,8 @@ export const NYCQuestion = ({
               setSolvesLeaderCycle={setSolvesLeaderCycle}
               setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
               setSolvesTouchpoint={setSolvesTouchpoint}
+              setNycTouchpointDuration={setNycTouchpointDuration}
+              nycTouchpoint={nycTouchpoint}
             />
           )}
           <Form.Group className="mb-3" controlId="formBasicCourse">

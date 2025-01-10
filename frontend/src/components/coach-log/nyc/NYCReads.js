@@ -1,10 +1,10 @@
 import Form from "react-bootstrap/Form";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import { focusOfWork, strategiesUsed } from "../utils";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { NYCReadsSubQuestions } from "./NYCReadsSubQuestions";
 import { nycSchoolLeaders } from "../utils";
 import { nycReadsPrimaryFocus } from "../utils";
+import { TouchpointDurationQuestion } from "./utils";
 
 export const NYCReads = ({
   NYCGradeLevel,
@@ -20,6 +20,8 @@ export const NYCReads = ({
   readsGradeLevels,
   setReadsGradeLevels,
   setNycTouchpoint,
+  nycTouchpoint,
+  setNycTouchpointDuration,
 }) => {
   useEffect(() => {
     // Filter each list directly by only keeping items that start with one of the selected grade levels
@@ -68,6 +70,12 @@ export const NYCReads = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
+      {nycTouchpoint && (
+        <TouchpointDurationQuestion
+          setTouchpointDuration={setNycTouchpointDuration}
+        />
+      )}
+
       <Form.Group className="mb-1" controlId="formBasicSite">
         <Form.Label>
           <strong>
