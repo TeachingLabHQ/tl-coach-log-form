@@ -124,10 +124,12 @@ function CoachLog() {
   const [schoolSelected, setSchoolSelected] = useState();
   const [coacheeList, setCoacheeList] = useState([]);
   useEffect(() => {
-    if (districtSelected && schoolSelected) {
+    //teacher list should update when a new school is selected
+    if (schoolSelected) {
       getTeacherInfo(setCoacheeList, districtSelected, schoolSelected);
     }
-    //teacher list should update when a new school is selected
+    //set Coachee list as null when district is changed
+    setCoacheeList([]);
   }, [schoolSelected, districtSelected]);
 
   //store coach logs in an array
@@ -386,7 +388,7 @@ function CoachLog() {
           date__1: { date: formattedDate },
           people__1: coachMondayId,
           text88__1: districtSelected,
-          text5__1: schoolSelected,
+          text5__1: schoolSelected.label,
           text4__1: microPLParticipants,
           text3__1: microPLParticipantRoles,
           text28__1: microPLTopic,
@@ -515,6 +517,7 @@ function CoachLog() {
           <DistrictSchoolQuestion
             setDistrictSelected={setDistrictSelected}
             setSchoolSelected={setSchoolSelected}
+            schoolSelected={schoolSelected}
           />
           <CoachingQuestion
             coacheeList={coacheeList}

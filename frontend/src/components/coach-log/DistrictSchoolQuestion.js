@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 export const DistrictSchoolQuestion = ({
   setDistrictSelected,
   setSchoolSelected,
+  schoolSelected,
 }) => {
   const [selectedDistrict, setSelectedDistrict] = useState();
-  const [selectedSchool, setSelectedSchool] = useState();
   const [districtSchools, setDistrictSchools] = useState({});
   const [schoolList, setSchoolList] = useState([]);
   const getDistrictInfoFromGoogleSheet = (e) => {
@@ -18,14 +18,37 @@ export const DistrictSchoolQuestion = ({
         const districtName = district[0];
         //use N/A as an option if no schools are added
         if (district.length === 1) {
-          schoolsByDistrict[districtName] = ["N/A"];
+          schoolsByDistrict[districtName] = [{ label: "N/A", value: ["N/A"] }];
         } else {
           for (let i = 1; i < district.length; i++) {
             if (!schoolsByDistrict[districtName]) {
-              schoolsByDistrict[districtName] = [district[i]];
+              schoolsByDistrict[districtName] = [
+                { label: district[i], value: [district[i]] },
+              ];
             } else {
-              schoolsByDistrict[districtName].push(district[i]);
+              schoolsByDistrict[districtName].push({
+                label: district[i],
+                value: [district[i]],
+              });
             }
+          }
+          if (districtName === "NY_D75") {
+            schoolsByDistrict[districtName].unshift({
+              label: "all D75 schools",
+              value: district.slice(1),
+            });
+          }
+          if (districtName === "NY_D9") {
+            schoolsByDistrict[districtName].unshift({
+              label: "all D9 schools",
+              value: district.slice(1),
+            });
+          }
+          if (districtName === "NY_D13") {
+            schoolsByDistrict[districtName].unshift({
+              label: "all D13 schools",
+              value: district.slice(1),
+            });
           }
         }
       }
@@ -53,6 +76,7 @@ export const DistrictSchoolQuestion = ({
           aria-label="Default select example"
           onChange={(e) => {
             onSelectDistrict(e);
+            setSchoolSelected("");
           }}
           required
         >
@@ -74,14 +98,14 @@ export const DistrictSchoolQuestion = ({
           name="schoolName"
           aria-label="Default select example"
           onChange={(e) => {
-            setSelectedSchool(e.target.value);
-            setSchoolSelected(e.target.value);
+            setSchoolSelected(JSON.parse(e.target.value));
           }}
           required
+          value={schoolSelected ? JSON.stringify(schoolSelected) : ""}
         >
           <option></option>
           {schoolList.map((val, idx) => (
-            <option value={val}>{val}</option>
+            <option value={JSON.stringify(val)}>{val.label}</option>
           ))}
         </Form.Control>
         <Form.Control.Feedback type="invalid">

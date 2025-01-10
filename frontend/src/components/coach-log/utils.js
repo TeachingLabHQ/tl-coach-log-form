@@ -2,12 +2,15 @@ import axios from "axios";
 
 const getCoacheeList = (teachersBySchool, districtSelected, schoolSelected) => {
   const uniqueTeacherArray = [];
+  const selectedSchoolList = schoolSelected.value;
   for (const [key, value] of Object.entries(teachersBySchool)) {
     if (districtSelected === key) {
       for (const [schoolName, teacherList] of Object.entries(value)) {
-        if (schoolSelected === schoolName) {
-          const uniqueTeacherSet = new Set(teacherList);
-          uniqueTeacherArray.push(...uniqueTeacherSet);
+        for (const selectedSchool of selectedSchoolList) {
+          if (selectedSchool === schoolName) {
+            const uniqueTeacherSet = new Set(teacherList);
+            uniqueTeacherArray.push(...uniqueTeacherSet);
+          }
         }
       }
     }
