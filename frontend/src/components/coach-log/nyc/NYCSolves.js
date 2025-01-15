@@ -77,7 +77,7 @@ export const NYCSolves = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {nycTouchpoint && (
+      {nycTouchpoint === "Multi-school professional learning" && (
         <TouchpointDurationQuestion
           setTouchpointDuration={setNycTouchpointDuration}
         />
