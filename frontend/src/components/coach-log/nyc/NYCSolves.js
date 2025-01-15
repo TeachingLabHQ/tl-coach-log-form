@@ -21,7 +21,7 @@ export const NYCSolves = ({
   setSolvesIntervisitation,
   setSolvesLeaderCycle,
   setSolvesAdminPrimaryStrategy,
-  setSolvesTouchpoint,
+  setNycTouchpoint,
   setNycTouchpointDuration,
   nycTouchpoint,
 }) => {
@@ -63,7 +63,7 @@ export const NYCSolves = ({
           name="Solvestouchpoint"
           aria-label="Default select example"
           onChange={(e) => {
-            setSolvesTouchpoint(e.target.value);
+            setNycTouchpoint(e.target.value);
           }}
           required
         >
@@ -77,7 +77,7 @@ export const NYCSolves = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {nycTouchpoint === "Multi-school professional learning" && (
+      {nycTouchpoint && (
         <TouchpointDurationQuestion
           setTouchpointDuration={setNycTouchpointDuration}
         />

@@ -34,7 +34,6 @@ export const NYCQuestion = ({
   setSolvesIntervisitation,
   setSolvesLeaderCycle,
   setSolvesAdminPrimaryStrategy,
-  setSolvesTouchpoint,
   nycReadsAdminsSupportedType,
   solvesIntervisitation,
   setNycTouchpointDuration,
@@ -60,7 +59,7 @@ export const NYCQuestion = ({
     setSolvesIntervisitation();
     setSolvesLeaderCycle();
     setSolvesAdminPrimaryStrategy();
-    setSolvesTouchpoint();
+    setNycTouchpoint();
   }
 
   return (
@@ -173,7 +172,7 @@ export const NYCQuestion = ({
               setSolvesIntervisitation={setSolvesIntervisitation}
               setSolvesLeaderCycle={setSolvesLeaderCycle}
               setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
-              setSolvesTouchpoint={setSolvesTouchpoint}
+              setNycTouchpoint={setNycTouchpoint}
               setNycTouchpointDuration={setNycTouchpointDuration}
               nycTouchpoint={nycTouchpoint}
             />

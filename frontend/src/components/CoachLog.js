@@ -310,8 +310,8 @@ function CoachLog() {
         teachersSupportedNumberGeneral = teachersSupportedNumber;
         teachersSupportedTypeGeneral = teachersSupportedType.toString();
         NYCAdditionalComments = e.target.coachingAdditionalWriteIn?.value;
+        NYCTouchpoint = nycTouchpoint;
         if (NYCDone === "NYC Reads") {
-          NYCTouchpoint = nycTouchpoint;
           readsGradeLevelsNYC = readsGradeLevels.toString();
           ImplementationIndicatorReads =
             readsImplementationIndicatorsList.toString();
@@ -322,7 +322,6 @@ function CoachLog() {
           NYCReadsSupportPrimaryFocus = readsPrimaryFocus;
           NYCReadsSupportedLeaders = nycReadsAdminsSupportedType.toString();
         } else {
-          NYCTouchpoint = solvesTouchpoint;
           solvesGradeLevelsNYC = solvesGradeLevels.toString();
           implementationIndicatorSolves = solvesImplementationIndicator;
           primaryStrategySolvesList = Object.values(solvesPrimaryStrategyList)
@@ -600,7 +599,6 @@ function CoachLog() {
             setSolvesIntervisitation={setSolvesIntervisitation}
             setSolvesLeaderCycle={setSolvesLeaderCycle}
             setSolvesAdminPrimaryStrategy={setSolvesAdminPrimaryStrategy}
-            setSolvesTouchpoint={setSolvesTouchpoint}
             nycReadsAdminsSupportedType={nycReadsAdminsSupportedType}
             solvesIntervisitation={solvesIntervisitation}
             setNycTouchpointDuration={setNycTouchpointDuration}
