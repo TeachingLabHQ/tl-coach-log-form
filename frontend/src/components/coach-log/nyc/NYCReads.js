@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { NYCReadsSubQuestions } from "./NYCReadsSubQuestions";
 import { nycSchoolLeaders } from "../utils";
 import { nycReadsPrimaryFocus } from "../utils";
-import { TouchpointDurationQuestion } from "./utils";
+import { TouchpointDurationQuestion, NYCDurationQuestion } from "./utils";
 
 export const NYCReads = ({
   NYCGradeLevel,
@@ -22,6 +22,7 @@ export const NYCReads = ({
   setNycTouchpoint,
   nycTouchpoint,
   setNycTouchpointDuration,
+  setNYCTotalDuration,
 }) => {
   useEffect(() => {
     // Filter each list directly by only keeping items that start with one of the selected grade levels
@@ -70,9 +71,15 @@ export const NYCReads = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {nycTouchpoint === "Multi-school professional learning" && (
+      {nycTouchpoint === "Multi-school professional learning" ? (
         <TouchpointDurationQuestion
-          setTouchpointDuration={setNycTouchpointDuration}
+          setNycTouchpointDuration={setNycTouchpointDuration}
+          setNYCTotalDuration={setNYCTotalDuration}
+        />
+      ) : (
+        <NYCDurationQuestion
+          setNYCTotalDuration={setNYCTotalDuration}
+          setNycTouchpointDuration={setNycTouchpointDuration}
         />
       )}
 

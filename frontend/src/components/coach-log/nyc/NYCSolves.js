@@ -4,7 +4,7 @@ import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { NYCSolvesGradeLevel } from "../utils";
 import { NYCSolvesSubQuestions } from "./NYCSolvesSubQuestions";
 import { useEffect } from "react";
-import { TouchpointDurationQuestion } from "./utils";
+import { NYCDurationQuestion } from "./utils";
 
 export const NYCSolves = ({
   setSolvesImplementationIndicator,
@@ -22,8 +22,9 @@ export const NYCSolves = ({
   setSolvesLeaderCycle,
   setSolvesAdminPrimaryStrategy,
   setNycTouchpoint,
-  setNycTouchpointDuration,
   nycTouchpoint,
+  setNYCTotalDuration,
+  setNycTouchpointDuration,
 }) => {
   useEffect(() => {
     // Filter each list directly by only keeping items that start with one of the selected grade levels
@@ -78,8 +79,9 @@ export const NYCSolves = ({
         </Form.Control.Feedback>
       </Form.Group>
       {nycTouchpoint && (
-        <TouchpointDurationQuestion
-          setTouchpointDuration={setNycTouchpointDuration}
+        <NYCDurationQuestion
+          setNYCTotalDuration={setNYCTotalDuration}
+          setNycTouchpointDuration={setNycTouchpointDuration}
         />
       )}
       <Form.Group className="mb-3" controlId="formBasicSite">

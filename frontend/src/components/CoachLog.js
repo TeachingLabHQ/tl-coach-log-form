@@ -37,6 +37,7 @@ function CoachLog() {
   const [validated, setValidated] = useState(false);
   const [errorCheck, setErrorCheck] = useState();
   const [timeCheck, setTimeCheck] = useState();
+  const [nycTotalDuration, setNYCTotalDuration] = useState();
   const [submitCheck, setSubmitCheck] = useState();
   const [schoolByDistrict, setSchoolByDistrict] = useState({});
   const [selectedMicroPLParticipants, setSelectedMicroPLParticipants] =
@@ -80,7 +81,6 @@ function CoachLog() {
   const [readsWorkFocusList, setReadsWorkFocusList] = useState([]);
   const [nycTouchpoint, setNycTouchpoint] = useState();
   const [nycTouchpointDuration, setNycTouchpointDuration] = useState();
-  const [solvesTouchpoint, setSolvesTouchpoint] = useState();
   const [nycReadsAdmin, setNycReadsAdmin] = useState();
   const [nycReadsAdminsSupportedType, setNycReadsAdminsSupportedType] =
     useState([]);
@@ -414,6 +414,7 @@ function CoachLog() {
           long_text8__1: additionalClarification,
           text13__1: NYCCoachType,
           text85__1: NYCTouchpoint,
+          text_mkm95g2m: nycTotalDuration,
           text_mkm2tnt8: nycTouchpointDuration,
           text87__1: teachersSupportedNumberGeneral,
           text43__1: teachersSupportedTypeGeneral,
@@ -603,6 +604,7 @@ function CoachLog() {
             solvesIntervisitation={solvesIntervisitation}
             setNycTouchpointDuration={setNycTouchpointDuration}
             nycTouchpoint={nycTouchpoint}
+            setNYCTotalDuration={setNYCTotalDuration}
           />
           <ModeQuestion
             coachingMode={coachingMode}
