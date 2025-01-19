@@ -38,11 +38,11 @@ export const NYCDurationQuestion = ({
   setNycTouchpointDuration,
 }) => {
   setNycTouchpointDuration();
-  const hourOptions = [3, 6];
+  const hourOptions = ["Half day - 3 hours", "Full day - 6 hours"];
   return (
     <Form.Group className="mb-3" controlId="formBasicSite">
       <Form.Label>
-        <strong>What was the total duration in hours?</strong>
+        <strong>What was the duration of this visit?</strong>
       </Form.Label>
       <Form.Control
         as="select"
