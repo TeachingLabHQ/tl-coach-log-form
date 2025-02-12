@@ -28,6 +28,8 @@ export const CoachingQuestion = ({
           onChange={(e) => {
             setCoachingDone(e.target.value);
             if (e.target.value === "no") {
+              setCoachingLogs([]);
+            } else {
               setCoachingLogs([
                 {
                   logId: new Date().getTime(),
