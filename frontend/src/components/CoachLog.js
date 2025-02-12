@@ -455,10 +455,8 @@ function CoachLog() {
           formData.append("file", microPLFile);
           uploadFile(formData, accessToken).then((e) => {
             console.log(e);
-            if (
-              e.data.hasOwnProperty("errors") ||
-              (e.status < 600 && e.status > 399)
-            ) {
+            if (e?.data?.errors || (e.status < 600 && e.status > 399)) {
+              console.error("error", e);
               setErrorCheck(true);
               return;
             } else {
@@ -466,7 +464,11 @@ function CoachLog() {
             }
           });
         }
-
+        const hasCoachingLogs = coachingLogs.length > 0;
+        if (!hasCoachingLogs) {
+          setErrorCheck(false);
+          return;
+        }
         //upload subitems
         for (var i = 0; i < coachingLogs.length; i++) {
           const parentID = response;
@@ -489,10 +491,8 @@ function CoachLog() {
           };
           const myTimeout = setTimeout(setErrorCheck(false), 60000);
           createItemSub(querySub, varsSub, accessToken).then((e) => {
-            if (
-              e.data.hasOwnProperty("errors") ||
-              (e.status < 600 && e.status > 399)
-            ) {
+            if (e?.data?.errors || (e.status < 600 && e.status > 399)) {
+              console.error("error", e.data);
               setErrorCheck(true);
             } else {
               setErrorCheck(false);
