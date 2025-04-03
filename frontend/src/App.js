@@ -10,6 +10,7 @@ import CoachLog from "./components/CoachLog";
 import NavBar from "./components/NavBar";
 import AccessTokenProvider from "./contexts/accessTokenContext";
 import app from "./firebase/firebase";
+import { ConversationRecord } from "./components/ConversationRecord";
 
 function App() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
@@ -33,6 +34,10 @@ function App() {
             <NavBar userStatus={isUserSignedIn} />
             <Routes>
               <Route element={<CoachLog />} path="/" />
+              <Route
+                element={<ConversationRecord />}
+                path="/conversation-record"
+              />
             </Routes>
           </AccessTokenProvider>
         </BrowserRouter>
