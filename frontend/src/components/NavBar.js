@@ -63,7 +63,7 @@ function NavBar(props) {
                 Coach Log
               </Nav.Link>
               <Nav.Link as={Link} to="/conversation-record">
-                Conversation Log
+                Conversation Recording Log
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
