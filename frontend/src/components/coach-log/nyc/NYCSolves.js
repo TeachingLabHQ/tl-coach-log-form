@@ -65,6 +65,8 @@ export const NYCSolves = ({
           aria-label="Default select example"
           onChange={(e) => {
             setNycTouchpoint(e.target.value);
+            setNYCTotalDuration("");
+            setNycTouchpointDuration("");
           }}
           required
         >
@@ -78,7 +80,7 @@ export const NYCSolves = ({
           Please choose an option.
         </Form.Control.Feedback>
       </Form.Group>
-      {nycTouchpoint && (
+      {nycTouchpoint !== "Leader support only" && (
         <NYCDurationQuestion
           setNYCTotalDuration={setNYCTotalDuration}
           setNycTouchpointDuration={setNycTouchpointDuration}

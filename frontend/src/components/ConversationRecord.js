@@ -13,7 +13,7 @@ export const ConversationRecord = () => {
             marginBottom: "3rem",
           }}
         >
-          <h1>Conversation Record</h1>
+          <h1>Conversation Recording Log</h1>
           <div className="conversationRecord">
             <iframe
               src="https://surveys.teachinglab.org/jfe/form/SV_0CEMeugJt9pUXJQ"
